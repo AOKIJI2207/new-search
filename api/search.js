@@ -45,7 +45,9 @@ export default async function handler(req, res) {
       .map(s => s.trim())
       .filter(Boolean);
 
-    const selected = SOURCES.filter(s => keys.includes(s.key));
+    const selected = keys.length === 0 || keys.includes("all")
+      ? SOURCES
+      : SOURCES.filter(s => keys.includes(s.key));
     if (selected.length === 0) {
       res.status(400).json({ error: "Aucune source sélectionnée." });
       return;

@@ -10,7 +10,26 @@ const sources = [
   { key: "nasa", name: "NASA Breaking News", url: "https://www.nasa.gov/rss/dyn/breaking_news.rss", enabledByDefault: true },
   { key: "lemonde", name: "Le Monde — À la une", url: "https://www.lemonde.fr/rss/une.xml", enabledByDefault: true },
   { key: "dw", name: "DW — World", url: "https://rss.dw.com/rdf/rss-en-all", enabledByDefault: true },
-  { key: "cbc_world", name: "CBC — World", url: "https://www.cbc.ca/cmlink/rss-world", enabledByDefault: true }
+  { key: "cbc_world", name: "CBC — World", url: "https://www.cbc.ca/cmlink/rss-world", enabledByDefault: true },
+  { key: "cnn_world", name: "CNN — World", url: "http://rss.cnn.com/rss/edition_world.rss", enabledByDefault: true },
+  { key: "cnn_tech", name: "CNN — Technology", url: "http://rss.cnn.com/rss/edition_technology.rss", enabledByDefault: true },
+  { key: "sky_world", name: "Sky News — World", url: "https://feeds.skynews.com/feeds/rss/world.xml", enabledByDefault: true },
+  { key: "sky_tech", name: "Sky News — Technology", url: "https://feeds.skynews.com/feeds/rss/technology.xml", enabledByDefault: true },
+  { key: "abc_au", name: "ABC News AU — Top Stories", url: "https://www.abc.net.au/news/feed/51120/rss.xml", enabledByDefault: true },
+  { key: "ap_top", name: "AP News — Top", url: "https://apnews.com/apf-topnews?format=rss", enabledByDefault: true },
+  { key: "reuters_world", name: "Reuters — World", url: "https://feeds.reuters.com/Reuters/worldNews", enabledByDefault: true },
+  { key: "reuters_tech", name: "Reuters — Tech", url: "https://feeds.reuters.com/reuters/technologyNews", enabledByDefault: true },
+  { key: "nytimes_world", name: "NYTimes — World", url: "https://rss.nytimes.com/services/xml/rss/nyt/World.xml", enabledByDefault: true },
+  { key: "nytimes_tech", name: "NYTimes — Technology", url: "https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml", enabledByDefault: true },
+  { key: "washpost_world", name: "Washington Post — World", url: "https://feeds.washingtonpost.com/rss/world", enabledByDefault: true },
+  { key: "politico", name: "Politico — Top", url: "https://www.politico.com/rss/politicopicks.xml", enabledByDefault: true },
+  { key: "un_news", name: "UN News", url: "https://news.un.org/feed/subscribe/en/news/all/rss.xml", enabledByDefault: true },
+  { key: "who_news", name: "WHO News", url: "https://www.who.int/feeds/entity/mediacentre/news/en/rss.xml", enabledByDefault: true },
+  { key: "econ", name: "The Economist — Latest", url: "https://www.economist.com/latest/rss.xml", enabledByDefault: true },
+  { key: "techcrunch", name: "TechCrunch", url: "https://techcrunch.com/feed/", enabledByDefault: true },
+  { key: "ars", name: "Ars Technica", url: "https://feeds.arstechnica.com/arstechnica/index", enabledByDefault: true },
+  { key: "mit_tech", name: "MIT Technology Review", url: "https://www.technologyreview.com/feed/", enabledByDefault: true },
+  { key: "noaa", name: "NOAA News", url: "https://www.noaa.gov/feeds/news/rss.xml", enabledByDefault: true }
 ];
 
 export default sources;
