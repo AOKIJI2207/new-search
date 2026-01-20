@@ -19,8 +19,10 @@ function matchesQuery(item, query) {
 
   const tokens = q.split(" ").filter(Boolean);
   const hay = norm([item.title, item.contentSnippet, item.content, item.summary].filter(Boolean).join(" "));
-  // AND logique : tous les mots doivent être présents
-  return tokens.every(t => hay.includes(t));
+  if (tokens.length === 0) return true;
+
+  // OR logique : au moins un mot doit être présent
+  return tokens.some(t => hay.includes(t));
 }
 
 function compactItem(it, source) {
