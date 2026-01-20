@@ -421,6 +421,7 @@
     const wantsSources = qn.includes("source") || qn.includes("cite");
     const articleIndex = extractArticleIndex(question);
     const wantsArticleSummary = articleIndex !== null && (qn.includes("resume") || qn.includes("resumer"));
+    const wantsGeneral = !wantsSummary && !wantsSources && !wantsArticleSummary;
 
     const lines = [];
     if(wantsArticleSummary){
@@ -430,6 +431,9 @@
       if (it.snippet) lines.push(`- Extrait : ${it.snippet}`);
       lines.push(`- Lien : ${it.link}`);
       return { text: lines.join("\\n"), cites: [it] };
+    }
+    if(wantsGeneral){
+      return { text: genericAnswer(question), cites:[] };
     }
     if(wantsSummary){
       return summarizeByThemes(question);
