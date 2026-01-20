@@ -73,6 +73,17 @@
     .tablist button{width:100%;text-align:left;border-radius:12px;background:rgba(12,18,32,.38);border:1px solid rgba(255,255,255,.14);padding:10px 12px}
     .tablist button.active{border-color:rgba(106,166,255,.55);background:rgba(106,166,255,.15);color:#cfe1ff}
     .tablist .small{margin-top:6px}
+    .ticker{max-width:1200px;margin:12px auto 0;padding:0 16px}
+    .ticker .panel{display:flex;flex-direction:column;gap:10px}
+    .ticker-track{display:flex;gap:24px;white-space:nowrap;overflow:hidden;position:relative}
+    .ticker-items{display:inline-flex;gap:24px;animation:scroll 32s linear infinite}
+    .ticker-item{display:inline-flex;gap:8px;align-items:center;font-size:13px;color:#d7def0}
+    .ticker-item a{color:#cfe1ff;text-decoration:none}
+    .ticker-item a:hover{text-decoration:underline}
+    @keyframes scroll{
+      0%{transform:translateX(0)}
+      100%{transform:translateX(-50%)}
+    }
   </style>
 </head>
 <body>
@@ -82,6 +93,22 @@
     <div class="sub">Tape un mot-clé (ex: “Groenland”, “cybersécurité”, “OTAN”). Résultats issus de flux RSS ouverts. Si aucune source n’est cochée, la recherche utilise toutes les sources.</div>
   </div>
 </header>
+
+<section class="ticker">
+  <div class="panel">
+    <div class="hd">
+      <div class="row">
+        <span class="badge">Actualités géopolitiques</span>
+        <span class="small" id="geoStatus">Mise à jour…</span>
+      </div>
+    </div>
+    <div class="bd">
+      <div class="ticker-track">
+        <div class="ticker-items" id="geoTicker"></div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <main>
   <aside class="panel continents">
@@ -265,6 +292,34 @@
     $("#count").textContent = `${ITEMS.length} item(s)`;
     renderArticles();
     summarizeSearch(q);
+  }
+
+  async function loadGeopolitics(){
+    const statusEl = $("#geoStatus");
+    try{
+      statusEl.textContent = "Mise à jour…";
+      const q = "geopolitique geopolitics defense diplomacy conflict";
+      const r = await fetch(`/api/search?q=${encodeURIComponent(q)}&sources=all`);
+      const data = await r.json();
+      const items = (data.items || []).slice(0, 16);
+      const ticker = $("#geoTicker");
+      if(items.length === 0){
+        ticker.innerHTML = `<span class="small">Aucune actualité disponible pour le moment.</span>`;
+        statusEl.textContent = "Aucune donnée";
+        return;
+      }
+      const entries = items.map(it => `
+        <span class="ticker-item">
+          <span class="idx">#</span>
+          <a href="${escapeHtml(it.link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(it.title)}</a>
+          <span class="small">${escapeHtml(it.sourceName)}</span>
+        </span>
+      `).join("");
+      ticker.innerHTML = entries + entries;
+      statusEl.textContent = `Mis à jour • ${new Date().toLocaleTimeString("fr-FR")}`;
+    } catch (e) {
+      statusEl.textContent = "Échec de mise à jour";
+    }
   }
 
   function renderArticles(){
@@ -523,6 +578,8 @@
 
   renderChat();
   loadSources();
+  loadGeopolitics();
+  setInterval(loadGeopolitics, 300000);
 
   const storedBg = localStorage.getItem(BG_STORAGE_KEY);
   if(storedBg && isValidBg(storedBg)){
