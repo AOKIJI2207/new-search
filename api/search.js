@@ -18,11 +18,42 @@ function matchesQuery(item, query) {
   if (!q) return true;
 
   const tokens = q.split(" ").filter(Boolean);
+  const expanded = expandTokens(tokens);
   const hay = norm([item.title, item.contentSnippet, item.content, item.summary].filter(Boolean).join(" "));
-  if (tokens.length === 0) return true;
+  if (expanded.length === 0) return true;
 
   // OR logique : au moins un mot doit être présent
-  return tokens.some(t => hay.includes(t));
+  return expanded.some(t => hay.includes(t));
+}
+
+const TOKEN_TRANSLATIONS = new Map();
+[
+  ["afrique", "africa"],
+  ["asie", "asia"],
+  ["oceanie", "oceania"],
+  ["amerique", "america"],
+  ["australie", "australia"],
+  ["chine", "china"],
+  ["japon", "japan"],
+  ["coree", "korea"],
+  ["allemagne", "germany"],
+  ["angleterre", "england"],
+  ["nigeria", "nigéria"],
+  ["etats", "states"],
+  ["etats-unis", "united"]
+].forEach(([fr, en]) => {
+  TOKEN_TRANSLATIONS.set(fr, en);
+  TOKEN_TRANSLATIONS.set(en, fr);
+});
+
+function expandTokens(tokens) {
+  const out = new Set();
+  tokens.forEach(token => {
+    out.add(token);
+    const mapped = TOKEN_TRANSLATIONS.get(token);
+    if (mapped) out.add(norm(mapped));
+  });
+  return Array.from(out);
 }
 
 function compactItem(it, source) {
