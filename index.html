@@ -264,6 +264,7 @@
     setStatus(`Résultats pour: ${q || "tout"}${warningText}`);
     $("#count").textContent = `${ITEMS.length} item(s)`;
     renderArticles();
+    summarizeSearch(q);
   }
 
   function renderArticles(){
@@ -279,6 +280,17 @@
         <div class="snippet">${escapeHtml(it.snippet || "")}</div>
       </article>
     `).join("") || `<div class="small">Aucun résultat. Essaie un autre mot-clé (ex: “arctic”, “nato”, “ransomware”).</div>`;
+  }
+
+  function summarizeSearch(query){
+    if(!ITEMS.length) return;
+    const summary = summarizeByThemes(query || "Synthèse");
+    chat.messages.push({
+      role: "assistant",
+      text: summary.text,
+      cites: summary.cites
+    });
+    renderChat();
   }
 
   // Chatbot: répond UNIQUEMENT depuis ITEMS
