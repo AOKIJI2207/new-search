@@ -166,16 +166,15 @@
   let SOURCES = [];
   let selected = new Set();
   let ITEMS = [];
-  let activeContinent = "all";
+  let activeContinent = "global";
   const CONTINENTS = [
-    { key: "all", label: "Tous" },
+    { key: "global", label: "Global" },
     { key: "Afrique", label: "Afrique" },
     { key: "Amérique du Nord", label: "Amérique du Nord" },
     { key: "Amérique du Sud", label: "Amérique du Sud" },
     { key: "Asie", label: "Asie" },
     { key: "Europe", label: "Europe" },
-    { key: "Océanie", label: "Océanie" },
-    { key: "Global", label: "Global" }
+    { key: "Océanie", label: "Océanie" }
   ];
   const DEFAULT_BG = getComputedStyle(document.documentElement).getPropertyValue("--map-image").trim();
   const BG_STORAGE_KEY = "customMapImageV2";
@@ -184,7 +183,7 @@
   async function loadSources(){
     const r = await fetch("/api/sources");
     SOURCES = await r.json();
-    setContinent("all");
+    setContinent("global");
     renderContinentTabs();
     setStatus("Prêt");
   }
@@ -207,7 +206,7 @@
 
   function setContinent(continent){
     activeContinent = continent;
-    const scopedSources = continent === "all"
+    const scopedSources = continent === "global"
       ? SOURCES
       : SOURCES.filter(s => s.continent === continent);
     selected = new Set(scopedSources.map(s => s.key));
@@ -217,7 +216,7 @@
 
   function renderSourceToggles(){
     const root = $("#sourceToggles");
-    const visibleSources = activeContinent === "all"
+    const visibleSources = activeContinent === "global"
       ? SOURCES
       : SOURCES.filter(s => s.continent === activeContinent);
     root.innerHTML = visibleSources.map(s => `
@@ -410,14 +409,14 @@
 
   $("#searchBtn").addEventListener("click", search);
   $("#selectAll").addEventListener("click", () => {
-    const scope = activeContinent === "all"
+    const scope = activeContinent === "global"
       ? SOURCES
       : SOURCES.filter(s => s.continent === activeContinent);
     selected = new Set(scope.map(s => s.key));
     renderSourceToggles();
   });
   $("#clearAll").addEventListener("click", () => {
-    const scope = activeContinent === "all"
+    const scope = activeContinent === "global"
       ? SOURCES
       : SOURCES.filter(s => s.continent === activeContinent);
     const remaining = new Set(selected);
