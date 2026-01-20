@@ -49,6 +49,12 @@
     article h3{margin:0 0 6px 0;font-size:15px;line-height:1.25}
     .idx{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;border-radius:999px;background:rgba(106,166,255,.15);border:1px solid rgba(106,166,255,.35);color:#cfe1ff;font-size:12px;margin-right:8px}
     .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;color:var(--muted);font-size:12px}
+    .tag{display:inline-flex;align-items:center;gap:6px;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:600;letter-spacing:.2px;border:1px solid transparent}
+    .tag-geo{background:rgba(103,194,255,.18);color:#cfe9ff;border-color:rgba(103,194,255,.35)}
+    .tag-finance{background:rgba(255,107,107,.18);color:#ffd6d6;border-color:rgba(255,107,107,.35)}
+    .tag-security{background:rgba(255,183,77,.2);color:#ffe0b2;border-color:rgba(255,183,77,.35)}
+    .tag-tech{background:rgba(153,102,255,.18);color:#e1ccff;border-color:rgba(153,102,255,.35)}
+    .tag-general{background:rgba(163,177,198,.18);color:#e7ecf5;border-color:rgba(163,177,198,.35)}
     .snippet{margin-top:8px;color:#d7def0;line-height:1.45;font-size:14px}
     a{color:#cfe1ff}
     .chat{display:flex;flex-direction:column;height:72vh;min-height:520px}
@@ -355,10 +361,30 @@
           <span>${escapeHtml(it.sourceName)}</span>
           <span>•</span>
           <span>${escapeHtml(it.pubDate ? new Date(it.pubDate).toLocaleString("fr-FR") : "")}</span>
+          ${renderTag(it)}
         </div>
         <div class="snippet">${escapeHtml(it.snippet || "")}</div>
       </article>
     `).join("") || `<div class="small">Aucun résultat. Essaie un autre mot-clé (ex: “arctic”, “nato”, “ransomware”).</div>`;
+  }
+
+  function classifyTopic(item){
+    const text = norm([item.title, item.snippet, item.sourceName].join(" "));
+    const tests = [
+      { key: "geo", label: "Géopolitique", className: "tag-geo", terms: ["geopolitique","geopolitics","diplomatie","diplomacy","conflit","conflict","sanction","alliance","otan","nato","frontiere","border","guerre","war"] },
+      { key: "finance", label: "Finance", className: "tag-finance", terms: ["finance","markets","marches","bourse","stocks","banque","bank","inflation","croissance","growth","entreprise","company","companies","business","earnings"] },
+      { key: "security", label: "Sécurité", className: "tag-security", terms: ["securite","security","terrorisme","terror","crime","violence","attaque","attack","militaire","military","defense","defence"] },
+      { key: "tech", label: "Tech", className: "tag-tech", terms: ["tech","technologie","technology","cyber","ai","intelligence artificielle","logiciel","software","startup","start-up"] }
+    ];
+    for(const test of tests){
+      if(test.terms.some(t => text.includes(norm(t)))) return test;
+    }
+    return { key: "general", label: "Général", className: "tag-general" };
+  }
+
+  function renderTag(item){
+    const tag = classifyTopic(item);
+    return `<span class="tag ${tag.className}">${escapeHtml(tag.label)}</span>`;
   }
 
   function summarizeSearch(query){
