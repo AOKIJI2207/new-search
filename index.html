@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AGORINFO</title>
+  <title>AGORAFLUX</title>
   <style>
     :root{--bg:#0b0f17;--card:#121a29;--text:#e7ecf5;--muted:#a9b4c7;--border:rgba(255,255,255,.10);--accent:#6aa6ff;--glow:rgba(106,166,255,.25);--map-image:url("assets/world-map.png")}
     *{box-sizing:border-box}
@@ -34,8 +34,8 @@
     .wrap{max-width:1100px;margin:0 auto;padding:16px}
     h1{margin:0;font-size:18px}
     .sub{margin-top:6px;color:var(--muted);font-size:13px;line-height:1.35}
-    main{display:grid;grid-template-columns:1.6fr .9fr;gap:14px;padding:14px 16px 32px;max-width:1100px;margin:0 auto}
-    @media(max-width:980px){main{grid-template-columns:1fr}}
+    main{display:grid;grid-template-columns:.55fr 1.6fr .9fr;gap:14px;padding:14px 16px 32px;max-width:1200px;margin:0 auto}
+    @media(max-width:1080px){main{grid-template-columns:1fr}}
     .panel{background:rgba(18,26,41,.45);border:1px solid rgba(255,255,255,.14);border-radius:16px;overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,.25);backdrop-filter:blur(6px)}
     .hd{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:12px;border-bottom:1px solid var(--border);flex-wrap:wrap}
     .bd{padding:12px}
@@ -68,6 +68,11 @@
     .bg-input{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
     .bg-input input{min-width:240px;flex:1}
     .bg-input .note{flex-basis:100%}
+    .continents{position:sticky;top:90px;align-self:start}
+    .tablist{display:flex;flex-direction:column;gap:8px}
+    .tablist button{width:100%;text-align:left;border-radius:12px;background:rgba(12,18,32,.38);border:1px solid rgba(255,255,255,.14);padding:10px 12px}
+    .tablist button.active{border-color:rgba(106,166,255,.55);background:rgba(106,166,255,.15);color:#cfe1ff}
+    .tablist .small{margin-top:6px}
   </style>
 </head>
 <body>
@@ -79,6 +84,19 @@
 </header>
 
 <main>
+  <aside class="panel continents">
+    <div class="hd">
+      <div class="row">
+        <span class="badge">Continents</span>
+        <span class="small">onglets</span>
+      </div>
+    </div>
+    <div class="bd">
+      <div class="tablist" id="continentTabs"></div>
+      <div class="small" style="margin-top:10px">Chaque onglet recharge les sources liées à la zone sélectionnée.</div>
+    </div>
+  </aside>
+
   <section class="panel">
     <div class="hd">
       <div class="row">
@@ -148,6 +166,17 @@
   let SOURCES = [];
   let selected = new Set();
   let ITEMS = [];
+  let activeContinent = "all";
+  const CONTINENTS = [
+    { key: "all", label: "Tous" },
+    { key: "Afrique", label: "Afrique" },
+    { key: "Amérique du Nord", label: "Amérique du Nord" },
+    { key: "Amérique du Sud", label: "Amérique du Sud" },
+    { key: "Asie", label: "Asie" },
+    { key: "Europe", label: "Europe" },
+    { key: "Océanie", label: "Océanie" },
+    { key: "Global", label: "Global" }
+  ];
   const DEFAULT_BG = getComputedStyle(document.documentElement).getPropertyValue("--map-image").trim();
   const BG_STORAGE_KEY = "customMapImageV2";
   const isValidBg = url => /^data:image\//i.test(url) || /^https?:\/\//i.test(url);
@@ -155,14 +184,43 @@
   async function loadSources(){
     const r = await fetch("/api/sources");
     SOURCES = await r.json();
-    selected = new Set(SOURCES.filter(s=>s.enabledByDefault).map(s=>s.key));
-    renderSourceToggles();
+    setContinent("all");
+    renderContinentTabs();
     setStatus("Prêt");
+  }
+
+  function renderContinentTabs(){
+    const root = $("#continentTabs");
+    root.innerHTML = CONTINENTS.map(c => `
+      <button type="button" data-continent="${escapeHtml(c.key)}" class="${c.key === activeContinent ? "active" : ""}">
+        ${escapeHtml(c.label)}
+      </button>
+    `).join("");
+    root.querySelectorAll("button").forEach(btn=>{
+      btn.addEventListener("click", () => {
+        const key = btn.getAttribute("data-continent");
+        if(!key) return;
+        setContinent(key);
+      });
+    });
+  }
+
+  function setContinent(continent){
+    activeContinent = continent;
+    const scopedSources = continent === "all"
+      ? SOURCES
+      : SOURCES.filter(s => s.continent === continent);
+    selected = new Set(scopedSources.map(s => s.key));
+    renderContinentTabs();
+    renderSourceToggles();
   }
 
   function renderSourceToggles(){
     const root = $("#sourceToggles");
-    root.innerHTML = SOURCES.map(s => `
+    const visibleSources = activeContinent === "all"
+      ? SOURCES
+      : SOURCES.filter(s => s.continent === activeContinent);
+    root.innerHTML = visibleSources.map(s => `
       <label class="src">
         <input type="checkbox" data-key="${escapeHtml(s.key)}" ${selected.has(s.key) ? "checked":""}/>
         ${escapeHtml(s.name)}
@@ -352,11 +410,19 @@
 
   $("#searchBtn").addEventListener("click", search);
   $("#selectAll").addEventListener("click", () => {
-    selected = new Set(SOURCES.map(s => s.key));
+    const scope = activeContinent === "all"
+      ? SOURCES
+      : SOURCES.filter(s => s.continent === activeContinent);
+    selected = new Set(scope.map(s => s.key));
     renderSourceToggles();
   });
   $("#clearAll").addEventListener("click", () => {
-    selected = new Set();
+    const scope = activeContinent === "all"
+      ? SOURCES
+      : SOURCES.filter(s => s.continent === activeContinent);
+    const remaining = new Set(selected);
+    scope.forEach(s => remaining.delete(s.key));
+    selected = remaining;
     renderSourceToggles();
   });
   $("#toggleSources").addEventListener("change", e => {
