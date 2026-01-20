@@ -328,6 +328,56 @@
     return idx - 1;
   }
 
+  function summarizeByThemes(question){
+    const qTokens = tokenize(question);
+    const scopedItems = qTokens.length
+      ? topMatches(question, 24).map(x => x.it)
+      : ITEMS.slice(0, 24);
+    const themes = [
+      { label: "Politique", terms: ["gouvernement","président","ministre","élection","parlement","opposition","loi","réforme","parti"] },
+      { label: "Économie", terms: ["économie","inflation","croissance","budget","marché","finance","investissement","banque","emploi","entreprise"] },
+      { label: "Géopolitique", terms: ["diplomatie","traité","alliance","sanction","frontière","international","région","otan","onu","union"] },
+      { label: "Sécurité", terms: ["sécurité","attaque","terrorisme","conflit","armée","militaire","crime","violence","insécurité","police"] }
+    ];
+
+    const buckets = themes.map(theme => ({
+      label: theme.label,
+      items: scopedItems.filter(it => {
+        const hay = norm([it.title, it.snippet].join(" "));
+        return theme.terms.some(term => hay.includes(norm(term)));
+      })
+    }));
+
+    const fallbackItems = scopedItems.filter(it =>
+      !buckets.some(bucket => bucket.items.includes(it))
+    );
+
+    const header = [
+      `Bilan ${activeContinent === "global" ? "global" : `(${activeContinent})`}`,
+      question.trim() ? `Sujet : ${question.trim()}` : "Sujet : (non précisé)"
+    ];
+    const lines = [header.join(" — "), ""];
+    for(const bucket of buckets){
+      if(bucket.items.length === 0) continue;
+      lines.push(`${bucket.label} :`);
+      for(const it of bucket.items.slice(0, 4)){
+        lines.push(`- ${it.sourceName} : ${it.title}`);
+      }
+      lines.push("");
+    }
+    if(fallbackItems.length){
+      lines.push("Autres points :");
+      for(const it of fallbackItems.slice(0, 4)){
+        lines.push(`- ${it.sourceName} : ${it.title}`);
+      }
+    }
+
+    return {
+      text: lines.join("\\n").trim(),
+      cites: scopedItems.slice(0, 8)
+    };
+  }
+
   function genericAnswer(question){
     const qn = norm(question);
     const title = question.trim() ? `Sujet : ${question.trim()}` : "Sujet : (non précisé)";
@@ -367,7 +417,7 @@
     }
 
     const qn = norm(question);
-    const wantsSummary = qn.includes("resume") || qn.includes("synthese") || qn.includes("maj") || qn.includes("principales");
+    const wantsSummary = qn.includes("resume") || qn.includes("synthese") || qn.includes("maj") || qn.includes("principales") || qn.includes("bilan");
     const wantsSources = qn.includes("source") || qn.includes("cite");
     const articleIndex = extractArticleIndex(question);
     const wantsArticleSummary = articleIndex !== null && (qn.includes("resume") || qn.includes("resumer"));
@@ -382,8 +432,7 @@
       return { text: lines.join("\\n"), cites: [it] };
     }
     if(wantsSummary){
-      lines.push("Synthèse basée sur les résultats chargés :");
-      for(const {it} of matches.slice(0,5)) lines.push(`- ${it.sourceName} : ${it.title}`);
+      return summarizeByThemes(question);
     } else if(wantsSources){
       lines.push("Sources pertinentes dans les résultats :");
       for(const {it} of matches.slice(0,6)) lines.push(`- ${it.sourceName} : ${it.title}`);
