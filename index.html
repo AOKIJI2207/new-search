@@ -5,25 +5,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Moteur d’actualité — recherche par mots-clés</title>
   <style>
-    :root{--bg:#0b0f17;--card:#121a29;--text:#e7ecf5;--muted:#a9b4c7;--border:rgba(255,255,255,.10);--accent:#6aa6ff}
+    :root{--bg:#0b0f17;--card:#121a29;--text:#e7ecf5;--muted:#a9b4c7;--border:rgba(255,255,255,.10);--accent:#6aa6ff;--glow:rgba(106,166,255,.25)}
     *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;background:linear-gradient(180deg,#070a12,#0b0f17);color:var(--text)}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;
+      color:var(--text);
+      background:
+        radial-gradient(900px 480px at 10% -10%, rgba(106,166,255,.25), transparent 60%),
+        radial-gradient(700px 420px at 90% 0%, rgba(106,166,255,.18), transparent 60%),
+        linear-gradient(180deg,#070a12,#0b0f17);
+      background-attachment: fixed;
+    }
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 600'><rect width='1200' height='600' fill='%23070a12'/><g fill='%2319283f' opacity='0.55'><path d='M150 310l60-40 90-10 60 30 30 40-20 40-80 10-100-20z'/><path d='M360 210l90-30 130 20 70 60-30 80-140 20-140-50z'/><path d='M650 210l120-30 140 20 70 70-30 70-140 20-130-40z'/><path d='M930 300l90-20 70 30 30 60-30 50-80 10-80-40z'/><path d='M300 430l80-30 120 10 60 40-20 40-120 30-140-20z'/><path d='M650 430l120-30 140 10 70 50-40 50-140 20-140-30z'/></g></svg>");
+      background-size: cover;
+      background-position: center;
+      opacity: 0.28;
+      pointer-events: none;
+      z-index: -1;
+    }
     header{position:sticky;top:0;z-index:10;backdrop-filter:blur(10px);background:rgba(11,15,23,.75);border-bottom:1px solid var(--border)}
     .wrap{max-width:1100px;margin:0 auto;padding:16px}
     h1{margin:0;font-size:18px}
     .sub{margin-top:6px;color:var(--muted);font-size:13px;line-height:1.35}
     main{display:grid;grid-template-columns:1.6fr .9fr;gap:14px;padding:14px 16px 32px;max-width:1100px;margin:0 auto}
     @media(max-width:980px){main{grid-template-columns:1fr}}
-    .panel{background:rgba(18,26,41,.75);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+    .panel{background:rgba(18,26,41,.78);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,.25)}
     .hd{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:12px;border-bottom:1px solid var(--border);flex-wrap:wrap}
     .bd{padding:12px}
     .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     input,textarea,button{background:#0c1220;color:var(--text);border:1px solid var(--border);padding:10px 11px;border-radius:12px;font:inherit}
     button{cursor:pointer}
-    button.primary{background:linear-gradient(180deg,rgba(106,166,255,.25),rgba(106,166,255,.12));border-color:rgba(106,166,255,.35)}
+    button.primary{background:linear-gradient(180deg,rgba(106,166,255,.25),rgba(106,166,255,.12));border-color:rgba(106,166,255,.35);box-shadow:0 10px 20px rgba(106,166,255,.15)}
     .badge{font-size:12px;color:var(--muted);border:1px solid var(--border);padding:6px 10px;border-radius:999px}
     .articles{display:grid;gap:10px}
-    article{background:rgba(12,18,32,.6);border:1px solid var(--border);border-radius:14px;padding:12px}
+    article{background:rgba(12,18,32,.65);border:1px solid var(--border);border-radius:14px;padding:12px}
     article h3{margin:0 0 6px 0;font-size:15px;line-height:1.25}
     .idx{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;border-radius:999px;background:rgba(106,166,255,.15);border:1px solid rgba(106,166,255,.35);color:#cfe1ff;font-size:12px;margin-right:8px}
     .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;color:var(--muted);font-size:12px}
@@ -31,7 +51,7 @@
     a{color:#cfe1ff}
     .chat{display:flex;flex-direction:column;height:72vh;min-height:520px}
     .chatlog{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
-    .msg{max-width:92%;padding:10px;border-radius:14px;border:1px solid var(--border);background:rgba(12,18,32,.6)}
+    .msg{max-width:92%;padding:10px;border-radius:14px;border:1px solid var(--border);background:rgba(12,18,32,.65)}
     .msg.user{align-self:flex-end;border-color:rgba(106,166,255,.35)}
     .who{font-size:12px;color:var(--muted);margin-bottom:6px}
     .txt{white-space:pre-wrap;line-height:1.4;font-size:14px}
@@ -39,6 +59,7 @@
     .small{font-size:12px;color:var(--muted);line-height:1.35}
     .sources{display:flex;flex-wrap:wrap;gap:10px}
     .src{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted)}
+    .toggle{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted);background:rgba(12,18,32,.6);border:1px solid var(--border);padding:6px 10px;border-radius:999px}
     .source-actions{display:flex;gap:8px;flex-wrap:wrap}
     .ghost{background:transparent;border:1px dashed var(--border);color:var(--muted)}
     .idx{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;border-radius:999px;background:rgba(106,166,255,.15);border:1px solid rgba(106,166,255,.35);color:#cfe1ff;font-size:12px;margin-right:8px}
@@ -69,6 +90,10 @@
       <div class="row source-actions">
         <button class="ghost" id="selectAll">Tout sélectionner</button>
         <button class="ghost" id="clearAll">Tout désélectionner</button>
+        <label class="toggle">
+          <input type="checkbox" id="toggleSources" checked />
+          Afficher les sources
+        </label>
       </div>
       <div style="height:8px"></div>
       <div class="sources" id="sourceToggles"></div>
@@ -314,6 +339,9 @@
   $("#clearAll").addEventListener("click", () => {
     selected = new Set();
     renderSourceToggles();
+  });
+  $("#toggleSources").addEventListener("change", e => {
+    $("#sourceToggles").style.display = e.target.checked ? "flex" : "none";
   });
   $("#q").addEventListener("keydown", e => {
     if(e.key === "Enter"){ e.preventDefault(); search(); }
