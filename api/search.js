@@ -1,4 +1,5 @@
 import Parser from "rss-parser";
+import SOURCES from "./sources-data.js";
 
 const parser = new Parser({ timeout: 15000 });
 
@@ -32,14 +33,6 @@ function compactItem(it, source) {
     snippet: (it.contentSnippet || it.summary || "").slice(0, 320)
   };
 }
-
-const SOURCES = [
-  { key: "bbc_world", name: "BBC World", url: "https://feeds.bbci.co.uk/news/world/rss.xml" },
-  { key: "bbc_sci", name: "BBC Science", url: "https://feeds.bbci.co.uk/news/science_and_environment/rss.xml" },
-  { key: "guardian_world", name: "The Guardian World", url: "https://www.theguardian.com/world/rss" },
-  { key: "guardian_tech", name: "The Guardian Technology", url: "https://www.theguardian.com/uk/technology/rss" },
-  { key: "france24", name: "France24 (EN)", url: "https://www.france24.com/en/rss" }
-];
 
 export default async function handler(req, res) {
   try {

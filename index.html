@@ -38,6 +38,8 @@
     .small{font-size:12px;color:var(--muted);line-height:1.35}
     .sources{display:flex;flex-wrap:wrap;gap:10px}
     .src{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted)}
+    .source-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .ghost{background:transparent;border:1px dashed var(--border);color:var(--muted)}
   </style>
 </head>
 <body>
@@ -62,6 +64,11 @@
     </div>
 
     <div class="bd">
+      <div class="row source-actions">
+        <button class="ghost" id="selectAll">Tout sélectionner</button>
+        <button class="ghost" id="clearAll">Tout désélectionner</button>
+      </div>
+      <div style="height:8px"></div>
       <div class="sources" id="sourceToggles"></div>
       <div style="height:10px"></div>
       <div class="articles" id="articles"></div>
@@ -245,6 +252,14 @@
   }
 
   $("#searchBtn").addEventListener("click", search);
+  $("#selectAll").addEventListener("click", () => {
+    selected = new Set(SOURCES.map(s => s.key));
+    renderSourceToggles();
+  });
+  $("#clearAll").addEventListener("click", () => {
+    selected = new Set();
+    renderSourceToggles();
+  });
   $("#q").addEventListener("keydown", e => {
     if(e.key === "Enter"){ e.preventDefault(); search(); }
   });
