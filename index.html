@@ -25,6 +25,7 @@
     .articles{display:grid;gap:10px}
     article{background:rgba(12,18,32,.6);border:1px solid var(--border);border-radius:14px;padding:12px}
     article h3{margin:0 0 6px 0;font-size:15px;line-height:1.25}
+    .idx{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;border-radius:999px;background:rgba(106,166,255,.15);border:1px solid rgba(106,166,255,.35);color:#cfe1ff;font-size:12px;margin-right:8px}
     .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;color:var(--muted);font-size:12px}
     .snippet{margin-top:8px;color:#d7def0;line-height:1.45;font-size:14px}
     a{color:#cfe1ff}
@@ -40,6 +41,7 @@
     .src{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted)}
     .source-actions{display:flex;gap:8px;flex-wrap:wrap}
     .ghost{background:transparent;border:1px dashed var(--border);color:var(--muted)}
+    .idx{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;border-radius:999px;background:rgba(106,166,255,.15);border:1px solid rgba(106,166,255,.35);color:#cfe1ff;font-size:12px;margin-right:8px}
   </style>
 </head>
 <body>
@@ -91,7 +93,7 @@
         <textarea id="prompt" placeholder="Ex : résume les infos majeures" style="flex:1; height:44px"></textarea>
         <button class="primary" id="send">Envoyer</button>
       </div>
-      <div class="small" style="margin-top:10px">Astuce : demande “classe par thèmes”, “quels risques”, “cite tes sources”.</div>
+      <div class="small" style="margin-top:10px">Astuce : demande “résume les articles”, “résume l’article #3”, “cite tes sources”.</div>
     </div>
   </aside>
 </main>
@@ -159,9 +161,9 @@
 
   function renderArticles(){
     const root = $("#articles");
-    root.innerHTML = ITEMS.map(it => `
+    root.innerHTML = ITEMS.map((it, idx) => `
       <article>
-        <h3><a href="${escapeHtml(it.link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(it.title)}</a></h3>
+        <h3><span class="idx">#${idx + 1}</span><a href="${escapeHtml(it.link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(it.title)}</a></h3>
         <div class="meta">
           <span>${escapeHtml(it.sourceName)}</span>
           <span>•</span>
@@ -174,7 +176,7 @@
 
   // Chatbot: répond UNIQUEMENT depuis ITEMS
   const chat = { messages: [
-    { role:"assistant", text:"Je réponds uniquement à partir des résultats chargés (titres/extraits/liens) et je cite mes sources. Lance une recherche puis pose ta question." }
+    { role:"assistant", text:"Je réponds uniquement à partir des résultats chargés. Tu peux demander un résumé global ou le résumé d’un article (#). Lance une recherche puis pose ta question." }
   ]};
 
   function renderChat(){
@@ -211,6 +213,14 @@
       .slice(0,k);
   }
 
+  function extractArticleIndex(question){
+    const match = question.match(/#(\\d+)/);
+    if (!match) return null;
+    const idx = Number.parseInt(match[1], 10);
+    if (Number.isNaN(idx) || idx < 1 || idx > ITEMS.length) return null;
+    return idx - 1;
+  }
+
   function buildAnswer(question){
     if(ITEMS.length===0){
       return { text:"Je n’ai aucun résultat chargé. Fais d’abord une recherche (ex: “Groenland”).", cites:[] };
@@ -223,8 +233,18 @@
     const qn = norm(question);
     const wantsSummary = qn.includes("resume") || qn.includes("synthese") || qn.includes("maj") || qn.includes("principales");
     const wantsSources = qn.includes("source") || qn.includes("cite");
+    const articleIndex = extractArticleIndex(question);
+    const wantsArticleSummary = articleIndex !== null && (qn.includes("resume") || qn.includes("resumer"));
 
     const lines = [];
+    if(wantsArticleSummary){
+      const it = ITEMS[articleIndex];
+      lines.push(`Résumé de l’article #${articleIndex + 1} (${it.sourceName}) :`);
+      lines.push(`- Titre : ${it.title}`);
+      if (it.snippet) lines.push(`- Extrait : ${it.snippet}`);
+      lines.push(`- Lien : ${it.link}`);
+      return { text: lines.join("\\n"), cites: [it] };
+    }
     if(wantsSummary){
       lines.push("Synthèse basée sur les résultats chargés :");
       for(const {it} of matches.slice(0,5)) lines.push(`- ${it.sourceName} : ${it.title}`);
