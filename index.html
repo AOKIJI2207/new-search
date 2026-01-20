@@ -182,7 +182,7 @@
 
   // Chatbot: répond UNIQUEMENT depuis ITEMS
   const chat = { messages: [
-    { role:"assistant", text:"Je peux répondre même sans recherche. Si tu veux des réponses sourcées, lance une recherche puis demande un résumé global ou un article (#)." }
+    { role:"assistant", text:"Je peux répondre de façon générale comme un chat classique. Pour des réponses sourcées, lance une recherche puis demande un résumé global ou un article (#)." }
   ]};
 
   function renderChat(){
@@ -229,13 +229,31 @@
 
   function genericAnswer(question){
     const qn = norm(question);
-    if(qn.includes("resume") || qn.includes("synthese")){
-      return "Voici une synthèse générale basée sur des principes courants. Pour un résumé sourcé d’articles, lance une recherche.";
+    const title = question.trim() ? `Sujet : ${question.trim()}` : "Sujet : (non précisé)";
+    const isSummary = qn.includes("resume") || qn.includes("synthese");
+    const isHow = qn.includes("comment");
+    const isWhy = qn.startsWith("pourquoi");
+    const isWhen = qn.startsWith("quand");
+    const isWhat = qn.startsWith("quoi") || qn.startsWith("quest ce que") || qn.startsWith("qu est ce que");
+
+    const lines = [];
+    lines.push("Réponse générale (non sourcée) :");
+    lines.push(`- ${title}`);
+    if (isSummary) {
+      lines.push("- Résumé : je peux faire une synthèse générale. Pour une synthèse sourcée d’articles, lance une recherche.");
+    } else if (isHow) {
+      lines.push("- Méthode : étapes clés, bonnes pratiques, points de vigilance.");
+    } else if (isWhy) {
+      lines.push("- Causes possibles : facteurs principaux, contexte, impacts.");
+    } else if (isWhen) {
+      lines.push("- Chronologie : repères temporels et conditions qui influencent le timing.");
+    } else if (isWhat) {
+      lines.push("- Définition : explication claire, exemples simples.");
+    } else {
+      lines.push("- Points clés : notions centrales, avantages/limites, exemples.");
     }
-    if(qn.includes("comment") || qn.startsWith("pourquoi") || qn.startsWith("quand")){
-      return "Je peux donner une explication générale. Si tu veux des preuves ou citations, lance une recherche et je m’appuierai sur les articles.";
-    }
-    return "Je peux répondre de façon générale. Pour des réponses sourcées et un résumé d’articles, lance une recherche.";
+    lines.push("Si tu veux des sources vérifiables, lance une recherche et je m’appuierai sur les articles.");
+    return lines.join("\\n");
   }
 
   function buildAnswer(question){
