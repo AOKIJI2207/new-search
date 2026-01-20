@@ -54,11 +54,27 @@ export default async function handler(req, res) {
     }
 
     const items = [];
-    for (const s of selected) {
+    const warnings = [];
+    const results = await Promise.allSettled(selected.map(async s => {
       const feed = await parser.parseURL(s.url);
       for (const it of (feed.items || [])) {
         if (matchesQuery(it, q)) items.push(compactItem(it, s));
       }
+    }));
+
+    results.forEach((result, idx) => {
+      if (result.status === "rejected") {
+        warnings.push({
+          sourceKey: selected[idx].key,
+          sourceName: selected[idx].name,
+          error: String(result.reason?.message || result.reason || "Erreur inconnue")
+        });
+      }
+    });
+
+    if (items.length === 0 && warnings.length === selected.length) {
+      res.status(502).json({ error: "Impossible de récupérer les flux RSS.", warnings });
+      return;
     }
 
     items.sort((a, b) => new Date(b.pubDate || 0) - new Date(a.pubDate || 0));
@@ -74,7 +90,7 @@ export default async function handler(req, res) {
       }
     }
 
-    res.status(200).json({ q, count: dedup.length, items: dedup.slice(0, 80) });
+    res.status(200).json({ q, count: dedup.length, items: dedup.slice(0, 80), warnings });
   } catch (e) {
     res.status(500).json({ error: "Erreur récupération RSS", details: String(e?.message || e) });
   }

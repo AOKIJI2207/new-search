@@ -149,12 +149,18 @@
 
     if(data.error){
       setStatus("Erreur");
-      $("#articles").innerHTML = `<div class="small">${escapeHtml(data.error)} ${escapeHtml(data.details||"")}</div>`;
+      const details = data.warnings?.length
+        ? ` (${data.warnings.length} source(s) en échec)`
+        : "";
+      $("#articles").innerHTML = `<div class="small">${escapeHtml(data.error)}${escapeHtml(details)} ${escapeHtml(data.details||"")}</div>`;
       return;
     }
 
     ITEMS = data.items || [];
-    setStatus(`Résultats pour: ${q || "tout"}`);
+    const warningText = data.warnings?.length
+      ? ` — ${data.warnings.length} source(s) en échec`
+      : "";
+    setStatus(`Résultats pour: ${q || "tout"}${warningText}`);
     $("#count").textContent = `${ITEMS.length} item(s)`;
     renderArticles();
   }
