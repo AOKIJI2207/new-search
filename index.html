@@ -144,7 +144,8 @@
   let selected = new Set();
   let ITEMS = [];
   const DEFAULT_BG = getComputedStyle(document.documentElement).getPropertyValue("--map-image").trim();
-  const BG_STORAGE_KEY = "customMapImage";
+  const BG_STORAGE_KEY = "customMapImageV2";
+  const isValidBg = url => /^data:image\//i.test(url) || /^https?:\/\//i.test(url);
 
   async function loadSources(){
     const r = await fetch("/api/sources");
@@ -364,6 +365,10 @@
       $("#bgUrl").value = "";
       return;
     }
+    if(!isValidBg(safeUrl)){
+      setStatus("URL de fond invalide");
+      return;
+    }
     const escaped = safeUrl.replace(/"/g, '\\"');
     document.documentElement.style.setProperty("--map-image", `url("${escaped}")`);
     localStorage.setItem(BG_STORAGE_KEY, safeUrl);
@@ -385,9 +390,11 @@
   loadSources();
 
   const storedBg = localStorage.getItem(BG_STORAGE_KEY);
-  if(storedBg){
+  if(storedBg && isValidBg(storedBg)){
     $("#bgUrl").value = storedBg;
     applyBackground(storedBg);
+  } else if(storedBg) {
+    localStorage.removeItem(BG_STORAGE_KEY);
   }
 </script>
 </body>
