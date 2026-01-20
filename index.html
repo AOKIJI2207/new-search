@@ -193,6 +193,8 @@
   let SOURCES = [];
   let selected = new Set();
   let ITEMS = [];
+  let geoSeen = new Set();
+  let geoLastUpdate = null;
   let activeContinent = "global";
   const CONTINENTS = [
     { key: "global", label: "Global" },
@@ -301,22 +303,44 @@
       const q = "geopolitique geopolitics defense diplomacy conflict";
       const r = await fetch(`/api/search?q=${encodeURIComponent(q)}&sources=all`);
       const data = await r.json();
-      const items = (data.items || []).slice(0, 16);
+      const items = (data.items || []).slice(0, 24);
       const ticker = $("#geoTicker");
       if(items.length === 0){
         ticker.innerHTML = `<span class="small">Aucune actualité disponible pour le moment.</span>`;
         statusEl.textContent = "Aucune donnée";
         return;
       }
-      const entries = items.map(it => `
+      const now = Date.now();
+      const cutoff = geoLastUpdate ? geoLastUpdate - 1000 : null;
+      const fresh = items.filter(it => {
+        const pub = it.pubDate ? new Date(it.pubDate).getTime() : null;
+        if (cutoff === null) return true;
+        if (!pub || Number.isNaN(pub)) return false;
+        return pub >= cutoff;
+      });
+      const nextItems = fresh.length ? fresh : items;
+      const unseen = nextItems.filter(it => {
+        const key = it.link || `${it.sourceName}-${it.title}`;
+        if (geoSeen.has(key)) return false;
+        geoSeen.add(key);
+        return true;
+      });
+      if(geoLastUpdate && unseen.length === 0){
+        statusEl.textContent = `À jour • ${new Date().toLocaleTimeString("fr-FR")}`;
+        geoLastUpdate = now;
+        return;
+      }
+      const entries = unseen.length ? unseen : items;
+      const html = entries.map(it => `
         <span class="ticker-item">
           <span class="idx">#</span>
           <a href="${escapeHtml(it.link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(it.title)}</a>
           <span class="small">${escapeHtml(it.sourceName)}</span>
         </span>
       `).join("");
-      ticker.innerHTML = entries + entries;
+      ticker.innerHTML = html + html;
       statusEl.textContent = `Mis à jour • ${new Date().toLocaleTimeString("fr-FR")}`;
+      geoLastUpdate = now;
     } catch (e) {
       statusEl.textContent = "Échec de mise à jour";
     }
