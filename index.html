@@ -182,7 +182,7 @@
 
   // Chatbot: répond UNIQUEMENT depuis ITEMS
   const chat = { messages: [
-    { role:"assistant", text:"Je réponds uniquement à partir des résultats chargés. Tu peux demander un résumé global ou le résumé d’un article (#). Lance une recherche puis pose ta question." }
+    { role:"assistant", text:"Je peux répondre même sans recherche. Si tu veux des réponses sourcées, lance une recherche puis demande un résumé global ou un article (#)." }
   ]};
 
   function renderChat(){
@@ -227,9 +227,20 @@
     return idx - 1;
   }
 
+  function genericAnswer(question){
+    const qn = norm(question);
+    if(qn.includes("resume") || qn.includes("synthese")){
+      return "Voici une synthèse générale basée sur des principes courants. Pour un résumé sourcé d’articles, lance une recherche.";
+    }
+    if(qn.includes("comment") || qn.startsWith("pourquoi") || qn.startsWith("quand")){
+      return "Je peux donner une explication générale. Si tu veux des preuves ou citations, lance une recherche et je m’appuierai sur les articles.";
+    }
+    return "Je peux répondre de façon générale. Pour des réponses sourcées et un résumé d’articles, lance une recherche.";
+  }
+
   function buildAnswer(question){
     if(ITEMS.length===0){
-      return { text:"Je n’ai aucun résultat chargé. Fais d’abord une recherche (ex: “Groenland”).", cites:[] };
+      return { text: genericAnswer(question), cites:[] };
     }
     const matches = topMatches(question, 10);
     if(matches.length===0){
