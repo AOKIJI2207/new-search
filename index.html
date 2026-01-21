@@ -84,12 +84,14 @@
     .country-slider{display:flex;gap:10px;overflow:auto;padding-bottom:6px}
     .country-slider button{white-space:nowrap;border-radius:999px;background:rgba(12,18,32,.38);border:1px solid rgba(255,255,255,.14);padding:6px 10px;font-size:12px}
     .country-slider button.active{border-color:rgba(106,166,255,.55);background:rgba(106,166,255,.15);color:#cfe1ff}
-    .ratings{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+    .ratings{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
     .rating-card{background:rgba(12,18,32,.38);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:10px}
     .rating-title{font-size:12px;color:var(--muted)}
     .rating-score{font-size:18px;font-weight:700}
+    .rating-note{font-size:11px;color:var(--muted);margin-top:4px}
     .category-section{margin-top:14px}
     .category-section h4{margin:0 0 8px 0;font-size:14px}
+    .advice{margin-top:10px;font-size:12px;color:var(--muted);line-height:1.4}
     .ticker{max-width:1200px;margin:12px auto 0;padding:0 16px}
     .ticker .panel{display:flex;flex-direction:column;gap:10px}
     .ticker-track{display:flex;gap:24px;white-space:nowrap;overflow:hidden;position:relative}
@@ -616,23 +618,32 @@
     }
     const countryItems = ITEMS.filter(matchCountry);
     const categories = [
-      { key: "sport", label: "Sport" },
-      { key: "geopolitique", label: "Géopolitique" },
-      { key: "finance", label: "Finance" },
-      { key: "sanitaire", label: "Sanitaire" },
       { key: "securitaire", label: "Sécuritaire" },
-      { key: "politique", label: "Politique intérieure" }
+      { key: "sanitaire", label: "Sanitaire" },
+      { key: "operabilite", label: "Opérabilité business" },
+      { key: "expat", label: "Faisabilité expatriés" },
+      { key: "global", label: "Risque global" }
     ];
     const ratings = CategoryRatingsBar(countryItems, categories);
     const cards = ratings.map(r => `
       <div class="rating-card">
         <div class="rating-title">${escapeHtml(r.label)}</div>
         <div class="rating-score">${r.stars}/5</div>
+        ${r.note ? `<div class="rating-note">${escapeHtml(r.note)}</div>` : ""}
       </div>
     `).join("");
-    const sections = CategorySections(countryItems, categories);
+    const sections = CategorySections(countryItems, [
+      { key: "sport", label: "Sport" },
+      { key: "geopolitique", label: "Géopolitique" },
+      { key: "finance", label: "Finance" },
+      { key: "sanitaire", label: "Sanitaire" },
+      { key: "securitaire", label: "Sécuritaire" },
+      { key: "politique", label: "Politique intérieure" }
+    ]);
+    const advice = buildEnterpriseAdvice(ratings);
     dashboard.innerHTML = `
       <div class="ratings">${cards}</div>
+      <div class="advice">${escapeHtml(advice)}</div>
       ${sections}
     `;
   }
@@ -677,15 +688,43 @@
       return recency * importance * multiplier;
     };
     const risk = getRiskRatings(country);
+    const business = computeBusinessOperability(items, risk);
+    const expat = computeExpatFeasibility(items, risk);
+    const overall = computeOverallRisk({
+      security: risk?.securityLevel ?? 3,
+      medical: risk?.medicalLevel ?? 3,
+      business,
+      expat
+    });
     byCategory.forEach(cat => {
       if(cat.key === "securitaire" && risk){
         cat.score = risk.securityLevel * 20;
         cat.stars = risk.securityLevel;
+        cat.note = risk.securityLevel >= 4 ? "Contraintes fortes pour les équipes" : "Exposition gérable avec mesures adaptées";
         return;
       }
       if(cat.key === "sanitaire" && risk){
         cat.score = risk.medicalLevel * 20;
         cat.stars = risk.medicalLevel;
+        cat.note = risk.medicalLevel >= 4 ? "Accès soins limité, prévoir évacuation" : "Soins disponibles avec vigilance";
+        return;
+      }
+      if(cat.key === "operabilite"){
+        cat.score = business * 20;
+        cat.stars = business;
+        cat.note = business >= 4 ? "Restrictions fréquentes" : "Opérations possibles avec procédures";
+        return;
+      }
+      if(cat.key === "expat"){
+        cat.score = expat * 20;
+        cat.stars = expat;
+        cat.note = expat >= 4 ? "Expatriation difficile" : "Expatriation possible avec support";
+        return;
+      }
+      if(cat.key === "global"){
+        cat.score = overall * 20;
+        cat.stars = overall;
+        cat.note = overall >= 4 ? "Approche critique requise" : "Approche standard renforcée";
         return;
       }
       cat.score = items.reduce((acc, it) => acc + weightItem(it, cat.key), 0);
@@ -693,7 +732,7 @@
     const maxScore = Math.max(1, ...byCategory.map(cat => cat.score));
     return byCategory.map(cat => {
       if(cat.stars){
-        return { ...cat, normalized: cat.score, stars: cat.stars };
+        return { ...cat, normalized: cat.score, stars: cat.stars, note: cat.note };
       }
       const normalized = Math.min(100, Math.round((cat.score / maxScore) * 100));
       const stars = Math.min(5, Math.max(1, Math.ceil(normalized / 20)));
@@ -709,6 +748,52 @@
       securityLevel: Math.min(5, Math.max(1, entry.securityLevel)),
       medicalLevel: Math.min(5, Math.max(1, entry.medicalLevel))
     };
+  }
+
+  function computeBusinessOperability(items, risk){
+    const riskBase = risk ? Math.round((risk.securityLevel + risk.medicalLevel) / 2) : 3;
+    const disruptionSignals = ["strike","grève","curfew","couvre-feu","shutdown","blockade","route","transport","airport","rail"];
+    const signalCount = items.filter(it => {
+      const text = norm([it.title, it.snippet, it.content].join(" "));
+      return disruptionSignals.some(term => text.includes(norm(term)));
+    }).length;
+    const signalBoost = Math.min(2, Math.floor(signalCount / 3));
+    return clampRating(riskBase + signalBoost);
+  }
+
+  function computeExpatFeasibility(items, risk){
+    const riskBase = risk ? Math.round((risk.securityLevel * 0.6) + (risk.medicalLevel * 0.4)) : 3;
+    const evacuationSignals = ["evacuation","evacuate","medical evacuation","assistance","emergency"];
+    const signalCount = items.filter(it => {
+      const text = norm([it.title, it.snippet, it.content].join(" "));
+      return evacuationSignals.some(term => text.includes(norm(term)));
+    }).length;
+    const signalBoost = Math.min(2, Math.floor(signalCount / 4));
+    return clampRating(Math.round(riskBase) + signalBoost);
+  }
+
+  function computeOverallRisk({ security, medical, business, expat }){
+    const score = (security * 0.35) + (medical * 0.25) + (business * 0.25) + (expat * 0.15);
+    return clampRating(Math.round(score));
+  }
+
+  function clampRating(value){
+    return Math.min(5, Math.max(1, value));
+  }
+
+  function buildEnterpriseAdvice(ratings){
+    const overall = ratings.find(r => r.key === "global");
+    const level = overall?.stars || 3;
+    if(level >= 5){
+      return "Mesures critiques : opérations très limitées, privilégier missions courtes, plans d’évacuation indispensables.";
+    }
+    if(level === 4){
+      return "Mesures renforcées : suivi sûreté, prestataires dédiés, plan de crise et options d’évacuation.";
+    }
+    if(level === 3){
+      return "Mesures structurées : procédures sûreté/santé, prestataires fiables, zones à éviter.";
+    }
+    return "Mesures standard : opérations possibles avec vigilance et briefings adaptés.";
   }
 
   function summarizeSearch(query){
