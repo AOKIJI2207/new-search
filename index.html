@@ -53,8 +53,9 @@
     .tag-geo{background:rgba(103,194,255,.18);color:#cfe9ff;border-color:rgba(103,194,255,.35)}
     .tag-finance{background:rgba(255,107,107,.18);color:#ffd6d6;border-color:rgba(255,107,107,.35)}
     .tag-security{background:rgba(255,183,77,.2);color:#ffe0b2;border-color:rgba(255,183,77,.35)}
-    .tag-tech{background:rgba(153,102,255,.18);color:#e1ccff;border-color:rgba(153,102,255,.35)}
     .tag-health{background:rgba(76,217,138,.18);color:#d2f6e3;border-color:rgba(76,217,138,.35)}
+    .tag-sport{background:rgba(120,190,255,.2);color:#d7ecff;border-color:rgba(120,190,255,.35)}
+    .tag-politics{background:rgba(255,150,84,.2);color:#ffe2cc;border-color:rgba(255,150,84,.35)}
     .tag-general{background:rgba(163,177,198,.18);color:#e7ecf5;border-color:rgba(163,177,198,.35)}
     .snippet{margin-top:8px;color:#d7def0;line-height:1.45;font-size:14px}
     a{color:#cfe1ff}
@@ -80,6 +81,15 @@
     .tablist button{width:100%;text-align:left;border-radius:12px;background:rgba(12,18,32,.38);border:1px solid rgba(255,255,255,.14);padding:10px 12px}
     .tablist button.active{border-color:rgba(106,166,255,.55);background:rgba(106,166,255,.15);color:#cfe1ff}
     .tablist .small{margin-top:6px}
+    .country-slider{display:flex;gap:10px;overflow:auto;padding-bottom:6px}
+    .country-slider button{white-space:nowrap;border-radius:999px;background:rgba(12,18,32,.38);border:1px solid rgba(255,255,255,.14);padding:6px 10px;font-size:12px}
+    .country-slider button.active{border-color:rgba(106,166,255,.55);background:rgba(106,166,255,.15);color:#cfe1ff}
+    .ratings{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+    .rating-card{background:rgba(12,18,32,.38);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:10px}
+    .rating-title{font-size:12px;color:var(--muted)}
+    .rating-score{font-size:18px;font-weight:700}
+    .category-section{margin-top:14px}
+    .category-section h4{margin:0 0 8px 0;font-size:14px}
     .ticker{max-width:1200px;margin:12px auto 0;padding:0 16px}
     .ticker .panel{display:flex;flex-direction:column;gap:10px}
     .ticker-track{display:flex;gap:24px;white-space:nowrap;overflow:hidden;position:relative}
@@ -127,6 +137,8 @@
     </div>
     <div class="bd">
       <div class="tablist" id="continentTabs"></div>
+      <div style="height:8px"></div>
+      <div class="country-slider" id="countrySlider"></div>
       <div class="small" style="margin-top:10px">Chaque onglet recharge les sources liées à la zone sélectionnée.</div>
     </div>
   </aside>
@@ -162,6 +174,7 @@
       <div style="height:8px"></div>
       <div class="sources" id="sourceToggles"></div>
       <div style="height:10px"></div>
+      <div id="countryDashboard"></div>
       <div class="articles" id="articles"></div>
     </div>
   </section>
@@ -203,6 +216,7 @@
   let geoSeen = new Set();
   let geoLastUpdate = null;
   let activeContinent = "global";
+  let activeCountry = null;
   const CONTINENTS = [
     { key: "global", label: "Global" },
     { key: "Afrique", label: "Afrique" },
@@ -212,6 +226,46 @@
     { key: "Europe", label: "Europe" },
     { key: "Océanie", label: "Océanie" }
   ];
+  const CONTINENT_COUNTRIES = {
+    Afrique: ["Nigeria","South Africa","Kenya","Egypt","Morocco","Ghana","Senegal"],
+    "Amérique du Nord": ["United States","Canada","Mexico"],
+    "Amérique du Sud": ["Brazil","Argentina","Colombia","Chile","Peru"],
+    Asie: ["China","India","Japan","South Korea","Indonesia","Pakistan"],
+    Europe: ["France","Germany","United Kingdom","Italy","Spain","Ukraine","Russia"],
+    Océanie: ["Australia","New Zealand"]
+  };
+  const COUNTRY_KEYWORDS = {
+    Nigeria: ["nigeria","nigerian","abuja","lagos"],
+    "South Africa": ["south africa","south african","johannesburg","pretoria","cape town"],
+    Kenya: ["kenya","kenyan","nairobi"],
+    Egypt: ["egypt","egyptian","cairo"],
+    Morocco: ["morocco","moroccan","rabat","casablanca"],
+    Ghana: ["ghana","ghanaian","accra"],
+    Senegal: ["senegal","senegalese","dakar"],
+    "United States": ["united states","usa","u.s.","washington","new york","america","american"],
+    Canada: ["canada","canadian","ottawa","toronto"],
+    Mexico: ["mexico","mexican","mexico city"],
+    Brazil: ["brazil","brazilian","brasil","brasilia","rio","sao paulo","são paulo"],
+    Argentina: ["argentina","argentine","buenos aires"],
+    Colombia: ["colombia","colombian","bogota","bogotá"],
+    Chile: ["chile","chilean","santiago"],
+    Peru: ["peru","peruvian","lima"],
+    China: ["china","chinese","beijing","peking"],
+    India: ["india","indian","new delhi","delhi"],
+    Japan: ["japan","japanese","tokyo"],
+    "South Korea": ["south korea","korea","seoul"],
+    Indonesia: ["indonesia","indonesian","jakarta"],
+    Pakistan: ["pakistan","pakistani","islamabad"],
+    France: ["france","french","paris"],
+    Germany: ["germany","german","berlin","deutschland"],
+    "United Kingdom": ["united kingdom","uk","britain","british","london"],
+    Italy: ["italy","italian","rome","roma"],
+    Spain: ["spain","spanish","madrid"],
+    Ukraine: ["ukraine","ukrainian","kyiv","kiev"],
+    Russia: ["russia","russian","moscow","moskva"],
+    Australia: ["australia","australian","canberra","sydney","melbourne"],
+    "New Zealand": ["new zealand","kiwi","wellington","auckland"]
+  };
   const DEFAULT_BG = getComputedStyle(document.documentElement).getPropertyValue("--map-image").trim();
   const BG_STORAGE_KEY = "customMapImageV2";
   const isValidBg = url => /^data:image\//i.test(url) || /^https?:\/\//i.test(url);
@@ -246,8 +300,48 @@
       ? SOURCES
       : SOURCES.filter(s => s.continent === continent);
     selected = new Set(scopedSources.map(s => s.key));
-    renderContinentTabs();
+    SidebarCountryTabs();
     renderSourceToggles();
+    ContinentPage();
+  }
+
+  function renderCountrySlider(){
+    const slider = $("#countrySlider");
+    const countries = CONTINENT_COUNTRIES[activeContinent] || [];
+    if (countries.length === 0){
+      slider.innerHTML = "";
+      activeCountry = null;
+      return;
+    }
+    if (!activeCountry || !countries.includes(activeCountry)){
+      activeCountry = countries[0];
+    }
+    slider.innerHTML = countries.map(country => `
+      <button type="button" data-country="${escapeHtml(country)}" class="${country === activeCountry ? "active" : ""}">
+        ${escapeHtml(country)}
+      </button>
+    `).join("");
+    slider.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const country = btn.getAttribute("data-country");
+        if(!country) return;
+        activeCountry = country;
+        renderCountrySlider();
+        CountryPage();
+      });
+    });
+  }
+
+  function SidebarCountryTabs(){
+    renderContinentTabs();
+  }
+
+  function ContinentPage(){
+    renderCountrySlider();
+  }
+
+  function CountrySlider(){
+    renderCountrySlider();
   }
 
   function renderSourceToggles(){
@@ -300,6 +394,7 @@
     setStatus(`Résultats pour: ${q || "tout"}${warningText}`);
     $("#count").textContent = `${ITEMS.length} item(s)`;
     renderArticles();
+    renderCountryPage();
     summarizeSearch(q);
   }
 
@@ -372,21 +467,12 @@
 
   function renderArticles(){
     const root = $("#articles");
-    root.innerHTML = ITEMS.map((it, idx) => `
-      <article>
-        <h3><span class="idx">#${idx + 1}</span><a href="${escapeHtml(it.link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(it.title)}</a></h3>
-        <div class="meta">
-          <span>${escapeHtml(it.sourceName)}</span>
-          <span>•</span>
-          <span>${escapeHtml(it.pubDate ? new Date(it.pubDate).toLocaleString("fr-FR") : "")}</span>
-          ${renderTag(it)}
-        </div>
-        <div class="snippet">${escapeHtml(it.snippet || "")}</div>
-      </article>
-    `).join("") || `<div class="small">Aucun résultat. Essaie un autre mot-clé (ex: “arctic”, “nato”, “ransomware”).</div>`;
+    const list = activeCountry ? ITEMS.filter(matchCountry) : ITEMS;
+    root.innerHTML = list.map((it, idx) => renderArticleCard(it, idx))
+      .join("") || `<div class="small">Aucun résultat. Essaie un autre mot-clé (ex: “arctic”, “nato”, “ransomware”).</div>`;
   }
 
-  function classifyTopic(item){
+  function classifyCountryCategory(item){
     const text = norm([item.title, item.snippet, item.content, item.sourceName].join(" "));
     const weighted = (terms, weight, mustHave = []) => {
       const score = terms.reduce((acc, term) => acc + (text.includes(norm(term)) ? weight : 0), 0);
@@ -395,7 +481,7 @@
     };
     const categories = [
       {
-        key: "geo",
+        key: "geopolitique",
         label: "Géopolitique",
         className: "tag-geo",
         score:
@@ -413,8 +499,8 @@
           weighted(["entreprise","company","corporate","earnings","results","profit","revenue","fusion","acquisition"], 2, ["entreprise","company","corporate"])
       },
       {
-        key: "security",
-        label: "Sécurité",
+        key: "securitaire",
+        label: "Sécuritaire",
         className: "tag-security",
         score:
           weighted(["securite","security","terrorisme","terror","attaque","attack","police","crime","violence"], 2) +
@@ -422,20 +508,28 @@
           weighted(["renseignement","intelligence","cyberattaque","cyberattack"], 2)
       },
       {
-        key: "tech",
-        label: "Tech",
-        className: "tag-tech",
-        score:
-          weighted(["technologie","technology","ia","intelligence artificielle","ai","algorithme","data","donnees","cloud"], 2) +
-          weighted(["cybersecurite","cybersecurity","plateforme","platform","logiciel","software","startup","start-up"], 2, ["technologie","technology","ia","ai","cybersecurite","cybersecurity"])
-      },
-      {
-        key: "health",
-        label: "Santé",
+        key: "sanitaire",
+        label: "Sanitaire",
         className: "tag-health",
         score:
           weighted(["sante","health","medecine","medicine","hopital","hospital","epidemie","epidemic","pandemie","pandemic"], 3) +
           weighted(["vaccin","vaccine","traitement","treatment","maladie","disease","sante publique","public health"], 2, ["sante","health","medecine","medicine"])
+      },
+      {
+        key: "sport",
+        label: "Sport",
+        className: "tag-sport",
+        score:
+          weighted(["sport","football","soccer","basket","tennis","rugby","olympique","olympics","championnat","league"], 3) +
+          weighted(["coupe","cup","fifa","uefa","nba","f1","formula 1"], 2, ["sport","football","soccer","basket","tennis"])
+      },
+      {
+        key: "politique",
+        label: "Politique intérieure",
+        className: "tag-politics",
+        score:
+          weighted(["politique interieure","politique intérieure","government","gouvernement","president","président","parlement","election","élection","opposition","ministere","ministère","loi","reforme","réforme"], 3) +
+          weighted(["parti","parties","vote","cabinet","majorite","majorité"], 2)
       }
     ];
 
@@ -451,13 +545,114 @@
     return { primary, secondary };
   }
 
+  function renderArticleCard(item, idx){
+    return `
+      <article>
+        <h3><span class="idx">#${idx + 1}</span><a href="${escapeHtml(item.link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title)}</a></h3>
+        <div class="meta">
+          <span>${escapeHtml(item.sourceName)}</span>
+          <span>•</span>
+          <span>${escapeHtml(item.pubDate ? new Date(item.pubDate).toLocaleString("fr-FR") : "")}</span>
+          ${renderTag(item)}
+        </div>
+        <div class="snippet">${escapeHtml(item.snippet || "")}</div>
+      </article>
+    `;
+  }
+
   function renderTag(item){
-    const { primary, secondary } = classifyTopic(item);
+    const { primary, secondary } = classifyCountryCategory(item);
     const primaryHtml = `<span class="tag ${primary.className}">${escapeHtml(primary.label)}</span>`;
     const secondaryHtml = secondary
       ? `<span class="tag ${secondary.className}">${escapeHtml(secondary.label)}</span>`
       : "";
     return primaryHtml + secondaryHtml;
+  }
+
+  function matchCountry(item){
+    if (!activeCountry) return true;
+    const text = norm([item.title, item.snippet, item.content, item.sourceName].join(" "));
+    const keywords = COUNTRY_KEYWORDS[activeCountry] || [activeCountry];
+    return keywords.some(keyword => text.includes(norm(keyword)));
+  }
+
+  function renderCountryPage(){
+    const dashboard = $("#countryDashboard");
+    if (!activeCountry){
+      dashboard.innerHTML = "";
+      return;
+    }
+    const countryItems = ITEMS.filter(matchCountry);
+    const categories = [
+      { key: "sport", label: "Sport" },
+      { key: "geopolitique", label: "Géopolitique" },
+      { key: "finance", label: "Finance" },
+      { key: "sanitaire", label: "Sanitaire" },
+      { key: "securitaire", label: "Sécuritaire" },
+      { key: "politique", label: "Politique intérieure" }
+    ];
+    const ratings = CategoryRatingsBar(countryItems, categories);
+    const cards = ratings.map(r => `
+      <div class="rating-card">
+        <div class="rating-title">${escapeHtml(r.label)}</div>
+        <div class="rating-score">${r.stars}/5</div>
+      </div>
+    `).join("");
+    const sections = CategorySections(countryItems, categories);
+    dashboard.innerHTML = `
+      <div class="ratings">${cards}</div>
+      ${sections}
+    `;
+  }
+
+  function CategoryRatingsBar(countryItems, categories){
+    return computeCategoryRatings(countryItems, categories);
+  }
+
+  function CategorySections(countryItems, categories){
+    return categories.map(category => {
+      const filtered = countryItems.filter(it => classifyCountryCategory(it).primary.key === category.key);
+      if (filtered.length === 0) return "";
+      return `
+        <div class="category-section">
+          <h4>${escapeHtml(category.label)}</h4>
+          <div class="articles">
+            ${filtered.map((it, idx) => renderArticleCard(it, idx)).join("")}
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function CountryPage(){
+    renderCountryPage();
+  }
+
+  function computeCategoryRatings(items, categories){
+    const now = Date.now();
+    const windowDays = 30;
+    const decay = 14;
+    const byCategory = categories.map(cat => ({ ...cat, score: 0 }));
+    const weightItem = (it, categoryKey) => {
+      const ageDays = it.pubDate ? (now - new Date(it.pubDate).getTime()) / 86400000 : windowDays + 1;
+      if (ageDays < 0 || ageDays > windowDays) return 0;
+      const recency = Math.exp(-ageDays / decay);
+      const text = norm([it.title, it.snippet, it.content].join(" "));
+      const hits = text.split(" ").filter(Boolean).length;
+      const importance = Math.min(5, 1 + Math.log10(hits + 1));
+      const { primary, secondary } = classifyCountryCategory(it);
+      const multiplier = primary.key === categoryKey ? 1 : secondary?.key === categoryKey ? 0.5 : 0;
+      return recency * importance * multiplier;
+    };
+    byCategory.forEach(cat => {
+      cat.score = items.reduce((acc, it) => acc + weightItem(it, cat.key), 0);
+    });
+    const maxScore = Math.max(1, ...byCategory.map(cat => cat.score));
+    return byCategory.map(cat => {
+      const normalized = Math.min(100, Math.round((cat.score / maxScore) * 100));
+      const stars = Math.min(5, Math.max(1, Math.ceil(normalized / 20)));
+      return { ...cat, normalized, stars };
+    });
   }
 
   function summarizeSearch(query){
