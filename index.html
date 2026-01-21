@@ -310,11 +310,28 @@
       const q = "geopolitique geopolitics defense diplomacy conflict";
       const r = await fetch(`/api/search?q=${encodeURIComponent(q)}&sources=all`);
       const data = await r.json();
+      geoLastUpdate = Date.now();
       const items = (data.items || []).slice(0, 24);
       const ticker = $("#geoTicker");
       if(items.length === 0){
         ticker.innerHTML = `<span class="small">Aucune actualité disponible pour le moment.</span>`;
         statusEl.textContent = "Aucune donnée";
+        return;
+      }
+      if(geoSeen.size === 0){
+        const entries = items.map(it => `
+          <span class="ticker-item">
+            <span class="idx">#</span>
+            <a href="${escapeHtml(it.link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(it.title)}</a>
+            <span class="small">${escapeHtml(it.sourceName)}</span>
+          </span>
+        `).join("");
+        ticker.innerHTML = entries + entries;
+        items.forEach(it => {
+          const key = it.link || `${it.sourceName}-${it.title}`;
+          geoSeen.add(key);
+        });
+        statusEl.textContent = `Mis à jour • ${new Date().toLocaleTimeString("fr-FR")}`;
         return;
       }
       const now = Date.now();
