@@ -34,7 +34,7 @@
     .wrap{max-width:1100px;margin:0 auto;padding:16px}
     h1{margin:0;font-size:18px}
     .sub{margin-top:6px;color:var(--muted);font-size:13px;line-height:1.35}
-    main{display:grid;grid-template-columns:.55fr 1.6fr .9fr;gap:14px;padding:14px 16px 32px;max-width:1200px;margin:0 auto}
+    main{display:grid;grid-template-columns:.55fr 1.6fr;gap:14px;padding:14px 16px 32px;max-width:1200px;margin:0 auto}
     @media(max-width:1080px){main{grid-template-columns:1fr}}
     .panel{background:rgba(18,26,41,.45);border:1px solid rgba(255,255,255,.14);border-radius:16px;overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,.25);backdrop-filter:blur(6px)}
     .hd{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:12px;border-bottom:1px solid var(--border);flex-wrap:wrap}
@@ -59,13 +59,6 @@
     .tag-general{background:rgba(163,177,198,.18);color:#e7ecf5;border-color:rgba(163,177,198,.35)}
     .snippet{margin-top:8px;color:#d7def0;line-height:1.45;font-size:14px}
     a{color:#cfe1ff}
-    .chat{display:flex;flex-direction:column;height:72vh;min-height:520px}
-    .chatlog{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
-    .msg{max-width:92%;padding:10px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(12,18,32,.38)}
-    .msg.user{align-self:flex-end;border-color:rgba(106,166,255,.35)}
-    .who{font-size:12px;color:var(--muted);margin-bottom:6px}
-    .txt{white-space:pre-wrap;line-height:1.4;font-size:14px}
-    .cites{margin-top:8px;font-size:12px;color:var(--muted)}
     .small{font-size:12px;color:var(--muted);line-height:1.35}
     .sources{display:flex;flex-wrap:wrap;gap:10px}
     .src{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted)}
@@ -181,25 +174,6 @@
     </div>
   </section>
 
-  <aside class="panel chat">
-    <div class="hd">
-      <div class="row">
-        <span class="badge">Chatbot</span>
-        <span class="small">réponses sourcées</span>
-      </div>
-      <button class="primary" id="reset">Réinitialiser</button>
-    </div>
-
-    <div class="chatlog" id="chatlog"></div>
-
-    <div class="bd" style="padding-top:0">
-      <div class="row">
-        <textarea id="prompt" placeholder="Ex : résume les infos majeures" style="flex:1; height:44px"></textarea>
-        <button class="primary" id="send">Envoyer</button>
-      </div>
-      <div class="small" style="margin-top:10px">Astuce : demande “résume les articles”, “résume l’article #3”, “cite tes sources”.</div>
-    </div>
-  </aside>
 </main>
 
 <script>
@@ -429,7 +403,6 @@
     $("#count").textContent = `${ITEMS.length} item(s)`;
     renderArticles();
     renderCountryPage();
-    summarizeSearch(q);
   }
 
   async function loadGeopolitics(){
@@ -796,196 +769,6 @@
     return "Mesures standard : opérations possibles avec vigilance et briefings adaptés.";
   }
 
-  function summarizeSearch(query){
-    if(!ITEMS.length) return;
-    const summary = summarizeByThemes(query || "Synthèse");
-    chat.messages.push({
-      role: "assistant",
-      text: summary.text,
-      cites: summary.cites
-    });
-    renderChat();
-  }
-
-  // Chatbot: répond UNIQUEMENT depuis ITEMS
-  const chat = { messages: [
-    { role:"assistant", text:"Je peux répondre de façon générale comme un chat classique. Pour des réponses sourcées, lance une recherche puis demande un résumé global ou un article (#)." }
-  ]};
-
-  function renderChat(){
-    const log = $("#chatlog");
-    log.innerHTML = chat.messages.map(m => `
-      <div class="msg ${m.role==="user" ? "user":""}">
-        <div class="who">${m.role==="user" ? "Toi":"Chatbot"}</div>
-        <div class="txt">${escapeHtml(m.text)}</div>
-        ${m.cites?.length ? `<div class="cites">Sources: ${
-          m.cites.map(c => `${escapeHtml(c.sourceName)} — ${escapeHtml(c.title)}`).join(" | ")
-        }</div>` : ""}
-      </div>
-    `).join("");
-    log.scrollTop = log.scrollHeight;
-  }
-
-  function score(it, qTokens){
-    const hay = tokenize([it.title, it.snippet, it.sourceName].join(" ")).join(" ");
-    let s = 0;
-    for(const t of qTokens){
-      const re = new RegExp("\\\\b"+t+"\\\\b","g");
-      s += (hay.match(re)||[]).length;
-    }
-    return s;
-  }
-
-  function topMatches(question, k=8){
-    const qTokens = tokenize(question);
-    if(qTokens.length===0) return [];
-    return ITEMS
-      .map(it => ({it, s: score(it, qTokens)}))
-      .filter(x=>x.s>0)
-      .sort((a,b)=>b.s-a.s)
-      .slice(0,k);
-  }
-
-  function extractArticleIndex(question){
-    const match = question.match(/#(\\d+)/);
-    if (!match) return null;
-    const idx = Number.parseInt(match[1], 10);
-    if (Number.isNaN(idx) || idx < 1 || idx > ITEMS.length) return null;
-    return idx - 1;
-  }
-
-  function summarizeByThemes(question){
-    const qTokens = tokenize(question);
-    const scopedItems = qTokens.length
-      ? topMatches(question, 24).map(x => x.it)
-      : ITEMS.slice(0, 24);
-    const themes = [
-      { label: "Politique", terms: ["gouvernement","président","ministre","élection","parlement","opposition","loi","réforme","parti"] },
-      { label: "Économie", terms: ["économie","inflation","croissance","budget","marché","finance","investissement","banque","emploi","entreprise"] },
-      { label: "Géopolitique", terms: ["diplomatie","traité","alliance","sanction","frontière","international","région","otan","onu","union"] },
-      { label: "Sécurité", terms: ["sécurité","attaque","terrorisme","conflit","armée","militaire","crime","violence","insécurité","police"] }
-    ];
-
-    const buckets = themes.map(theme => ({
-      label: theme.label,
-      items: scopedItems.filter(it => {
-        const hay = norm([it.title, it.snippet].join(" "));
-        return theme.terms.some(term => hay.includes(norm(term)));
-      })
-    }));
-
-    const fallbackItems = scopedItems.filter(it =>
-      !buckets.some(bucket => bucket.items.includes(it))
-    );
-
-    const header = [
-      `Bilan ${activeContinent === "global" ? "global" : `(${activeContinent})`}`,
-      question.trim() ? `Sujet : ${question.trim()}` : "Sujet : (non précisé)"
-    ];
-    const lines = [header.join(" — "), ""];
-    for(const bucket of buckets){
-      if(bucket.items.length === 0) continue;
-      lines.push(`${bucket.label} :`);
-      for(const it of bucket.items.slice(0, 4)){
-        lines.push(`- ${it.sourceName} : ${it.title}`);
-      }
-      lines.push("");
-    }
-    if(fallbackItems.length){
-      lines.push("Autres points :");
-      for(const it of fallbackItems.slice(0, 4)){
-        lines.push(`- ${it.sourceName} : ${it.title}`);
-      }
-    }
-
-    return {
-      text: lines.join("\\n").trim(),
-      cites: scopedItems.slice(0, 8)
-    };
-  }
-
-  function genericAnswer(question){
-    const qn = norm(question);
-    const title = question.trim() ? `Sujet : ${question.trim()}` : "Sujet : (non précisé)";
-    const isSummary = qn.includes("resume") || qn.includes("synthese");
-    const isHow = qn.includes("comment");
-    const isWhy = qn.startsWith("pourquoi");
-    const isWhen = qn.startsWith("quand");
-    const isWhat = qn.startsWith("quoi") || qn.startsWith("quest ce que") || qn.startsWith("qu est ce que");
-
-    const lines = [];
-    lines.push("Réponse générale (non sourcée) :");
-    lines.push(`- ${title}`);
-    if (isSummary) {
-      lines.push("- Résumé : je peux faire une synthèse générale. Pour une synthèse sourcée d’articles, lance une recherche.");
-    } else if (isHow) {
-      lines.push("- Méthode : étapes clés, bonnes pratiques, points de vigilance.");
-    } else if (isWhy) {
-      lines.push("- Causes possibles : facteurs principaux, contexte, impacts.");
-    } else if (isWhen) {
-      lines.push("- Chronologie : repères temporels et conditions qui influencent le timing.");
-    } else if (isWhat) {
-      lines.push("- Définition : explication claire, exemples simples.");
-    } else {
-      lines.push("- Points clés : notions centrales, avantages/limites, exemples.");
-    }
-    lines.push("Si tu veux des sources vérifiables, lance une recherche et je m’appuierai sur les articles.");
-    return lines.join("\\n");
-  }
-
-  function buildAnswer(question){
-    if(ITEMS.length===0){
-      return { text: genericAnswer(question), cites:[] };
-    }
-    const matches = topMatches(question, 10);
-    if(matches.length===0){
-      return { text:"Je ne trouve rien dans les résultats chargés qui corresponde. Reformule ou refais une recherche plus large.", cites:[] };
-    }
-
-    const qn = norm(question);
-    const wantsSummary = qn.includes("resume") || qn.includes("synthese") || qn.includes("maj") || qn.includes("principales") || qn.includes("bilan");
-    const wantsSources = qn.includes("source") || qn.includes("cite");
-    const articleIndex = extractArticleIndex(question);
-    const wantsArticleSummary = articleIndex !== null && (qn.includes("resume") || qn.includes("resumer"));
-    const wantsGeneral = !wantsSummary && !wantsSources && !wantsArticleSummary;
-
-    const lines = [];
-    if(wantsArticleSummary){
-      const it = ITEMS[articleIndex];
-      lines.push(`Résumé de l’article #${articleIndex + 1} (${it.sourceName}) :`);
-      lines.push(`- Titre : ${it.title}`);
-      if (it.snippet) lines.push(`- Extrait : ${it.snippet}`);
-      lines.push(`- Lien : ${it.link}`);
-      return { text: lines.join("\\n"), cites: [it] };
-    }
-    if(wantsGeneral){
-      return { text: genericAnswer(question), cites:[] };
-    }
-    if(wantsSummary){
-      return summarizeByThemes(question);
-    } else if(wantsSources){
-      lines.push("Sources pertinentes dans les résultats :");
-      for(const {it} of matches.slice(0,6)) lines.push(`- ${it.sourceName} : ${it.title}`);
-    } else {
-      lines.push("Éléments les plus proches de ta question :");
-      for(const {it} of matches.slice(0,4)) lines.push(`- ${it.sourceName} : ${it.title}`);
-      lines.push("");
-      lines.push("Si tu veux, je peux faire une synthèse thématique (géopolitique / économie / cyber / défense).");
-    }
-
-    return { text: lines.join("\\n"), cites: matches.slice(0,6).map(x=>x.it) };
-  }
-
-  function send(){
-    const q = $("#prompt").value.trim();
-    if(!q) return;
-    chat.messages.push({ role:"user", text:q });
-    const ans = buildAnswer(q);
-    chat.messages.push({ role:"assistant", text: ans.text, cites: ans.cites });
-    $("#prompt").value = "";
-    renderChat();
-  }
-
   $("#searchBtn").addEventListener("click", search);
   $("#selectAll").addEventListener("click", () => {
     const scope = activeContinent === "global"
@@ -1029,13 +812,6 @@
   $("#q").addEventListener("keydown", e => {
     if(e.key === "Enter"){ e.preventDefault(); search(); }
   });
-  $("#send").addEventListener("click", send);
-  $("#reset").addEventListener("click", () => {
-    chat.messages = [{ role:"assistant", text:"Chat réinitialisé. Fais une recherche puis pose ta question." }];
-    renderChat();
-  });
-
-  renderChat();
   loadSources();
   loadGeopolitics();
   setInterval(loadGeopolitics, 300000);
