@@ -63,7 +63,8 @@ function compactItem(it, source) {
     title: it.title || "",
     link: it.link || "",
     pubDate: it.isoDate || it.pubDate || "",
-    snippet: (it.contentSnippet || it.summary || "").slice(0, 320)
+    snippet: (it.contentSnippet || it.summary || "").slice(0, 320),
+    content: (it.content || it.summary || it.contentSnippet || "").slice(0, 2000)
   };
 }
 

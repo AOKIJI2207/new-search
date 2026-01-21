@@ -54,6 +54,7 @@
     .tag-finance{background:rgba(255,107,107,.18);color:#ffd6d6;border-color:rgba(255,107,107,.35)}
     .tag-security{background:rgba(255,183,77,.2);color:#ffe0b2;border-color:rgba(255,183,77,.35)}
     .tag-tech{background:rgba(153,102,255,.18);color:#e1ccff;border-color:rgba(153,102,255,.35)}
+    .tag-health{background:rgba(76,217,138,.18);color:#d2f6e3;border-color:rgba(76,217,138,.35)}
     .tag-general{background:rgba(163,177,198,.18);color:#e7ecf5;border-color:rgba(163,177,198,.35)}
     .snippet{margin-top:8px;color:#d7def0;line-height:1.45;font-size:14px}
     a{color:#cfe1ff}
@@ -369,22 +370,77 @@
   }
 
   function classifyTopic(item){
-    const text = norm([item.title, item.snippet, item.sourceName].join(" "));
-    const tests = [
-      { key: "geo", label: "Géopolitique", className: "tag-geo", terms: ["geopolitique","geopolitics","diplomatie","diplomacy","conflit","conflict","sanction","alliance","otan","nato","frontiere","border","guerre","war"] },
-      { key: "finance", label: "Finance", className: "tag-finance", terms: ["finance","markets","marches","bourse","stocks","banque","bank","inflation","croissance","growth","entreprise","company","companies","business","earnings"] },
-      { key: "security", label: "Sécurité", className: "tag-security", terms: ["securite","security","terrorisme","terror","crime","violence","attaque","attack","militaire","military","defense","defence"] },
-      { key: "tech", label: "Tech", className: "tag-tech", terms: ["tech","technologie","technology","cyber","ai","intelligence artificielle","logiciel","software","startup","start-up"] }
+    const text = norm([item.title, item.snippet, item.content, item.sourceName].join(" "));
+    const weighted = (terms, weight, mustHave = []) => {
+      const score = terms.reduce((acc, term) => acc + (text.includes(norm(term)) ? weight : 0), 0);
+      if (mustHave.length && !mustHave.some(term => text.includes(norm(term)))) return 0;
+      return score;
+    };
+    const categories = [
+      {
+        key: "geo",
+        label: "Géopolitique",
+        className: "tag-geo",
+        score:
+          weighted(["geopolitique","geopolitics","relations internationales","diplomatie","diplomatic","sanction","embargo"], 3) +
+          weighted(["conflit","conflict","guerre","war","occupation","invasion","frontiere","border"], 2, ["etat","state","pays","country","armement","armed"]) +
+          weighted(["otan","nato","onu","un","alliance","treaty","traité","coalition"], 2)
+      },
+      {
+        key: "finance",
+        label: "Finance",
+        className: "tag-finance",
+        score:
+          weighted(["marches","markets","bourse","stocks","indices","bond","obligation","taux","interest rate"], 3) +
+          weighted(["banque","bank","central bank","fed","ecb","inflation","croissance","growth","recession"], 2) +
+          weighted(["entreprise","company","corporate","earnings","results","profit","revenue","fusion","acquisition"], 2, ["entreprise","company","corporate"])
+      },
+      {
+        key: "security",
+        label: "Sécurité",
+        className: "tag-security",
+        score:
+          weighted(["securite","security","terrorisme","terror","attaque","attack","police","crime","violence"], 2) +
+          weighted(["militaire","military","defense","defence","armes","weapons"], 2, ["securite","security","militaire","military"]) +
+          weighted(["renseignement","intelligence","cyberattaque","cyberattack"], 2)
+      },
+      {
+        key: "tech",
+        label: "Tech",
+        className: "tag-tech",
+        score:
+          weighted(["technologie","technology","ia","intelligence artificielle","ai","algorithme","data","donnees","cloud"], 2) +
+          weighted(["cybersecurite","cybersecurity","plateforme","platform","logiciel","software","startup","start-up"], 2, ["technologie","technology","ia","ai","cybersecurite","cybersecurity"])
+      },
+      {
+        key: "health",
+        label: "Santé",
+        className: "tag-health",
+        score:
+          weighted(["sante","health","medecine","medicine","hopital","hospital","epidemie","epidemic","pandemie","pandemic"], 3) +
+          weighted(["vaccin","vaccine","traitement","treatment","maladie","disease","sante publique","public health"], 2, ["sante","health","medecine","medicine"])
+      }
     ];
-    for(const test of tests){
-      if(test.terms.some(t => text.includes(norm(t)))) return test;
-    }
-    return { key: "general", label: "Général", className: "tag-general" };
+
+    const ranked = categories
+      .map(cat => ({ ...cat, score: cat.score || 0 }))
+      .sort((a, b) => b.score - a.score);
+
+    const primary = ranked[0]?.score > 0 ? ranked[0] : { key: "general", label: "Général", className: "tag-general", score: 0 };
+    const secondary = ranked[1] && ranked[1].score >= 3 && ranked[1].score >= primary.score * 0.6
+      ? ranked[1]
+      : null;
+
+    return { primary, secondary };
   }
 
   function renderTag(item){
-    const tag = classifyTopic(item);
-    return `<span class="tag ${tag.className}">${escapeHtml(tag.label)}</span>`;
+    const { primary, secondary } = classifyTopic(item);
+    const primaryHtml = `<span class="tag ${primary.className}">${escapeHtml(primary.label)}</span>`;
+    const secondaryHtml = secondary
+      ? `<span class="tag ${secondary.className}">${escapeHtml(secondary.label)}</span>`
+      : "";
+    return primaryHtml + secondaryHtml;
   }
 
   function summarizeSearch(query){
