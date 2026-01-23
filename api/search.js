@@ -1,4 +1,5 @@
 import Parser from "rss-parser";
+import SOURCES from "./sources-data.js";
 
 const parser = new Parser({ timeout: 15000 });
 
@@ -18,8 +19,10 @@ function matchesQuery(item, query) {
 
   const tokens = q.split(" ").filter(Boolean);
   const hay = norm([item.title, item.contentSnippet, item.content, item.summary].filter(Boolean).join(" "));
-  // AND logique : tous les mots doivent être présents
-  return tokens.every(t => hay.includes(t));
+  if (tokens.length === 0) return true;
+
+  // OR logique : au moins un mot doit être présent
+  return tokens.some(t => hay.includes(t));
 }
 
 function compactItem(it, source) {
@@ -33,14 +36,6 @@ function compactItem(it, source) {
   };
 }
 
-const SOURCES = [
-  { key: "bbc_world", name: "BBC World", url: "https://feeds.bbci.co.uk/news/world/rss.xml" },
-  { key: "bbc_sci", name: "BBC Science", url: "https://feeds.bbci.co.uk/news/science_and_environment/rss.xml" },
-  { key: "guardian_world", name: "The Guardian World", url: "https://www.theguardian.com/world/rss" },
-  { key: "guardian_tech", name: "The Guardian Technology", url: "https://www.theguardian.com/uk/technology/rss" },
-  { key: "france24", name: "France24 (EN)", url: "https://www.france24.com/en/rss" }
-];
-
 export default async function handler(req, res) {
   try {
     const q = (req.query.q || "").toString();
@@ -50,18 +45,36 @@ export default async function handler(req, res) {
       .map(s => s.trim())
       .filter(Boolean);
 
-    const selected = SOURCES.filter(s => keys.includes(s.key));
+    const selected = keys.length === 0 || keys.includes("all")
+      ? SOURCES
+      : SOURCES.filter(s => keys.includes(s.key));
     if (selected.length === 0) {
       res.status(400).json({ error: "Aucune source sélectionnée." });
       return;
     }
 
     const items = [];
-    for (const s of selected) {
+    const warnings = [];
+    const results = await Promise.allSettled(selected.map(async s => {
       const feed = await parser.parseURL(s.url);
       for (const it of (feed.items || [])) {
         if (matchesQuery(it, q)) items.push(compactItem(it, s));
       }
+    }));
+
+    results.forEach((result, idx) => {
+      if (result.status === "rejected") {
+        warnings.push({
+          sourceKey: selected[idx].key,
+          sourceName: selected[idx].name,
+          error: String(result.reason?.message || result.reason || "Erreur inconnue")
+        });
+      }
+    });
+
+    if (items.length === 0 && warnings.length === selected.length) {
+      res.status(502).json({ error: "Impossible de récupérer les flux RSS.", warnings });
+      return;
     }
 
     items.sort((a, b) => new Date(b.pubDate || 0) - new Date(a.pubDate || 0));
@@ -77,7 +90,7 @@ export default async function handler(req, res) {
       }
     }
 
-    res.status(200).json({ q, count: dedup.length, items: dedup.slice(0, 80) });
+    res.status(200).json({ q, count: dedup.length, items: dedup.slice(0, 80), warnings });
   } catch (e) {
     res.status(500).json({ error: "Erreur récupération RSS", details: String(e?.message || e) });
   }
