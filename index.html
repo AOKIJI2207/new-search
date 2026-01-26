@@ -734,11 +734,11 @@
     }
     const countryItems = ITEMS.filter(matchCountry);
     const categories = [
-      { key: "securitaire", label: "Sécuritaire" },
-      { key: "sanitaire", label: "Sanitaire" },
-      { key: "operabilite", label: "Opérabilité business" },
-      { key: "expat", label: "Faisabilité expatriés" },
-      { key: "global", label: "Risque global" }
+      { key: "securitaire", label: "Situation sécuritaire" },
+      { key: "sanitaire", label: "Situation sanitaire" },
+      { key: "operabilite", label: "Situation opérabilité business" },
+      { key: "expat", label: "Situation expatriés" },
+      { key: "global", label: "Situation globale" }
     ];
     const ratings = CategoryRatingsBar(countryItems, categories);
     const cards = ratings.map(r => `
@@ -804,43 +804,48 @@
       return recency * importance * multiplier;
     };
     const risk = getRiskRatings(country);
-    const business = computeBusinessOperability(items, risk);
-    const expat = computeExpatFeasibility(items, risk);
-    const overall = computeOverallRisk({
+    const businessConstraint = computeBusinessOperability(items, risk);
+    const expatConstraint = computeExpatFeasibility(items, risk);
+    const overallConstraint = computeOverallConstraint({
       security: risk?.securityLevel ?? 3,
       medical: risk?.medicalLevel ?? 3,
-      business,
-      expat
+      business: businessConstraint,
+      expat: expatConstraint
     });
+    const businessSituation = clampRating(6 - businessConstraint);
+    const expatSituation = clampRating(6 - expatConstraint);
+    const overallSituation = clampRating(6 - overallConstraint);
     byCategory.forEach(cat => {
       if(cat.key === "securitaire" && risk){
-        cat.score = risk.securityLevel * 20;
-        cat.stars = risk.securityLevel;
-        cat.note = risk.securityLevel >= 4 ? "Contraintes fortes pour les équipes" : "Exposition gérable avec mesures adaptées";
+        const situation = clampRating(6 - risk.securityLevel);
+        cat.score = situation * 20;
+        cat.stars = situation;
+        cat.note = situation <= 2 ? "Situation défavorable, mesures renforcées" : "Situation gérable avec mesures adaptées";
         return;
       }
       if(cat.key === "sanitaire" && risk){
-        cat.score = risk.medicalLevel * 20;
-        cat.stars = risk.medicalLevel;
-        cat.note = risk.medicalLevel >= 4 ? "Accès soins limité, prévoir évacuation" : "Soins disponibles avec vigilance";
+        const situation = clampRating(6 - risk.medicalLevel);
+        cat.score = situation * 20;
+        cat.stars = situation;
+        cat.note = situation <= 2 ? "Accès soins limité, prévoir évacuation" : "Soins disponibles avec vigilance";
         return;
       }
       if(cat.key === "operabilite"){
-        cat.score = business * 20;
-        cat.stars = business;
-        cat.note = business >= 4 ? "Restrictions fréquentes" : "Opérations possibles avec procédures";
+        cat.score = businessSituation * 20;
+        cat.stars = businessSituation;
+        cat.note = businessSituation <= 2 ? "Restrictions fréquentes" : "Opérations possibles avec procédures";
         return;
       }
       if(cat.key === "expat"){
-        cat.score = expat * 20;
-        cat.stars = expat;
-        cat.note = expat >= 4 ? "Expatriation difficile" : "Expatriation possible avec support";
+        cat.score = expatSituation * 20;
+        cat.stars = expatSituation;
+        cat.note = expatSituation <= 2 ? "Expatriation difficile" : "Expatriation possible avec support";
         return;
       }
       if(cat.key === "global"){
-        cat.score = overall * 20;
-        cat.stars = overall;
-        cat.note = overall >= 4 ? "Approche critique requise" : "Approche standard renforcée";
+        cat.score = overallSituation * 20;
+        cat.stars = overallSituation;
+        cat.note = overallSituation <= 2 ? "Approche critique requise" : "Approche standard renforcée";
         return;
       }
       cat.score = items.reduce((acc, it) => acc + weightItem(it, cat.key), 0);
@@ -888,7 +893,7 @@
     return clampRating(Math.round(riskBase) + signalBoost);
   }
 
-  function computeOverallRisk({ security, medical, business, expat }){
+  function computeOverallConstraint({ security, medical, business, expat }){
     const score = (security * 0.35) + (medical * 0.25) + (business * 0.25) + (expat * 0.15);
     return clampRating(Math.round(score));
   }
@@ -900,16 +905,19 @@
   function buildEnterpriseAdvice(ratings){
     const overall = ratings.find(r => r.key === "global");
     const level = overall?.stars || 3;
-    if(level >= 5){
-      return "Mesures critiques : opérations très limitées, privilégier missions courtes, plans d’évacuation indispensables.";
+    if(level <= 1){
+      return "Situation critique : opérations très limitées, plans d’évacuation indispensables.";
     }
-    if(level === 4){
-      return "Mesures renforcées : suivi sûreté, prestataires dédiés, plan de crise et options d’évacuation.";
+    if(level === 2){
+      return "Situation défavorable : mesures renforcées, suivi sûreté et options d’évacuation.";
     }
     if(level === 3){
-      return "Mesures structurées : procédures sûreté/santé, prestataires fiables, zones à éviter.";
+      return "Situation intermédiaire : procédures sûreté/santé, prestataires fiables, zones à éviter.";
     }
-    return "Mesures standard : opérations possibles avec vigilance et briefings adaptés.";
+    if(level === 4){
+      return "Situation favorable : opérations possibles avec vigilance et briefings adaptés.";
+    }
+    return "Situation très favorable : dispositifs standards généralement suffisants.";
   }
 
   $("#searchBtn").addEventListener("click", search);
