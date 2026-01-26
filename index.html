@@ -292,70 +292,8 @@
     Australia: "AU",
     "New Zealand": "NZ"
   };
-  const RISK_MAP_2026 = {
-    Nigeria: { securityLevel: 4, medicalLevel: 4 },
-    "South Africa": { securityLevel: 3, medicalLevel: 3 },
-    Kenya: { securityLevel: 3, medicalLevel: 3 },
-    Egypt: { securityLevel: 3, medicalLevel: 3 },
-    Morocco: { securityLevel: 2, medicalLevel: 2 },
-    Ghana: { securityLevel: 2, medicalLevel: 2 },
-    Senegal: { securityLevel: 2, medicalLevel: 2 },
-    "United States": { securityLevel: 2, medicalLevel: 2 },
-    Canada: { securityLevel: 1, medicalLevel: 1 },
-    Mexico: { securityLevel: 4, medicalLevel: 3 },
-    Brazil: { securityLevel: 4, medicalLevel: 3 },
-    Argentina: { securityLevel: 2, medicalLevel: 2 },
-    Colombia: { securityLevel: 4, medicalLevel: 3 },
-    Chile: { securityLevel: 2, medicalLevel: 2 },
-    Peru: { securityLevel: 3, medicalLevel: 3 },
-    China: { securityLevel: 3, medicalLevel: 2 },
-    India: { securityLevel: 3, medicalLevel: 3 },
-    Japan: { securityLevel: 1, medicalLevel: 1 },
-    "South Korea": { securityLevel: 1, medicalLevel: 1 },
-    Indonesia: { securityLevel: 3, medicalLevel: 3 },
-    Pakistan: { securityLevel: 4, medicalLevel: 4 },
-    France: { securityLevel: 2, medicalLevel: 1 },
-    Germany: { securityLevel: 1, medicalLevel: 1 },
-    "United Kingdom": { securityLevel: 2, medicalLevel: 1 },
-    Italy: { securityLevel: 2, medicalLevel: 2 },
-    Spain: { securityLevel: 2, medicalLevel: 2 },
-    Ukraine: { securityLevel: 5, medicalLevel: 4 },
-    Russia: { securityLevel: 4, medicalLevel: 3 },
-    Australia: { securityLevel: 1, medicalLevel: 1 },
-    "New Zealand": { securityLevel: 1, medicalLevel: 1 }
-  };
-  const COUNTRY_FACTS = {
-    Nigeria: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    "South Africa": { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    Kenya: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    Egypt: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    Morocco: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    Ghana: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    Senegal: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    "United States": { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    Canada: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    Mexico: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    Brazil: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    Argentina: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    Colombia: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    Chile: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    Peru: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    China: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    India: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    Japan: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    "South Korea": { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    Indonesia: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    Pakistan: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    France: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    Germany: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    "United Kingdom": { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    Italy: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    Spain: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    Ukraine: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    Russia: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    Australia: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
-    "New Zealand": { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null }
-  };
+  let COUNTRY_PROFILES = {};
+  let countryProfilesLoaded = false;
   const DEFAULT_BG = getComputedStyle(document.documentElement).getPropertyValue("--map-image").trim();
   const BG_STORAGE_KEY = "customMapImageV2";
   const isValidBg = url => /^data:image\//i.test(url) || /^https?:\/\//i.test(url);
@@ -363,8 +301,24 @@
   async function loadSources(){
     const r = await fetch("/api/sources");
     SOURCES = await r.json();
-    initFromRoute();
-    setStatus("Prêt");
+  }
+
+  async function loadCountryProfiles(){
+    try {
+      const r = await fetch("/api/country-profiles");
+      const data = await r.json();
+      COUNTRY_PROFILES = data.profiles || {};
+      countryProfilesLoaded = true;
+      return data;
+    } catch (e) {
+      countryProfilesLoaded = false;
+      setStatus("Données pays indisponibles");
+      return null;
+    }
+  }
+
+  function getCountryProfile(country){
+    return COUNTRY_PROFILES?.[country] || null;
   }
 
   function renderContinentTabs(){
@@ -769,6 +723,15 @@
       dashboard.innerHTML = `<div class="placeholder">Sélectionnez un pays pour afficher les informations.</div>`;
       return;
     }
+    if (!countryProfilesLoaded){
+      dashboard.innerHTML = `<div class="small">Chargement des profils pays officiels…</div>`;
+      return;
+    }
+    const profile = getCountryProfile(activeCountry);
+    if (!profile){
+      dashboard.innerHTML = `<div class="small">Profil pays indisponible.</div>`;
+      return;
+    }
     const countryItems = ITEMS.filter(matchCountry);
     const categories = [
       { key: "securitaire", label: "Situation sécuritaire" },
@@ -804,31 +767,37 @@
   }
 
   function renderCountryFacts(country){
-    const facts = COUNTRY_FACTS[country] || {};
-    const value = v => v ?? "À renseigner";
+    const profile = getCountryProfile(country);
+    if (!profile) return "";
+    const formatDate = value => {
+      if (!value) return null;
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value;
+      return date.toLocaleDateString("fr-FR", { year: "numeric", month: "long", day: "numeric" });
+    };
+    const electionValue = profile.isDemocracy
+      ? formatDate(profile.nextElection)
+      : "Non applicable — régime non démocratique";
+    const facts = [
+      { title: "Chef d’État", value: profile.headOfState },
+      { title: "Parti majoritaire", value: profile.rulingParty },
+      profile.isDemocracy !== null && profile.isDemocracy !== undefined
+        ? { title: "Prochaines élections", value: electionValue }
+        : null,
+      { title: "RSF WPFI — rang", value: profile.rsfRank },
+      { title: "RSF WPFI — score", value: profile.rsfScore }
+    ].filter(item => item && item.value !== null && item.value !== undefined && item.value !== "");
+    const hasRsf = facts.some(item => item.title.startsWith("RSF"));
+    if (facts.length === 0) return "";
     return `
       <div class="facts">
-        <div class="fact-card">
-          <div class="fact-title">Chef d’État</div>
-          <div class="fact-value">${escapeHtml(value(facts.headOfState))}</div>
-        </div>
-        <div class="fact-card">
-          <div class="fact-title">Parti majoritaire</div>
-          <div class="fact-value">${escapeHtml(value(facts.rulingParty))}</div>
-        </div>
-        <div class="fact-card">
-          <div class="fact-title">Prochaines élections</div>
-          <div class="fact-value">${escapeHtml(value(facts.nextElection))}</div>
-        </div>
-        <div class="fact-card">
-          <div class="fact-title">RSF WPFI — rang</div>
-          <div class="fact-value">${escapeHtml(value(facts.rsfRank))}</div>
-        </div>
-        <div class="fact-card">
-          <div class="fact-title">RSF WPFI — score</div>
-          <div class="fact-value">${escapeHtml(value(facts.rsfScore))}</div>
-        </div>
-        <div class="fact-note">Classement mondial de la liberté de la presse (WPFI) — Reporters sans Frontières.</div>
+        ${facts.map(item => `
+          <div class="fact-card">
+            <div class="fact-title">${escapeHtml(item.title)}</div>
+            <div class="fact-value">${escapeHtml(String(item.value))}</div>
+          </div>
+        `).join("")}
+        ${hasRsf ? `<div class="fact-note">Classement mondial de la liberté de la presse (WPFI) — Reporters sans Frontières.</div>` : ""}
       </div>
     `;
   }
@@ -857,114 +826,44 @@
   }
 
   function computeCategoryRatings(items, categories, country){
-    const now = Date.now();
-    const windowDays = 30;
-    const decay = 14;
-    const byCategory = categories.map(cat => ({ ...cat, score: 0 }));
-    const weightItem = (it, categoryKey) => {
-      const ageDays = it.pubDate ? (now - new Date(it.pubDate).getTime()) / 86400000 : windowDays + 1;
-      if (ageDays < 0 || ageDays > windowDays) return 0;
-      const recency = Math.exp(-ageDays / decay);
-      const text = norm([it.title, it.snippet, it.content].join(" "));
-      const hits = text.split(" ").filter(Boolean).length;
-      const importance = Math.min(5, 1 + Math.log10(hits + 1));
-      const { primary, secondary } = classifyCountryCategory(it);
-      const multiplier = primary.key === categoryKey ? 1 : secondary?.key === categoryKey ? 0.5 : 0;
-      return recency * importance * multiplier;
+    const profile = getCountryProfile(country);
+    if (!profile || !profile.ratings) return [];
+    const ratingMap = {
+      securitaire: profile.ratings.security,
+      sanitaire: profile.ratings.health,
+      operabilite: profile.ratings.business,
+      expat: profile.ratings.expat,
+      global: profile.ratings.overall
     };
-    const risk = getRiskRatings(country);
-    const businessConstraint = computeBusinessOperability(items, risk);
-    const expatConstraint = computeExpatFeasibility(items, risk);
-    const overallConstraint = computeOverallConstraint({
-      security: risk?.securityLevel ?? 3,
-      medical: risk?.medicalLevel ?? 3,
-      business: businessConstraint,
-      expat: expatConstraint
-    });
-    const businessSituation = clampRating(6 - businessConstraint);
-    const expatSituation = clampRating(6 - expatConstraint);
-    const overallSituation = clampRating(6 - overallConstraint);
-    byCategory.forEach(cat => {
-      if(cat.key === "securitaire" && risk){
-        const situation = clampRating(6 - risk.securityLevel);
-        cat.score = situation * 20;
-        cat.stars = situation;
-        cat.note = situation <= 2 ? "Situation défavorable, mesures renforcées" : "Situation gérable avec mesures adaptées";
-        return;
-      }
-      if(cat.key === "sanitaire" && risk){
-        const situation = clampRating(6 - risk.medicalLevel);
-        cat.score = situation * 20;
-        cat.stars = situation;
-        cat.note = situation <= 2 ? "Accès soins limité, prévoir évacuation" : "Soins disponibles avec vigilance";
-        return;
-      }
-      if(cat.key === "operabilite"){
-        cat.score = businessSituation * 20;
-        cat.stars = businessSituation;
-        cat.note = businessSituation <= 2 ? "Restrictions fréquentes" : "Opérations possibles avec procédures";
-        return;
-      }
-      if(cat.key === "expat"){
-        cat.score = expatSituation * 20;
-        cat.stars = expatSituation;
-        cat.note = expatSituation <= 2 ? "Expatriation difficile" : "Expatriation possible avec support";
-        return;
-      }
-      if(cat.key === "global"){
-        cat.score = overallSituation * 20;
-        cat.stars = overallSituation;
-        cat.note = overallSituation <= 2 ? "Approche critique requise" : "Approche standard renforcée";
-        return;
-      }
-      cat.score = items.reduce((acc, it) => acc + weightItem(it, cat.key), 0);
-    });
-    const maxScore = Math.max(1, ...byCategory.map(cat => cat.score));
-    return byCategory.map(cat => {
-      if(cat.stars){
-        return { ...cat, normalized: cat.score, stars: cat.stars, note: cat.note };
-      }
-      const normalized = Math.min(100, Math.round((cat.score / maxScore) * 100));
-      const stars = Math.min(5, Math.max(1, Math.ceil(normalized / 20)));
-      return { ...cat, normalized, stars };
+    return categories.map(cat => {
+      const score = ratingMap[cat.key];
+      const stars = typeof score === "number" ? clampRating(score) : 3;
+      return {
+        ...cat,
+        normalized: stars * 20,
+        stars,
+        note: buildRatingNote(cat.key, stars)
+      };
     });
   }
 
-  function getRiskRatings(country){
-    if(!country) return null;
-    const entry = RISK_MAP_2026[country];
-    if(!entry) return null;
-    return {
-      securityLevel: Math.min(5, Math.max(1, entry.securityLevel)),
-      medicalLevel: Math.min(5, Math.max(1, entry.medicalLevel))
-    };
-  }
-
-  function computeBusinessOperability(items, risk){
-    const riskBase = risk ? Math.round((risk.securityLevel + risk.medicalLevel) / 2) : 3;
-    const disruptionSignals = ["strike","grève","curfew","couvre-feu","shutdown","blockade","route","transport","airport","rail"];
-    const signalCount = items.filter(it => {
-      const text = norm([it.title, it.snippet, it.content].join(" "));
-      return disruptionSignals.some(term => text.includes(norm(term)));
-    }).length;
-    const signalBoost = Math.min(2, Math.floor(signalCount / 3));
-    return clampRating(riskBase + signalBoost);
-  }
-
-  function computeExpatFeasibility(items, risk){
-    const riskBase = risk ? Math.round((risk.securityLevel * 0.6) + (risk.medicalLevel * 0.4)) : 3;
-    const evacuationSignals = ["evacuation","evacuate","medical evacuation","assistance","emergency"];
-    const signalCount = items.filter(it => {
-      const text = norm([it.title, it.snippet, it.content].join(" "));
-      return evacuationSignals.some(term => text.includes(norm(term)));
-    }).length;
-    const signalBoost = Math.min(2, Math.floor(signalCount / 4));
-    return clampRating(Math.round(riskBase) + signalBoost);
-  }
-
-  function computeOverallConstraint({ security, medical, business, expat }){
-    const score = (security * 0.35) + (medical * 0.25) + (business * 0.25) + (expat * 0.15);
-    return clampRating(Math.round(score));
+  function buildRatingNote(key, stars){
+    if (key === "securitaire"){
+      return stars <= 2 ? "Risque élevé, vigilance renforcée" : "Contexte sécuritaire maîtrisé";
+    }
+    if (key === "sanitaire"){
+      return stars <= 2 ? "Couverture sanitaire limitée" : "Système sanitaire fonctionnel";
+    }
+    if (key === "operabilite"){
+      return stars <= 2 ? "Environnement opérationnel contraint" : "Activité possible avec procédures";
+    }
+    if (key === "expat"){
+      return stars <= 2 ? "Conditions expatriés difficiles" : "Conditions expatriés favorables";
+    }
+    if (key === "global"){
+      return stars <= 2 ? "Vigilance critique" : "Situation globale favorable";
+    }
+    return "";
   }
 
   function clampRating(value){
@@ -1039,7 +938,14 @@
   $("#q").addEventListener("keydown", e => {
     if(e.key === "Enter"){ e.preventDefault(); search(); }
   });
-  loadSources();
+  async function boot(){
+    setStatus("Chargement…");
+    await Promise.all([loadSources(), loadCountryProfiles()]);
+    initFromRoute();
+    setStatus("Prêt");
+  }
+
+  boot();
   loadGeopolitics();
   setInterval(loadGeopolitics, 300000);
 
