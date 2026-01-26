@@ -75,8 +75,15 @@
     .tablist button.active{border-color:rgba(106,166,255,.55);background:rgba(106,166,255,.15);color:#cfe1ff}
     .tablist .small{margin-top:6px}
     .country-slider{display:flex;gap:10px;overflow:auto;padding-bottom:6px}
+    .country-slider.hidden{display:none;pointer-events:none}
     .country-slider button{white-space:nowrap;border-radius:999px;background:rgba(12,18,32,.38);border:1px solid rgba(255,255,255,.14);padding:6px 10px;font-size:12px}
     .country-slider button.active{border-color:rgba(106,166,255,.55);background:rgba(106,166,255,.15);color:#cfe1ff}
+    .country-picker{margin-top:8px;display:none;flex-direction:column;gap:8px}
+    .country-picker.open{display:flex}
+    .country-picker input{width:100%}
+    .country-list{display:flex;flex-wrap:wrap;gap:8px}
+    .country-list button{border-radius:999px;background:rgba(12,18,32,.38);border:1px solid rgba(255,255,255,.14);padding:6px 10px;font-size:12px}
+    .placeholder{padding:12px;border:1px dashed var(--border);border-radius:12px;color:var(--muted);background:rgba(12,18,32,.25)}
     .ratings{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
     .rating-card{background:rgba(12,18,32,.38);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:10px}
     .rating-title{font-size:12px;color:var(--muted)}
@@ -133,7 +140,12 @@
     <div class="bd">
       <div class="tablist" id="continentTabs"></div>
       <div style="height:8px"></div>
-      <div class="country-slider" id="countrySlider"></div>
+      <button class="ghost" id="openCountryPicker">Choisir un pays</button>
+      <div class="country-picker" id="countryPicker">
+        <input id="countrySearch" type="search" placeholder="Rechercher un pays..." />
+        <div class="country-list" id="countryList"></div>
+      </div>
+      <div class="country-slider hidden" id="countrySlider"></div>
       <div class="small" style="margin-top:10px">Chaque onglet recharge les sources liées à la zone sélectionnée.</div>
     </div>
   </aside>
@@ -193,6 +205,7 @@
   let geoLastUpdate = null;
   let activeContinent = "global";
   let activeCountry = null;
+  let countrySearch = "";
   const CONTINENTS = [
     { key: "global", label: "Global" },
     { key: "Afrique", label: "Afrique" },
@@ -242,6 +255,38 @@
     Australia: ["australia","australian","canberra","sydney","melbourne"],
     "New Zealand": ["new zealand","kiwi","wellington","auckland"]
   };
+  const COUNTRY_CODES = {
+    Nigeria: "NG",
+    "South Africa": "ZA",
+    Kenya: "KE",
+    Egypt: "EG",
+    Morocco: "MA",
+    Ghana: "GH",
+    Senegal: "SN",
+    "United States": "US",
+    Canada: "CA",
+    Mexico: "MX",
+    Brazil: "BR",
+    Argentina: "AR",
+    Colombia: "CO",
+    Chile: "CL",
+    Peru: "PE",
+    China: "CN",
+    India: "IN",
+    Japan: "JP",
+    "South Korea": "KR",
+    Indonesia: "ID",
+    Pakistan: "PK",
+    France: "FR",
+    Germany: "DE",
+    "United Kingdom": "GB",
+    Italy: "IT",
+    Spain: "ES",
+    Ukraine: "UA",
+    Russia: "RU",
+    Australia: "AU",
+    "New Zealand": "NZ"
+  };
   const RISK_MAP_2026 = {
     Nigeria: { securityLevel: 4, medicalLevel: 4 },
     "South Africa": { securityLevel: 3, medicalLevel: 3 },
@@ -281,8 +326,7 @@
   async function loadSources(){
     const r = await fetch("/api/sources");
     SOURCES = await r.json();
-    setContinent("global");
-    renderContinentTabs();
+    initFromRoute();
     setStatus("Prêt");
   }
 
@@ -308,9 +352,13 @@
       ? SOURCES
       : SOURCES.filter(s => s.continent === continent);
     selected = new Set(scopedSources.map(s => s.key));
+    const countries = CONTINENT_COUNTRIES[activeContinent] || [];
+    if (!countries.includes(activeCountry)) activeCountry = null;
     SidebarCountryTabs();
     renderSourceToggles();
     ContinentPage();
+    renderCountryPage();
+    renderArticles();
   }
 
   function renderCountrySlider(){
@@ -318,11 +366,7 @@
     const countries = CONTINENT_COUNTRIES[activeContinent] || [];
     if (countries.length === 0){
       slider.innerHTML = "";
-      activeCountry = null;
       return;
-    }
-    if (!activeCountry || !countries.includes(activeCountry)){
-      activeCountry = countries[0];
     }
     slider.innerHTML = countries.map(country => `
       <button type="button" data-country="${escapeHtml(country)}" class="${country === activeCountry ? "active" : ""}">
@@ -333,9 +377,7 @@
       btn.addEventListener("click", () => {
         const country = btn.getAttribute("data-country");
         if(!country) return;
-        activeCountry = country;
-        renderCountrySlider();
-        CountryPage();
+        setCountry(country);
       });
     });
   }
@@ -346,10 +388,101 @@
 
   function ContinentPage(){
     renderCountrySlider();
+    renderCountryPicker();
   }
 
   function CountrySlider(){
     renderCountrySlider();
+  }
+
+  function setCountry(country){
+    activeCountry = country;
+    renderCountrySlider();
+    renderCountryPicker();
+    CountryPage();
+    renderArticles();
+  }
+
+  function renderCountryPicker(){
+    const picker = $("#countryPicker");
+    const list = $("#countryList");
+    const countries = CONTINENT_COUNTRIES[activeContinent] || [];
+    if (countries.length === 0){
+      picker.classList.remove("open");
+      list.innerHTML = "";
+      return;
+    }
+    const filtered = countries.filter(country => {
+      if (!countrySearch) return true;
+      return norm(country).includes(norm(countrySearch));
+    });
+    list.innerHTML = filtered.map(country => `
+      <button type="button" data-country="${escapeHtml(country)}">${escapeHtml(country)}</button>
+    `).join("");
+    list.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const country = btn.getAttribute("data-country");
+        if(!country) return;
+        setCountry(country);
+        picker.classList.remove("open");
+      });
+    });
+  }
+
+  function initFromRoute(){
+    const { continentId, countryId } = parseRoute();
+    const resolvedContinent = resolveContinent(continentId) || "global";
+    activeContinent = resolvedContinent;
+    const resolvedCountry = resolveCountry(countryId, resolvedContinent);
+    if (resolvedCountry) {
+      activeCountry = resolvedCountry;
+    } else {
+      activeCountry = null;
+    }
+    SidebarCountryTabs();
+    renderSourceToggles();
+    ContinentPage();
+    renderCountryPage();
+    renderArticles();
+  }
+
+  function parseRoute(){
+    const path = window.location.pathname.toLowerCase();
+    const parts = path.split("/").filter(Boolean);
+    const idx = parts.indexOf("continent");
+    const continentId = idx >= 0 ? parts[idx + 1] : null;
+    const countryId = idx >= 0 ? parts[idx + 2] : null;
+    const params = new URLSearchParams(window.location.search);
+    return {
+      continentId: params.get("continent") || continentId,
+      countryId: params.get("country") || countryId
+    };
+  }
+
+  function resolveContinent(input){
+    if (!input) return null;
+    const key = norm(input);
+    const map = {
+      afrique: "Afrique",
+      "amerique-du-nord": "Amérique du Nord",
+      "amerique-du-sud": "Amérique du Sud",
+      asie: "Asie",
+      europe: "Europe",
+      oceanie: "Océanie",
+      global: "global"
+    };
+    return map[key] || null;
+  }
+
+  function resolveCountry(input, continent){
+    if (!input) return null;
+    const countries = CONTINENT_COUNTRIES[continent] || [];
+    const normalized = norm(input);
+    const byName = countries.find(country => norm(country) === normalized);
+    if (byName) return byName;
+    const byCode = countries.find(country => norm(COUNTRY_CODES[country] || "") === normalized);
+    if (byCode) return byCode;
+    return null;
   }
 
   function renderSourceToggles(){
@@ -375,6 +508,10 @@
 
   async function search(){
     const q = $("#q").value.trim();
+    if(!activeCountry){
+      setStatus("Choisis un pays pour afficher les informations.");
+      return;
+    }
     if(selected.size === 0){
       setStatus("Choisis au moins 1 source");
       return;
@@ -474,7 +611,13 @@
 
   function renderArticles(){
     const root = $("#articles");
-    const list = activeCountry ? ITEMS.filter(matchCountry) : ITEMS;
+    if (!activeCountry){
+      root.style.display = "none";
+      root.innerHTML = "";
+      return;
+    }
+    root.style.display = "grid";
+    const list = ITEMS.filter(matchCountry);
     root.innerHTML = list.map((it, idx) => renderArticleCard(it, idx))
       .join("") || `<div class="small">Aucun résultat. Essaie un autre mot-clé (ex: “arctic”, “nato”, “ransomware”).</div>`;
   }
@@ -586,7 +729,7 @@
   function renderCountryPage(){
     const dashboard = $("#countryDashboard");
     if (!activeCountry){
-      dashboard.innerHTML = "";
+      dashboard.innerHTML = `<div class="placeholder">Sélectionnez un pays pour afficher les informations.</div>`;
       return;
     }
     const countryItems = ITEMS.filter(matchCountry);
@@ -770,6 +913,13 @@
   }
 
   $("#searchBtn").addEventListener("click", search);
+  $("#openCountryPicker").addEventListener("click", () => {
+    $("#countryPicker").classList.toggle("open");
+  });
+  $("#countrySearch").addEventListener("input", e => {
+    countrySearch = e.target.value;
+    renderCountryPicker();
+  });
   $("#selectAll").addEventListener("click", () => {
     const scope = activeContinent === "global"
       ? SOURCES
