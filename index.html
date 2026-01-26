@@ -92,6 +92,11 @@
     .category-section{margin-top:14px}
     .category-section h4{margin:0 0 8px 0;font-size:14px}
     .advice{margin-top:10px;font-size:12px;color:var(--muted);line-height:1.4}
+    .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:12px}
+    .fact-card{background:rgba(12,18,32,.38);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:10px}
+    .fact-title{font-size:12px;color:var(--muted)}
+    .fact-value{font-size:14px;font-weight:600;margin-top:4px}
+    .fact-note{font-size:11px;color:var(--muted);margin-top:6px;grid-column:1/-1}
     .ticker{max-width:1200px;margin:12px auto 0;padding:0 16px}
     .ticker .panel{display:flex;flex-direction:column;gap:10px}
     .ticker-track{display:flex;gap:24px;white-space:nowrap;overflow:hidden;position:relative}
@@ -318,6 +323,38 @@
     Russia: { securityLevel: 4, medicalLevel: 3 },
     Australia: { securityLevel: 1, medicalLevel: 1 },
     "New Zealand": { securityLevel: 1, medicalLevel: 1 }
+  };
+  const COUNTRY_FACTS = {
+    Nigeria: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    "South Africa": { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    Kenya: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    Egypt: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    Morocco: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    Ghana: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    Senegal: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    "United States": { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    Canada: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    Mexico: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    Brazil: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    Argentina: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    Colombia: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    Chile: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    Peru: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    China: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    India: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    Japan: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    "South Korea": { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    Indonesia: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    Pakistan: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    France: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    Germany: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    "United Kingdom": { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    Italy: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    Spain: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    Ukraine: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    Russia: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    Australia: { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null },
+    "New Zealand": { headOfState: null, rulingParty: null, nextElection: null, rsfRank: null, rsfScore: null }
   };
   const DEFAULT_BG = getComputedStyle(document.documentElement).getPropertyValue("--map-image").trim();
   const BG_STORAGE_KEY = "customMapImageV2";
@@ -748,6 +785,7 @@
         ${r.note ? `<div class="rating-note">${escapeHtml(r.note)}</div>` : ""}
       </div>
     `).join("");
+    const facts = renderCountryFacts(activeCountry);
     const sections = CategorySections(countryItems, [
       { key: "sport", label: "Sport" },
       { key: "geopolitique", label: "Géopolitique" },
@@ -759,8 +797,39 @@
     const advice = buildEnterpriseAdvice(ratings);
     dashboard.innerHTML = `
       <div class="ratings">${cards}</div>
+      ${facts}
       <div class="advice">${escapeHtml(advice)}</div>
       ${sections}
+    `;
+  }
+
+  function renderCountryFacts(country){
+    const facts = COUNTRY_FACTS[country] || {};
+    const value = v => v ?? "À renseigner";
+    return `
+      <div class="facts">
+        <div class="fact-card">
+          <div class="fact-title">Chef d’État</div>
+          <div class="fact-value">${escapeHtml(value(facts.headOfState))}</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-title">Parti majoritaire</div>
+          <div class="fact-value">${escapeHtml(value(facts.rulingParty))}</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-title">Prochaines élections</div>
+          <div class="fact-value">${escapeHtml(value(facts.nextElection))}</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-title">RSF WPFI — rang</div>
+          <div class="fact-value">${escapeHtml(value(facts.rsfRank))}</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-title">RSF WPFI — score</div>
+          <div class="fact-value">${escapeHtml(value(facts.rsfScore))}</div>
+        </div>
+        <div class="fact-note">Classement mondial de la liberté de la presse (WPFI) — Reporters sans Frontières.</div>
+      </div>
     `;
   }
 
