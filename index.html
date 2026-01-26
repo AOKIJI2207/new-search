@@ -3,52 +3,158 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Moteur d’actualité — recherche par mots-clés</title>
+  <title>AGORAFLUX</title>
   <style>
-    :root{--bg:#0b0f17;--card:#121a29;--text:#e7ecf5;--muted:#a9b4c7;--border:rgba(255,255,255,.10);--accent:#6aa6ff}
+    :root{--bg:#cfe8d1;--card:#121a29;--text:#e7ecf5;--muted:#a9b4c7;--border:rgba(255,255,255,.10);--accent:#6aa6ff;--glow:rgba(106,166,255,.25);--map-image:url("assets/world-map.png")}
     *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;background:linear-gradient(180deg,#070a12,#0b0f17);color:var(--text)}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;
+      color:var(--text);
+      background:
+        radial-gradient(900px 480px at 10% -10%, rgba(106,166,255,.18), transparent 60%),
+        radial-gradient(700px 420px at 90% 0%, rgba(106,166,255,.12), transparent 60%),
+        linear-gradient(180deg,#d8f0d9,#bfe1c3);
+      background-attachment: fixed;
+    }
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:var(--map-image);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0.6;
+      filter: contrast(1.15) saturate(1.15);
+      pointer-events: none;
+      z-index: -1;
+    }
     header{position:sticky;top:0;z-index:10;backdrop-filter:blur(10px);background:rgba(11,15,23,.75);border-bottom:1px solid var(--border)}
     .wrap{max-width:1100px;margin:0 auto;padding:16px}
     h1{margin:0;font-size:18px}
     .sub{margin-top:6px;color:var(--muted);font-size:13px;line-height:1.35}
-    main{display:grid;grid-template-columns:1.6fr .9fr;gap:14px;padding:14px 16px 32px;max-width:1100px;margin:0 auto}
-    @media(max-width:980px){main{grid-template-columns:1fr}}
-    .panel{background:rgba(18,26,41,.75);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+    main{display:grid;grid-template-columns:.55fr 1.6fr;gap:14px;padding:14px 16px 32px;max-width:1200px;margin:0 auto}
+    @media(max-width:1080px){main{grid-template-columns:1fr}}
+    .panel{background:rgba(18,26,41,.45);border:1px solid rgba(255,255,255,.14);border-radius:16px;overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,.25);backdrop-filter:blur(6px)}
     .hd{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:12px;border-bottom:1px solid var(--border);flex-wrap:wrap}
     .bd{padding:12px}
     .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     input,textarea,button{background:#0c1220;color:var(--text);border:1px solid var(--border);padding:10px 11px;border-radius:12px;font:inherit}
     button{cursor:pointer}
-    button.primary{background:linear-gradient(180deg,rgba(106,166,255,.25),rgba(106,166,255,.12));border-color:rgba(106,166,255,.35)}
+    button.primary{background:linear-gradient(180deg,rgba(106,166,255,.25),rgba(106,166,255,.12));border-color:rgba(106,166,255,.35);box-shadow:0 10px 20px rgba(106,166,255,.15)}
     .badge{font-size:12px;color:var(--muted);border:1px solid var(--border);padding:6px 10px;border-radius:999px}
     .articles{display:grid;gap:10px}
-    article{background:rgba(12,18,32,.6);border:1px solid var(--border);border-radius:14px;padding:12px}
+    article{background:rgba(12,18,32,.38);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:12px}
     article h3{margin:0 0 6px 0;font-size:15px;line-height:1.25}
+    .idx{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;border-radius:999px;background:rgba(106,166,255,.15);border:1px solid rgba(106,166,255,.35);color:#cfe1ff;font-size:12px;margin-right:8px}
     .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;color:var(--muted);font-size:12px}
+    .tag{display:inline-flex;align-items:center;gap:6px;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:600;letter-spacing:.2px;border:1px solid transparent}
+    .tag-geo{background:rgba(103,194,255,.18);color:#cfe9ff;border-color:rgba(103,194,255,.35)}
+    .tag-finance{background:rgba(255,107,107,.18);color:#ffd6d6;border-color:rgba(255,107,107,.35)}
+    .tag-security{background:rgba(255,183,77,.2);color:#ffe0b2;border-color:rgba(255,183,77,.35)}
+    .tag-health{background:rgba(76,217,138,.18);color:#d2f6e3;border-color:rgba(76,217,138,.35)}
+    .tag-sport{background:rgba(120,190,255,.2);color:#d7ecff;border-color:rgba(120,190,255,.35)}
+    .tag-politics{background:rgba(255,150,84,.2);color:#ffe2cc;border-color:rgba(255,150,84,.35)}
+    .tag-general{background:rgba(163,177,198,.18);color:#e7ecf5;border-color:rgba(163,177,198,.35)}
     .snippet{margin-top:8px;color:#d7def0;line-height:1.45;font-size:14px}
     a{color:#cfe1ff}
-    .chat{display:flex;flex-direction:column;height:72vh;min-height:520px}
-    .chatlog{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
-    .msg{max-width:92%;padding:10px;border-radius:14px;border:1px solid var(--border);background:rgba(12,18,32,.6)}
-    .msg.user{align-self:flex-end;border-color:rgba(106,166,255,.35)}
-    .who{font-size:12px;color:var(--muted);margin-bottom:6px}
-    .txt{white-space:pre-wrap;line-height:1.4;font-size:14px}
-    .cites{margin-top:8px;font-size:12px;color:var(--muted)}
     .small{font-size:12px;color:var(--muted);line-height:1.35}
     .sources{display:flex;flex-wrap:wrap;gap:10px}
     .src{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted)}
+    .toggle{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted);background:rgba(12,18,32,.6);border:1px solid var(--border);padding:6px 10px;border-radius:999px}
+    .source-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .ghost{background:transparent;border:1px dashed var(--border);color:var(--muted)}
+    .idx{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;border-radius:999px;background:rgba(106,166,255,.15);border:1px solid rgba(106,166,255,.35);color:#cfe1ff;font-size:12px;margin-right:8px}
+    .bg-input{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .bg-input input{min-width:240px;flex:1}
+    .bg-input .note{flex-basis:100%}
+    .continents{position:sticky;top:90px;align-self:start}
+    .tablist{display:flex;flex-direction:column;gap:8px}
+    .tablist button{width:100%;text-align:left;border-radius:12px;background:rgba(12,18,32,.38);border:1px solid rgba(255,255,255,.14);padding:10px 12px}
+    .tablist button.active{border-color:rgba(106,166,255,.55);background:rgba(106,166,255,.15);color:#cfe1ff}
+    .tablist .small{margin-top:6px}
+    .country-slider{display:flex;gap:10px;overflow:auto;padding-bottom:6px}
+    .country-slider.hidden{display:none;pointer-events:none}
+    .country-slider button{white-space:nowrap;border-radius:999px;background:rgba(12,18,32,.38);border:1px solid rgba(255,255,255,.14);padding:6px 10px;font-size:12px}
+    .country-slider button.active{border-color:rgba(106,166,255,.55);background:rgba(106,166,255,.15);color:#cfe1ff}
+    .country-picker{margin-top:8px;display:none;flex-direction:column;gap:8px}
+    .country-picker.open{display:flex}
+    .country-picker input{width:100%}
+    .country-list{display:flex;flex-wrap:wrap;gap:8px}
+    .country-list button{border-radius:999px;background:rgba(12,18,32,.38);border:1px solid rgba(255,255,255,.14);padding:6px 10px;font-size:12px}
+    .placeholder{padding:12px;border:1px dashed var(--border);border-radius:12px;color:var(--muted);background:rgba(12,18,32,.25)}
+    .ratings{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+    .rating-card{background:rgba(12,18,32,.38);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:10px}
+    .rating-title{font-size:12px;color:var(--muted)}
+    .rating-score{font-size:18px;font-weight:700}
+    .rating-note{font-size:11px;color:var(--muted);margin-top:4px}
+    .category-section{margin-top:14px}
+    .category-section h4{margin:0 0 8px 0;font-size:14px}
+    .advice{margin-top:10px;font-size:12px;color:var(--muted);line-height:1.4}
+    .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:12px}
+    .fact-card{background:rgba(12,18,32,.38);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:10px}
+    .fact-title{font-size:12px;color:var(--muted)}
+    .fact-value{font-size:14px;font-weight:600;margin-top:4px}
+    .fact-note{font-size:11px;color:var(--muted);margin-top:6px;grid-column:1/-1}
+    .ticker{max-width:1200px;margin:12px auto 0;padding:0 16px}
+    .ticker .panel{display:flex;flex-direction:column;gap:10px}
+    .ticker-track{display:flex;gap:24px;white-space:nowrap;overflow:hidden;position:relative}
+    .ticker-items{display:inline-flex;gap:24px;animation:scroll 140s linear infinite}
+    .ticker-item{display:inline-flex;gap:8px;align-items:center;font-size:13px;color:#d7def0}
+    .ticker-item a{color:#cfe1ff;text-decoration:none}
+    .ticker-item a:hover{text-decoration:underline}
+    @keyframes scroll{
+      0%{transform:translateX(0)}
+      100%{transform:translateX(-50%)}
+    }
   </style>
 </head>
 <body>
 <header>
   <div class="wrap">
-    <h1>Moteur d’actualité — recherche par mots-clés</h1>
-    <div class="sub">Tape un mot-clé (ex: “Groenland”, “cybersécurité”, “OTAN”). Résultats issus de flux RSS ouverts. Le chatbot répond uniquement à partir des résultats chargés.</div>
+    <h1 id="siteName">AGORAFLUX</h1>
+    <div class="sub">Tape un mot-clé (ex: “Groenland”, “cybersécurité”, “OTAN”). Résultats issus de flux RSS ouverts. Si aucune source n’est cochée, la recherche utilise toutes les sources.</div>
   </div>
 </header>
 
+<section class="ticker">
+  <div class="panel">
+    <div class="hd">
+      <div class="row">
+        <span class="badge">Actualités géopolitiques</span>
+        <span class="small" id="geoStatus">Mise à jour…</span>
+      </div>
+    </div>
+    <div class="bd">
+      <div class="ticker-track">
+        <div class="ticker-items" id="geoTicker"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <main>
+  <aside class="panel continents">
+    <div class="hd">
+      <div class="row">
+        <span class="badge">Continents</span>
+        <span class="small">onglets</span>
+      </div>
+    </div>
+    <div class="bd">
+      <div class="tablist" id="continentTabs"></div>
+      <div style="height:8px"></div>
+      <button class="ghost" id="openCountryPicker">Choisir un pays</button>
+      <div class="country-picker" id="countryPicker">
+        <input id="countrySearch" type="search" placeholder="Rechercher un pays..." />
+        <div class="country-list" id="countryList"></div>
+      </div>
+      <div class="country-slider hidden" id="countrySlider"></div>
+      <div class="small" style="margin-top:10px">Chaque onglet recharge les sources liées à la zone sélectionnée.</div>
+    </div>
+  </aside>
+
   <section class="panel">
     <div class="hd">
       <div class="row">
@@ -62,35 +168,37 @@
     </div>
 
     <div class="bd">
+      <div class="row source-actions">
+        <button class="ghost" id="selectAll">Tout sélectionner</button>
+        <button class="ghost" id="clearAll">Tout désélectionner</button>
+        <label class="toggle">
+          <input type="checkbox" id="toggleSources" checked />
+          Afficher les sources
+        </label>
+      </div>
+      <div style="height:10px"></div>
+      <div class="row bg-input">
+        <input id="bgUrl" type="url" placeholder="URL d’image de fond (ou data:image/...)" />
+        <button class="ghost" id="applyBg">Appliquer</button>
+        <button class="ghost" id="resetBg">Réinitialiser</button>
+        <div class="small note">Astuce : utilise une URL publique ou un data URI base64 pour voir le fond s’afficher immédiatement.</div>
+      </div>
+      <div style="height:8px"></div>
       <div class="sources" id="sourceToggles"></div>
       <div style="height:10px"></div>
+      <div id="countryDashboard"></div>
       <div class="articles" id="articles"></div>
     </div>
   </section>
 
-  <aside class="panel chat">
-    <div class="hd">
-      <div class="row">
-        <span class="badge">Chatbot</span>
-        <span class="small">réponses sourcées</span>
-      </div>
-      <button class="primary" id="reset">Réinitialiser</button>
-    </div>
-
-    <div class="chatlog" id="chatlog"></div>
-
-    <div class="bd" style="padding-top:0">
-      <div class="row">
-        <textarea id="prompt" placeholder="Ex : résume les infos majeures" style="flex:1; height:44px"></textarea>
-        <button class="primary" id="send">Envoyer</button>
-      </div>
-      <div class="small" style="margin-top:10px">Astuce : demande “classe par thèmes”, “quels risques”, “cite tes sources”.</div>
-    </div>
-  </aside>
 </main>
 
 <script>
   const $ = s => document.querySelector(s);
+  const SITE_NAME = "AGORAFLUX";
+  document.title = SITE_NAME;
+  const siteNameEl = $("#siteName");
+  if(siteNameEl) siteNameEl.textContent = SITE_NAME;
   const escapeHtml = s => (s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const norm = s => (s||"").toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,"").replace(/[^a-z0-9\\s-]/g," ").replace(/\\s+/g," ").trim();
   const tokenize = s => norm(s).split(" ").filter(t=>t.length>=2);
@@ -98,18 +206,282 @@
   let SOURCES = [];
   let selected = new Set();
   let ITEMS = [];
+  let geoSeen = new Set();
+  let geoLastUpdate = null;
+  let activeContinent = "global";
+  let activeCountry = null;
+  let countrySearch = "";
+  const CONTINENTS = [
+    { key: "global", label: "Global" },
+    { key: "Afrique", label: "Afrique" },
+    { key: "Amérique du Nord", label: "Amérique du Nord" },
+    { key: "Amérique du Sud", label: "Amérique du Sud" },
+    { key: "Asie", label: "Asie" },
+    { key: "Europe", label: "Europe" },
+    { key: "Océanie", label: "Océanie" }
+  ];
+  const CONTINENT_COUNTRIES = {
+    Afrique: ["Nigeria","South Africa","Kenya","Egypt","Morocco","Ghana","Senegal"],
+    "Amérique du Nord": ["United States","Canada","Mexico"],
+    "Amérique du Sud": ["Brazil","Argentina","Colombia","Chile","Peru"],
+    Asie: ["China","India","Japan","South Korea","Indonesia","Pakistan"],
+    Europe: ["France","Germany","United Kingdom","Italy","Spain","Ukraine","Russia"],
+    Océanie: ["Australia","New Zealand"]
+  };
+  const COUNTRY_KEYWORDS = {
+    Nigeria: ["nigeria","nigerian","abuja","lagos"],
+    "South Africa": ["south africa","south african","johannesburg","pretoria","cape town"],
+    Kenya: ["kenya","kenyan","nairobi"],
+    Egypt: ["egypt","egyptian","cairo"],
+    Morocco: ["morocco","moroccan","rabat","casablanca"],
+    Ghana: ["ghana","ghanaian","accra"],
+    Senegal: ["senegal","senegalese","dakar"],
+    "United States": ["united states","usa","u.s.","washington","new york","america","american"],
+    Canada: ["canada","canadian","ottawa","toronto"],
+    Mexico: ["mexico","mexican","mexico city"],
+    Brazil: ["brazil","brazilian","brasil","brasilia","rio","sao paulo","são paulo"],
+    Argentina: ["argentina","argentine","buenos aires"],
+    Colombia: ["colombia","colombian","bogota","bogotá"],
+    Chile: ["chile","chilean","santiago"],
+    Peru: ["peru","peruvian","lima"],
+    China: ["china","chinese","beijing","peking"],
+    India: ["india","indian","new delhi","delhi"],
+    Japan: ["japan","japanese","tokyo"],
+    "South Korea": ["south korea","korea","seoul"],
+    Indonesia: ["indonesia","indonesian","jakarta"],
+    Pakistan: ["pakistan","pakistani","islamabad"],
+    France: ["france","french","paris"],
+    Germany: ["germany","german","berlin","deutschland"],
+    "United Kingdom": ["united kingdom","uk","britain","british","london"],
+    Italy: ["italy","italian","rome","roma"],
+    Spain: ["spain","spanish","madrid"],
+    Ukraine: ["ukraine","ukrainian","kyiv","kiev"],
+    Russia: ["russia","russian","moscow","moskva"],
+    Australia: ["australia","australian","canberra","sydney","melbourne"],
+    "New Zealand": ["new zealand","kiwi","wellington","auckland"]
+  };
+  const COUNTRY_CODES = {
+    Nigeria: "NG",
+    "South Africa": "ZA",
+    Kenya: "KE",
+    Egypt: "EG",
+    Morocco: "MA",
+    Ghana: "GH",
+    Senegal: "SN",
+    "United States": "US",
+    Canada: "CA",
+    Mexico: "MX",
+    Brazil: "BR",
+    Argentina: "AR",
+    Colombia: "CO",
+    Chile: "CL",
+    Peru: "PE",
+    China: "CN",
+    India: "IN",
+    Japan: "JP",
+    "South Korea": "KR",
+    Indonesia: "ID",
+    Pakistan: "PK",
+    France: "FR",
+    Germany: "DE",
+    "United Kingdom": "GB",
+    Italy: "IT",
+    Spain: "ES",
+    Ukraine: "UA",
+    Russia: "RU",
+    Australia: "AU",
+    "New Zealand": "NZ"
+  };
+  let COUNTRY_PROFILES = {};
+  let countryProfilesLoaded = false;
+  const DEFAULT_BG = getComputedStyle(document.documentElement).getPropertyValue("--map-image").trim();
+  const BG_STORAGE_KEY = "customMapImageV2";
+  const isValidBg = url => /^data:image\//i.test(url) || /^https?:\/\//i.test(url);
 
   async function loadSources(){
     const r = await fetch("/api/sources");
     SOURCES = await r.json();
-    selected = new Set(SOURCES.filter(s=>s.enabledByDefault).map(s=>s.key));
+  }
+
+  async function loadCountryProfiles(){
+    try {
+      const r = await fetch("/api/country-profiles");
+      const data = await r.json();
+      COUNTRY_PROFILES = data.profiles || {};
+      countryProfilesLoaded = true;
+      return data;
+    } catch (e) {
+      countryProfilesLoaded = false;
+      setStatus("Données pays indisponibles");
+      return null;
+    }
+  }
+
+  function getCountryProfile(country){
+    return COUNTRY_PROFILES?.[country] || null;
+  }
+
+  function renderContinentTabs(){
+    const root = $("#continentTabs");
+    root.innerHTML = CONTINENTS.map(c => `
+      <button type="button" data-continent="${escapeHtml(c.key)}" class="${c.key === activeContinent ? "active" : ""}">
+        ${escapeHtml(c.label)}
+      </button>
+    `).join("");
+    root.querySelectorAll("button").forEach(btn=>{
+      btn.addEventListener("click", () => {
+        const key = btn.getAttribute("data-continent");
+        if(!key) return;
+        setContinent(key);
+      });
+    });
+  }
+
+  function setContinent(continent){
+    activeContinent = continent;
+    const scopedSources = continent === "global"
+      ? SOURCES
+      : SOURCES.filter(s => s.continent === continent);
+    selected = new Set(scopedSources.map(s => s.key));
+    const countries = CONTINENT_COUNTRIES[activeContinent] || [];
+    if (!countries.includes(activeCountry)) activeCountry = null;
+    SidebarCountryTabs();
     renderSourceToggles();
-    setStatus("Prêt");
+    ContinentPage();
+    renderCountryPage();
+    renderArticles();
+  }
+
+  function renderCountrySlider(){
+    const slider = $("#countrySlider");
+    const countries = CONTINENT_COUNTRIES[activeContinent] || [];
+    if (countries.length === 0){
+      slider.innerHTML = "";
+      return;
+    }
+    slider.innerHTML = countries.map(country => `
+      <button type="button" data-country="${escapeHtml(country)}" class="${country === activeCountry ? "active" : ""}">
+        ${escapeHtml(country)}
+      </button>
+    `).join("");
+    slider.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const country = btn.getAttribute("data-country");
+        if(!country) return;
+        setCountry(country);
+      });
+    });
+  }
+
+  function SidebarCountryTabs(){
+    renderContinentTabs();
+  }
+
+  function ContinentPage(){
+    renderCountrySlider();
+    renderCountryPicker();
+  }
+
+  function CountrySlider(){
+    renderCountrySlider();
+  }
+
+  function setCountry(country){
+    activeCountry = country;
+    renderCountrySlider();
+    renderCountryPicker();
+    CountryPage();
+    renderArticles();
+  }
+
+  function renderCountryPicker(){
+    const picker = $("#countryPicker");
+    const list = $("#countryList");
+    const countries = CONTINENT_COUNTRIES[activeContinent] || [];
+    if (countries.length === 0){
+      picker.classList.remove("open");
+      list.innerHTML = "";
+      return;
+    }
+    const filtered = countries.filter(country => {
+      if (!countrySearch) return true;
+      return norm(country).includes(norm(countrySearch));
+    });
+    list.innerHTML = filtered.map(country => `
+      <button type="button" data-country="${escapeHtml(country)}">${escapeHtml(country)}</button>
+    `).join("");
+    list.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const country = btn.getAttribute("data-country");
+        if(!country) return;
+        setCountry(country);
+        picker.classList.remove("open");
+      });
+    });
+  }
+
+  function initFromRoute(){
+    const { continentId, countryId } = parseRoute();
+    const resolvedContinent = resolveContinent(continentId) || "global";
+    activeContinent = resolvedContinent;
+    const resolvedCountry = resolveCountry(countryId, resolvedContinent);
+    if (resolvedCountry) {
+      activeCountry = resolvedCountry;
+    } else {
+      activeCountry = null;
+    }
+    SidebarCountryTabs();
+    renderSourceToggles();
+    ContinentPage();
+    renderCountryPage();
+    renderArticles();
+  }
+
+  function parseRoute(){
+    const path = window.location.pathname.toLowerCase();
+    const parts = path.split("/").filter(Boolean);
+    const idx = parts.indexOf("continent");
+    const continentId = idx >= 0 ? parts[idx + 1] : null;
+    const countryId = idx >= 0 ? parts[idx + 2] : null;
+    const params = new URLSearchParams(window.location.search);
+    return {
+      continentId: params.get("continent") || continentId,
+      countryId: params.get("country") || countryId
+    };
+  }
+
+  function resolveContinent(input){
+    if (!input) return null;
+    const key = norm(input);
+    const map = {
+      afrique: "Afrique",
+      "amerique-du-nord": "Amérique du Nord",
+      "amerique-du-sud": "Amérique du Sud",
+      asie: "Asie",
+      europe: "Europe",
+      oceanie: "Océanie",
+      global: "global"
+    };
+    return map[key] || null;
+  }
+
+  function resolveCountry(input, continent){
+    if (!input) return null;
+    const countries = CONTINENT_COUNTRIES[continent] || [];
+    const normalized = norm(input);
+    const byName = countries.find(country => norm(country) === normalized);
+    if (byName) return byName;
+    const byCode = countries.find(country => norm(COUNTRY_CODES[country] || "") === normalized);
+    if (byCode) return byCode;
+    return null;
   }
 
   function renderSourceToggles(){
     const root = $("#sourceToggles");
-    root.innerHTML = SOURCES.map(s => `
+    const visibleSources = activeContinent === "global"
+      ? SOURCES
+      : SOURCES.filter(s => s.continent === activeContinent);
+    root.innerHTML = visibleSources.map(s => `
       <label class="src">
         <input type="checkbox" data-key="${escapeHtml(s.key)}" ${selected.has(s.key) ? "checked":""}/>
         ${escapeHtml(s.name)}
@@ -127,6 +499,10 @@
 
   async function search(){
     const q = $("#q").value.trim();
+    if(!activeCountry){
+      setStatus("Choisis un pays pour afficher les informations.");
+      return;
+    }
     if(selected.size === 0){
       setStatus("Choisis au moins 1 source");
       return;
@@ -140,122 +516,446 @@
 
     if(data.error){
       setStatus("Erreur");
-      $("#articles").innerHTML = `<div class="small">${escapeHtml(data.error)} ${escapeHtml(data.details||"")}</div>`;
+      const details = data.warnings?.length
+        ? ` (${data.warnings.length} source(s) en échec)`
+        : "";
+      $("#articles").innerHTML = `<div class="small">${escapeHtml(data.error)}${escapeHtml(details)} ${escapeHtml(data.details||"")}</div>`;
       return;
     }
 
     ITEMS = data.items || [];
-    setStatus(`Résultats pour: ${q || "tout"}`);
+    const warningText = data.warnings?.length
+      ? ` — ${data.warnings.length} source(s) en échec`
+      : "";
+    setStatus(`Résultats pour: ${q || "tout"}${warningText}`);
     $("#count").textContent = `${ITEMS.length} item(s)`;
     renderArticles();
+    renderCountryPage();
+  }
+
+  async function loadGeopolitics(){
+    const statusEl = $("#geoStatus");
+    try{
+      statusEl.textContent = "Mise à jour…";
+      const q = "geopolitique geopolitics defense diplomacy conflict";
+      const r = await fetch(`/api/search?q=${encodeURIComponent(q)}&sources=all`);
+      const data = await r.json();
+      geoLastUpdate = Date.now();
+      const items = (data.items || []).slice(0, 24);
+      const ticker = $("#geoTicker");
+      if(items.length === 0){
+        ticker.innerHTML = `<span class="small">Aucune actualité disponible pour le moment.</span>`;
+        statusEl.textContent = "Aucune donnée";
+        return;
+      }
+      if(geoSeen.size === 0){
+        const entries = items.map(it => `
+          <span class="ticker-item">
+            <span class="idx">#</span>
+            <a href="${escapeHtml(it.link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(it.title)}</a>
+            <span class="small">${escapeHtml(it.sourceName)}</span>
+          </span>
+        `).join("");
+        ticker.innerHTML = entries + entries;
+        items.forEach(it => {
+          const key = it.link || `${it.sourceName}-${it.title}`;
+          geoSeen.add(key);
+        });
+        statusEl.textContent = `Mis à jour • ${new Date().toLocaleTimeString("fr-FR")}`;
+        return;
+      }
+      const now = Date.now();
+      const cutoff = geoLastUpdate ? geoLastUpdate - 1000 : null;
+      const fresh = items.filter(it => {
+        const pub = it.pubDate ? new Date(it.pubDate).getTime() : null;
+        if (cutoff === null) return true;
+        if (!pub || Number.isNaN(pub)) return false;
+        return pub >= cutoff;
+      });
+      const nextItems = fresh.length ? fresh : items;
+      const unseen = nextItems.filter(it => {
+        const key = it.link || `${it.sourceName}-${it.title}`;
+        if (geoSeen.has(key)) return false;
+        geoSeen.add(key);
+        return true;
+      });
+      if(geoLastUpdate && unseen.length === 0){
+        statusEl.textContent = `À jour • ${new Date().toLocaleTimeString("fr-FR")}`;
+        geoLastUpdate = now;
+        return;
+      }
+      const entries = unseen.length ? unseen : items;
+      const html = entries.map(it => `
+        <span class="ticker-item">
+          <span class="idx">#</span>
+          <a href="${escapeHtml(it.link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(it.title)}</a>
+          <span class="small">${escapeHtml(it.sourceName)}</span>
+        </span>
+      `).join("");
+      ticker.innerHTML = html + html;
+      statusEl.textContent = `Mis à jour • ${new Date().toLocaleTimeString("fr-FR")}`;
+      geoLastUpdate = now;
+    } catch (e) {
+      statusEl.textContent = "Échec de mise à jour";
+    }
   }
 
   function renderArticles(){
     const root = $("#articles");
-    root.innerHTML = ITEMS.map(it => `
-      <article>
-        <h3><a href="${escapeHtml(it.link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(it.title)}</a></h3>
-        <div class="meta">
-          <span>${escapeHtml(it.sourceName)}</span>
-          <span>•</span>
-          <span>${escapeHtml(it.pubDate ? new Date(it.pubDate).toLocaleString("fr-FR") : "")}</span>
-        </div>
-        <div class="snippet">${escapeHtml(it.snippet || "")}</div>
-      </article>
-    `).join("") || `<div class="small">Aucun résultat. Essaie un autre mot-clé (ex: “arctic”, “nato”, “ransomware”).</div>`;
+    if (!activeCountry){
+      root.style.display = "none";
+      root.innerHTML = "";
+      return;
+    }
+    root.style.display = "grid";
+    const list = ITEMS.filter(matchCountry);
+    root.innerHTML = list.map((it, idx) => renderArticleCard(it, idx))
+      .join("") || `<div class="small">Aucun résultat. Essaie un autre mot-clé (ex: “arctic”, “nato”, “ransomware”).</div>`;
   }
 
-  // Chatbot: répond UNIQUEMENT depuis ITEMS
-  const chat = { messages: [
-    { role:"assistant", text:"Je réponds uniquement à partir des résultats chargés (titres/extraits/liens) et je cite mes sources. Lance une recherche puis pose ta question." }
-  ]};
+  function classifyCountryCategory(item){
+    const text = norm([item.title, item.snippet, item.content, item.sourceName].join(" "));
+    const weighted = (terms, weight, mustHave = []) => {
+      const score = terms.reduce((acc, term) => acc + (text.includes(norm(term)) ? weight : 0), 0);
+      if (mustHave.length && !mustHave.some(term => text.includes(norm(term)))) return 0;
+      return score;
+    };
+    const categories = [
+      {
+        key: "geopolitique",
+        label: "Géopolitique",
+        className: "tag-geo",
+        score:
+          weighted(["geopolitique","geopolitics","relations internationales","diplomatie","diplomatic","sanction","embargo"], 3) +
+          weighted(["conflit","conflict","guerre","war","occupation","invasion","frontiere","border"], 2, ["etat","state","pays","country","armement","armed"]) +
+          weighted(["otan","nato","onu","un","alliance","treaty","traité","coalition"], 2)
+      },
+      {
+        key: "finance",
+        label: "Finance",
+        className: "tag-finance",
+        score:
+          weighted(["marches","markets","bourse","stocks","indices","bond","obligation","taux","interest rate"], 3) +
+          weighted(["banque","bank","central bank","fed","ecb","inflation","croissance","growth","recession"], 2) +
+          weighted(["entreprise","company","corporate","earnings","results","profit","revenue","fusion","acquisition"], 2, ["entreprise","company","corporate"])
+      },
+      {
+        key: "securitaire",
+        label: "Sécuritaire",
+        className: "tag-security",
+        score:
+          weighted(["securite","security","terrorisme","terror","attaque","attack","police","crime","violence"], 2) +
+          weighted(["militaire","military","defense","defence","armes","weapons"], 2, ["securite","security","militaire","military"]) +
+          weighted(["renseignement","intelligence","cyberattaque","cyberattack"], 2)
+      },
+      {
+        key: "sanitaire",
+        label: "Sanitaire",
+        className: "tag-health",
+        score:
+          weighted(["sante","health","medecine","medicine","hopital","hospital","epidemie","epidemic","pandemie","pandemic"], 3) +
+          weighted(["vaccin","vaccine","traitement","treatment","maladie","disease","sante publique","public health"], 2, ["sante","health","medecine","medicine"])
+      },
+      {
+        key: "sport",
+        label: "Sport",
+        className: "tag-sport",
+        score:
+          weighted(["sport","football","soccer","basket","tennis","rugby","olympique","olympics","championnat","league"], 3) +
+          weighted(["coupe","cup","fifa","uefa","nba","f1","formula 1"], 2, ["sport","football","soccer","basket","tennis"])
+      },
+      {
+        key: "politique",
+        label: "Politique intérieure",
+        className: "tag-politics",
+        score:
+          weighted(["politique interieure","politique intérieure","government","gouvernement","president","président","parlement","election","élection","opposition","ministere","ministère","loi","reforme","réforme"], 3) +
+          weighted(["parti","parties","vote","cabinet","majorite","majorité"], 2)
+      }
+    ];
 
-  function renderChat(){
-    const log = $("#chatlog");
-    log.innerHTML = chat.messages.map(m => `
-      <div class="msg ${m.role==="user" ? "user":""}">
-        <div class="who">${m.role==="user" ? "Toi":"Chatbot"}</div>
-        <div class="txt">${escapeHtml(m.text)}</div>
-        ${m.cites?.length ? `<div class="cites">Sources: ${
-          m.cites.map(c => `${escapeHtml(c.sourceName)} — ${escapeHtml(c.title)}`).join(" | ")
-        }</div>` : ""}
+    const ranked = categories
+      .map(cat => ({ ...cat, score: cat.score || 0 }))
+      .sort((a, b) => b.score - a.score);
+
+    const primary = ranked[0]?.score > 0 ? ranked[0] : { key: "general", label: "Général", className: "tag-general", score: 0 };
+    const secondary = ranked[1] && ranked[1].score >= 3 && ranked[1].score >= primary.score * 0.6
+      ? ranked[1]
+      : null;
+
+    return { primary, secondary };
+  }
+
+  function renderArticleCard(item, idx){
+    return `
+      <article>
+        <h3><span class="idx">#${idx + 1}</span><a href="${escapeHtml(item.link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title)}</a></h3>
+        <div class="meta">
+          <span>${escapeHtml(item.sourceName)}</span>
+          <span>•</span>
+          <span>${escapeHtml(item.pubDate ? new Date(item.pubDate).toLocaleString("fr-FR") : "")}</span>
+          ${renderTag(item)}
+        </div>
+        <div class="snippet">${escapeHtml(item.snippet || "")}</div>
+      </article>
+    `;
+  }
+
+  function renderTag(item){
+    const { primary, secondary } = classifyCountryCategory(item);
+    const primaryHtml = `<span class="tag ${primary.className}">${escapeHtml(primary.label)}</span>`;
+    const secondaryHtml = secondary
+      ? `<span class="tag ${secondary.className}">${escapeHtml(secondary.label)}</span>`
+      : "";
+    return primaryHtml + secondaryHtml;
+  }
+
+  function matchCountry(item){
+    if (!activeCountry) return true;
+    const text = norm([item.title, item.snippet, item.content, item.sourceName].join(" "));
+    const keywords = COUNTRY_KEYWORDS[activeCountry] || [activeCountry];
+    return keywords.some(keyword => text.includes(norm(keyword)));
+  }
+
+  function renderCountryPage(){
+    const dashboard = $("#countryDashboard");
+    if (!activeCountry){
+      dashboard.innerHTML = `<div class="placeholder">Sélectionnez un pays pour afficher les informations.</div>`;
+      return;
+    }
+    if (!countryProfilesLoaded){
+      dashboard.innerHTML = `<div class="small">Chargement des profils pays officiels…</div>`;
+      return;
+    }
+    const profile = getCountryProfile(activeCountry);
+    if (!profile){
+      dashboard.innerHTML = `<div class="small">Profil pays indisponible.</div>`;
+      return;
+    }
+    const countryItems = ITEMS.filter(matchCountry);
+    const categories = [
+      { key: "securitaire", label: "Situation sécuritaire" },
+      { key: "sanitaire", label: "Situation sanitaire" },
+      { key: "operabilite", label: "Situation opérabilité business" },
+      { key: "expat", label: "Situation expatriés" },
+      { key: "global", label: "Situation globale" }
+    ];
+    const ratings = CategoryRatingsBar(countryItems, categories);
+    const cards = ratings.map(r => `
+      <div class="rating-card">
+        <div class="rating-title">${escapeHtml(r.label)}</div>
+        <div class="rating-score">${r.stars}/5</div>
+        ${r.note ? `<div class="rating-note">${escapeHtml(r.note)}</div>` : ""}
       </div>
     `).join("");
-    log.scrollTop = log.scrollHeight;
+    const facts = renderCountryFacts(activeCountry);
+    const sections = CategorySections(countryItems, [
+      { key: "sport", label: "Sport" },
+      { key: "geopolitique", label: "Géopolitique" },
+      { key: "finance", label: "Finance" },
+      { key: "sanitaire", label: "Sanitaire" },
+      { key: "securitaire", label: "Sécuritaire" },
+      { key: "politique", label: "Politique intérieure" }
+    ]);
+    const advice = buildEnterpriseAdvice(ratings);
+    dashboard.innerHTML = `
+      <div class="ratings">${cards}</div>
+      ${facts}
+      <div class="advice">${escapeHtml(advice)}</div>
+      ${sections}
+    `;
   }
 
-  function score(it, qTokens){
-    const hay = tokenize([it.title, it.snippet, it.sourceName].join(" ")).join(" ");
-    let s = 0;
-    for(const t of qTokens){
-      const re = new RegExp("\\\\b"+t+"\\\\b","g");
-      s += (hay.match(re)||[]).length;
-    }
-    return s;
+  function renderCountryFacts(country){
+    const profile = getCountryProfile(country);
+    if (!profile) return "";
+    const formatDate = value => {
+      if (!value) return null;
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value;
+      return date.toLocaleDateString("fr-FR", { year: "numeric", month: "long", day: "numeric" });
+    };
+    const electionValue = profile.isDemocracy
+      ? formatDate(profile.nextElection)
+      : "Non applicable — régime non démocratique";
+    const facts = [
+      { title: "Chef d’État", value: profile.headOfState },
+      { title: "Parti majoritaire", value: profile.rulingParty },
+      profile.isDemocracy !== null && profile.isDemocracy !== undefined
+        ? { title: "Prochaines élections", value: electionValue }
+        : null,
+      { title: "RSF WPFI — rang", value: profile.rsfRank },
+      { title: "RSF WPFI — score", value: profile.rsfScore }
+    ].filter(item => item && item.value !== null && item.value !== undefined && item.value !== "");
+    const hasRsf = facts.some(item => item.title.startsWith("RSF"));
+    if (facts.length === 0) return "";
+    return `
+      <div class="facts">
+        ${facts.map(item => `
+          <div class="fact-card">
+            <div class="fact-title">${escapeHtml(item.title)}</div>
+            <div class="fact-value">${escapeHtml(String(item.value))}</div>
+          </div>
+        `).join("")}
+        ${hasRsf ? `<div class="fact-note">Classement mondial de la liberté de la presse (WPFI) — Reporters sans Frontières.</div>` : ""}
+      </div>
+    `;
   }
 
-  function topMatches(question, k=8){
-    const qTokens = tokenize(question);
-    if(qTokens.length===0) return [];
-    return ITEMS
-      .map(it => ({it, s: score(it, qTokens)}))
-      .filter(x=>x.s>0)
-      .sort((a,b)=>b.s-a.s)
-      .slice(0,k);
+  function CategoryRatingsBar(countryItems, categories){
+    return computeCategoryRatings(countryItems, categories, activeCountry);
   }
 
-  function buildAnswer(question){
-    if(ITEMS.length===0){
-      return { text:"Je n’ai aucun résultat chargé. Fais d’abord une recherche (ex: “Groenland”).", cites:[] };
-    }
-    const matches = topMatches(question, 10);
-    if(matches.length===0){
-      return { text:"Je ne trouve rien dans les résultats chargés qui corresponde. Reformule ou refais une recherche plus large.", cites:[] };
-    }
-
-    const qn = norm(question);
-    const wantsSummary = qn.includes("resume") || qn.includes("synthese") || qn.includes("maj") || qn.includes("principales");
-    const wantsSources = qn.includes("source") || qn.includes("cite");
-
-    const lines = [];
-    if(wantsSummary){
-      lines.push("Synthèse basée sur les résultats chargés :");
-      for(const {it} of matches.slice(0,5)) lines.push(`- ${it.sourceName} : ${it.title}`);
-    } else if(wantsSources){
-      lines.push("Sources pertinentes dans les résultats :");
-      for(const {it} of matches.slice(0,6)) lines.push(`- ${it.sourceName} : ${it.title}`);
-    } else {
-      lines.push("Éléments les plus proches de ta question :");
-      for(const {it} of matches.slice(0,4)) lines.push(`- ${it.sourceName} : ${it.title}`);
-      lines.push("");
-      lines.push("Si tu veux, je peux faire une synthèse thématique (géopolitique / économie / cyber / défense).");
-    }
-
-    return { text: lines.join("\\n"), cites: matches.slice(0,6).map(x=>x.it) };
+  function CategorySections(countryItems, categories){
+    return categories.map(category => {
+      const filtered = countryItems.filter(it => classifyCountryCategory(it).primary.key === category.key);
+      if (filtered.length === 0) return "";
+      return `
+        <div class="category-section">
+          <h4>${escapeHtml(category.label)}</h4>
+          <div class="articles">
+            ${filtered.map((it, idx) => renderArticleCard(it, idx)).join("")}
+          </div>
+        </div>
+      `;
+    }).join("");
   }
 
-  function send(){
-    const q = $("#prompt").value.trim();
-    if(!q) return;
-    chat.messages.push({ role:"user", text:q });
-    const ans = buildAnswer(q);
-    chat.messages.push({ role:"assistant", text: ans.text, cites: ans.cites });
-    $("#prompt").value = "";
-    renderChat();
+  function CountryPage(){
+    renderCountryPage();
+  }
+
+  function computeCategoryRatings(items, categories, country){
+    const profile = getCountryProfile(country);
+    if (!profile || !profile.ratings) return [];
+    const ratingMap = {
+      securitaire: profile.ratings.security,
+      sanitaire: profile.ratings.health,
+      operabilite: profile.ratings.business,
+      expat: profile.ratings.expat,
+      global: profile.ratings.overall
+    };
+    return categories.map(cat => {
+      const score = ratingMap[cat.key];
+      const stars = typeof score === "number" ? clampRating(score) : 3;
+      return {
+        ...cat,
+        normalized: stars * 20,
+        stars,
+        note: buildRatingNote(cat.key, stars)
+      };
+    });
+  }
+
+  function buildRatingNote(key, stars){
+    if (key === "securitaire"){
+      return stars <= 2 ? "Risque élevé, vigilance renforcée" : "Contexte sécuritaire maîtrisé";
+    }
+    if (key === "sanitaire"){
+      return stars <= 2 ? "Couverture sanitaire limitée" : "Système sanitaire fonctionnel";
+    }
+    if (key === "operabilite"){
+      return stars <= 2 ? "Environnement opérationnel contraint" : "Activité possible avec procédures";
+    }
+    if (key === "expat"){
+      return stars <= 2 ? "Conditions expatriés difficiles" : "Conditions expatriés favorables";
+    }
+    if (key === "global"){
+      return stars <= 2 ? "Vigilance critique" : "Situation globale favorable";
+    }
+    return "";
+  }
+
+  function clampRating(value){
+    return Math.min(5, Math.max(1, value));
+  }
+
+  function buildEnterpriseAdvice(ratings){
+    const overall = ratings.find(r => r.key === "global");
+    const level = overall?.stars || 3;
+    if(level <= 1){
+      return "Situation critique : opérations très limitées, plans d’évacuation indispensables.";
+    }
+    if(level === 2){
+      return "Situation défavorable : mesures renforcées, suivi sûreté et options d’évacuation.";
+    }
+    if(level === 3){
+      return "Situation intermédiaire : procédures sûreté/santé, prestataires fiables, zones à éviter.";
+    }
+    if(level === 4){
+      return "Situation favorable : opérations possibles avec vigilance et briefings adaptés.";
+    }
+    return "Situation très favorable : dispositifs standards généralement suffisants.";
   }
 
   $("#searchBtn").addEventListener("click", search);
+  $("#openCountryPicker").addEventListener("click", () => {
+    $("#countryPicker").classList.toggle("open");
+  });
+  $("#countrySearch").addEventListener("input", e => {
+    countrySearch = e.target.value;
+    renderCountryPicker();
+  });
+  $("#selectAll").addEventListener("click", () => {
+    const scope = activeContinent === "global"
+      ? SOURCES
+      : SOURCES.filter(s => s.continent === activeContinent);
+    selected = new Set(scope.map(s => s.key));
+    renderSourceToggles();
+  });
+  $("#clearAll").addEventListener("click", () => {
+    const scope = activeContinent === "global"
+      ? SOURCES
+      : SOURCES.filter(s => s.continent === activeContinent);
+    const remaining = new Set(selected);
+    scope.forEach(s => remaining.delete(s.key));
+    selected = remaining;
+    renderSourceToggles();
+  });
+  $("#toggleSources").addEventListener("change", e => {
+    $("#sourceToggles").style.display = e.target.checked ? "flex" : "none";
+  });
+  function applyBackground(url){
+    const safeUrl = (url || "").trim();
+    if(!safeUrl){
+      document.documentElement.style.setProperty("--map-image", DEFAULT_BG);
+      localStorage.removeItem(BG_STORAGE_KEY);
+      $("#bgUrl").value = "";
+      return;
+    }
+    if(!isValidBg(safeUrl)){
+      setStatus("URL de fond invalide");
+      return;
+    }
+    const escaped = safeUrl.replace(/"/g, '\\"');
+    document.documentElement.style.setProperty("--map-image", `url("${escaped}")`);
+    localStorage.setItem(BG_STORAGE_KEY, safeUrl);
+  }
+
+  $("#applyBg").addEventListener("click", () => applyBackground($("#bgUrl").value));
+  $("#resetBg").addEventListener("click", () => applyBackground(""));
+
   $("#q").addEventListener("keydown", e => {
     if(e.key === "Enter"){ e.preventDefault(); search(); }
   });
-  $("#send").addEventListener("click", send);
-  $("#reset").addEventListener("click", () => {
-    chat.messages = [{ role:"assistant", text:"Chat réinitialisé. Fais une recherche puis pose ta question." }];
-    renderChat();
-  });
+  async function boot(){
+    setStatus("Chargement…");
+    await Promise.all([loadSources(), loadCountryProfiles()]);
+    initFromRoute();
+    setStatus("Prêt");
+  }
 
-  renderChat();
-  loadSources();
+  boot();
+  loadGeopolitics();
+  setInterval(loadGeopolitics, 300000);
+
+  const storedBg = localStorage.getItem(BG_STORAGE_KEY);
+  if(storedBg && isValidBg(storedBg)){
+    $("#bgUrl").value = storedBg;
+    applyBackground(storedBg);
+  } else if(storedBg) {
+    localStorage.removeItem(BG_STORAGE_KEY);
+  }
 </script>
 </body>
 </html>
