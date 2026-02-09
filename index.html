@@ -350,6 +350,26 @@
     return norm(v).replace(/\s+/g, "-");
   }
 
+  function buildCountryUrl(country){
+    const continent = continentByCountry(country);
+    const params = new URLSearchParams();
+    if (continent) params.set("continent", continent);
+    params.set("country", country);
+    return `/?${params.toString()}`;
+  }
+
+  function buildContinentUrl(continent){
+    const params = new URLSearchParams();
+    params.set("continent", continent);
+    return `/?${params.toString()}`;
+  }
+
+  function buildEntityUrl(entity){
+    const params = new URLSearchParams();
+    params.set("entity", entity);
+    return `/?${params.toString()}`;
+  }
+
   function continentByCountry(country){
     return Object.entries(CONTINENT_COUNTRIES).find(([, list]) => list.includes(country))?.[0] || null;
   }
@@ -375,7 +395,7 @@
     activeCountry = null;
     activeEntity = null;
     continentCountryFilter = "";
-    if (continent && continent !== "global") history.pushState({}, "", `/continent/${slugify(continent)}`);
+    if (continent && continent !== "global") history.pushState({}, "", buildContinentUrl(continent));
     const scopedSources = continent === "global"
       ? SOURCES
       : SOURCES.filter(s => s.continent === continent);
@@ -429,7 +449,7 @@
     activeEntity = null;
     const targetContinent = continentByCountry(country) || activeContinent || "global";
     activeContinent = targetContinent;
-    history.pushState({}, "", `/country/${slugify(country)}`);
+    history.pushState({}, "", buildCountryUrl(country));
     renderCountrySlider();
     renderCountryPicker();
     CountryPage();
@@ -559,7 +579,7 @@
     const qNorm = norm(q);
     const continentMatch = index.continents.find(c => norm(c.name) === qNorm || c.slug === qNorm.replace(/\s+/g, "-"));
     if (continentMatch) {
-      const url = `/continent/${continentMatch.slug}`;
+      const url = buildContinentUrl(continentMatch.name);
       history.pushState({}, "", url);
       activeContinent = continentMatch.name;
       activeCountry = null;
@@ -575,7 +595,7 @@
     }
     const countryMatch = index.countries.find(c => norm(c.name) === qNorm || c.slug === qNorm.replace(/\s+/g, "-"));
     if (countryMatch) {
-      const url = `/country/${countryMatch.slug}`;
+      const url = buildCountryUrl(countryMatch.name);
       history.pushState({}, "", url);
       activeContinent = countryMatch.continent || "global";
       activeCountry = countryMatch.name;
@@ -611,7 +631,7 @@
 
     ITEMS = data.items || [];
     activeEntity = q || null;
-    history.pushState({}, "", `/entity/${encodeURIComponent(slugify(q || "recherche"))}?entity=${encodeURIComponent(q)}`);
+    history.pushState({}, "", buildEntityUrl(q || "recherche"));
     const warningText = data.warnings?.length
       ? ` — ${data.warnings.length} source(s) en échec`
       : "";
@@ -629,7 +649,7 @@
       : (CONTINENT_COUNTRIES[activeContinent] || []);
 
     if (activeCountry) {
-      const profileLink = `/country/${slugify(activeCountry)}`;
+      const profileLink = buildCountryUrl(activeCountry);
       root.innerHTML = `<div class="small"><strong>Profil pays</strong> — <a href="${profileLink}">${escapeHtml(activeCountry)}</a> (${escapeHtml(activeContinent || continentByCountry(activeCountry) || "Global")})</div>`;
       return;
     }
@@ -784,7 +804,7 @@
           <span>${escapeHtml(item.date ? new Date(item.date).toLocaleString("fr-FR") : "")}</span>
           ${renderTag(item)}
           ${item.continent ? `<span>•</span><span>${escapeHtml(item.continent)}</span>` : ""}
-          ${item.country ? `<span>•</span><a href="/country/${slugify(item.country)}">${escapeHtml(item.country)}</a>` : ""}
+          ${item.country ? `<span>•</span><a href="${buildCountryUrl(item.country)}">${escapeHtml(item.country)}</a>` : ""}
         </div>
         <div class="snippet">${escapeHtml(item.summary || "")}</div>
       </article>
