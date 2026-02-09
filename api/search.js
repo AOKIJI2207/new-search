@@ -1,50 +1,18 @@
 import Parser from "rss-parser";
+import crypto from "crypto";
 import SOURCES from "./sources-data.js";
+import { norm, toArticleRecord } from "./article-pipeline.js";
 
 const parser = new Parser({ timeout: 15000 });
-
-function norm(s) {
-  return (s || "")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "")
-    .replace(/[^a-z0-9\s-]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function matchesQuery(item, query) {
-  const q = norm(query);
-  if (!q) return true;
-
-  const tokens = q.split(" ").filter(Boolean);
-  const expanded = expandTokens(tokens);
-  const hay = norm([item.title, item.contentSnippet, item.content, item.summary].filter(Boolean).join(" "));
-  if (expanded.length === 0) return true;
-
-  // OR logique : au moins un mot doit être présent
-  return expanded.some(t => hay.includes(t));
-}
+const SEARCH_TTL_MS = 5 * 60 * 1000;
+const searchCache = new Map();
 
 const TOKEN_TRANSLATIONS = new Map();
 [
-  ["afrique", "africa"],
-  ["asie", "asia"],
-  ["oceanie", "oceania"],
-  ["amerique", "america"],
-  ["australie", "australia"],
-  ["chine", "china"],
-  ["japon", "japan"],
-  ["coree", "korea"],
-  ["allemagne", "germany"],
-  ["angleterre", "england"],
-  ["nigeria", "nigéria"],
-  ["etats", "states"],
-  ["etats-unis", "united"]
-].forEach(([fr, en]) => {
-  TOKEN_TRANSLATIONS.set(fr, en);
-  TOKEN_TRANSLATIONS.set(en, fr);
-});
+  ["afrique", "africa"],["asie", "asia"],["oceanie", "oceania"],["amerique", "america"],
+  ["australie", "australia"],["chine", "china"],["japon", "japan"],["coree", "korea"],
+  ["allemagne", "germany"],["angleterre", "england"],["etats", "states"],["etats-unis", "united"]
+].forEach(([fr, en]) => { TOKEN_TRANSLATIONS.set(fr, en); TOKEN_TRANSLATIONS.set(en, fr); });
 
 function expandTokens(tokens) {
   const out = new Set();
@@ -56,41 +24,53 @@ function expandTokens(tokens) {
   return Array.from(out);
 }
 
-function compactItem(it, source) {
-  return {
-    sourceKey: source.key,
-    sourceName: source.name,
-    title: it.title || "",
-    link: it.link || "",
-    pubDate: it.isoDate || it.pubDate || "",
-    snippet: (it.contentSnippet || it.summary || "").slice(0, 320),
-    content: (it.content || it.summary || it.contentSnippet || "").slice(0, 2000)
-  };
+function matchesQuery(item, query) {
+  const q = norm(query);
+  if (!q) return true;
+  const tokens = expandTokens(q.split(" ").filter(Boolean));
+  const hay = norm([item.title, item.summary, item.content, item.source, item.category_label, item.country, ...(item.entities || [])].join(" "));
+  return tokens.some(t => hay.includes(t));
+}
+
+function setCachingHeaders(req, res, payload) {
+  const body = JSON.stringify(payload);
+  const etag = `W/"${crypto.createHash("sha1").update(body).digest("hex")}"`;
+  res.setHeader("Cache-Control", "public, max-age=60, s-maxage=300, stale-while-revalidate=600");
+  res.setHeader("ETag", etag);
+  if (req.headers["if-none-match"] === etag) {
+    res.status(304).end();
+    return true;
+  }
+  return false;
 }
 
 export default async function handler(req, res) {
   try {
     const q = (req.query.q || "").toString();
-    const keys = (req.query.sources || "")
-      .toString()
-      .split(",")
-      .map(s => s.trim())
-      .filter(Boolean);
-
-    const selected = keys.length === 0 || keys.includes("all")
-      ? SOURCES
-      : SOURCES.filter(s => keys.includes(s.key));
+    const keys = (req.query.sources || "").toString().split(",").map(s => s.trim()).filter(Boolean);
+    const selected = keys.length === 0 || keys.includes("all") ? SOURCES : SOURCES.filter(s => keys.includes(s.key));
     if (selected.length === 0) {
       res.status(400).json({ error: "Aucune source sélectionnée." });
       return;
     }
 
+    const cacheKey = `${q}::${selected.map(s => s.key).join(",")}`;
+    const now = Date.now();
+    const hit = searchCache.get(cacheKey);
+    if (hit && now - hit.ts < SEARCH_TTL_MS) {
+      if (setCachingHeaders(req, res, hit.payload)) return;
+      res.status(200).json(hit.payload);
+      return;
+    }
+
     const items = [];
     const warnings = [];
-    const results = await Promise.allSettled(selected.map(async s => {
-      const feed = await parser.parseURL(s.url);
-      for (const it of (feed.items || [])) {
-        if (matchesQuery(it, q)) items.push(compactItem(it, s));
+    const results = await Promise.allSettled(selected.map(async source => {
+      const feed = await parser.parseURL(source.url);
+      for (const raw of (feed.items || [])) {
+        const mapped = toArticleRecord(raw, source);
+        if (!mapped) continue;
+        if (matchesQuery(mapped, q)) items.push(mapped);
       }
     }));
 
@@ -104,25 +84,20 @@ export default async function handler(req, res) {
       }
     });
 
-    if (items.length === 0 && warnings.length === selected.length) {
-      res.status(502).json({ error: "Impossible de récupérer les flux RSS.", warnings });
-      return;
-    }
-
-    items.sort((a, b) => new Date(b.pubDate || 0) - new Date(a.pubDate || 0));
-
-    // dedupe par lien
+    items.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
     const seen = new Set();
     const dedup = [];
     for (const it of items) {
-      const k = it.link || (it.sourceName + it.title);
-      if (!seen.has(k)) {
-        seen.add(k);
-        dedup.push(it);
-      }
+      const key = it.url || `${it.source}-${it.title}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      dedup.push(it);
     }
 
-    res.status(200).json({ q, count: dedup.length, items: dedup.slice(0, 80), warnings });
+    const payload = { q, count: dedup.length, items: dedup.slice(0, 80), warnings };
+    searchCache.set(cacheKey, { ts: now, payload });
+    if (setCachingHeaders(req, res, payload)) return;
+    res.status(200).json(payload);
   } catch (e) {
     res.status(500).json({ error: "Erreur récupération RSS", details: String(e?.message || e) });
   }

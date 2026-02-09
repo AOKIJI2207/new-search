@@ -537,8 +537,7 @@
     const statusEl = $("#geoStatus");
     try{
       statusEl.textContent = "Mise à jour…";
-      const q = "geopolitique geopolitics defense diplomacy conflict";
-      const r = await fetch(`/api/search?q=${encodeURIComponent(q)}&sources=all`);
+      const r = await fetch(`/api/ticker`);
       const data = await r.json();
       geoLastUpdate = Date.now();
       const items = (data.items || []).slice(0, 24);
@@ -552,13 +551,13 @@
         const entries = items.map(it => `
           <span class="ticker-item">
             <span class="idx">#</span>
-            <a href="${escapeHtml(it.link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(it.title)}</a>
-            <span class="small">${escapeHtml(it.sourceName)}</span>
+            <a href="${escapeHtml(it.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(it.title_fr || it.title)}</a>
+            <span class="small">${escapeHtml(it.source)}</span>
           </span>
         `).join("");
         ticker.innerHTML = entries + entries;
         items.forEach(it => {
-          const key = it.link || `${it.sourceName}-${it.title}`;
+          const key = it.url || `${it.source}-${it.title}`;
           geoSeen.add(key);
         });
         statusEl.textContent = `Mis à jour • ${new Date().toLocaleTimeString("fr-FR")}`;
@@ -567,14 +566,14 @@
       const now = Date.now();
       const cutoff = geoLastUpdate ? geoLastUpdate - 1000 : null;
       const fresh = items.filter(it => {
-        const pub = it.pubDate ? new Date(it.pubDate).getTime() : null;
+        const pub = it.date ? new Date(it.date).getTime() : null;
         if (cutoff === null) return true;
         if (!pub || Number.isNaN(pub)) return false;
         return pub >= cutoff;
       });
       const nextItems = fresh.length ? fresh : items;
       const unseen = nextItems.filter(it => {
-        const key = it.link || `${it.sourceName}-${it.title}`;
+        const key = it.url || `${it.source}-${it.title}`;
         if (geoSeen.has(key)) return false;
         geoSeen.add(key);
         return true;
@@ -588,8 +587,8 @@
       const html = entries.map(it => `
         <span class="ticker-item">
           <span class="idx">#</span>
-          <a href="${escapeHtml(it.link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(it.title)}</a>
-          <span class="small">${escapeHtml(it.sourceName)}</span>
+          <a href="${escapeHtml(it.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(it.title_fr || it.title)}</a>
+          <span class="small">${escapeHtml(it.source)}</span>
         </span>
       `).join("");
       ticker.innerHTML = html + html;
@@ -614,89 +613,28 @@
   }
 
   function classifyCountryCategory(item){
-    const text = norm([item.title, item.snippet, item.content, item.sourceName].join(" "));
-    const weighted = (terms, weight, mustHave = []) => {
-      const score = terms.reduce((acc, term) => acc + (text.includes(norm(term)) ? weight : 0), 0);
-      if (mustHave.length && !mustHave.some(term => text.includes(norm(term)))) return 0;
-      return score;
+    const map = {
+      securite_interieure: { key: "securite_interieure", label: "Sécurité intérieure", className: "tag-security" },
+      securite_exterieure: { key: "securite_exterieure", label: "Sécurité extérieure", className: "tag-geo" },
+      situation_sanitaire: { key: "situation_sanitaire", label: "Situation sanitaire", className: "tag-health" },
+      situations_geographiques: { key: "situations_geographiques", label: "Situations géographiques", className: "tag-sport" },
+      actualites_politiques: { key: "actualites_politiques", label: "Actualités politiques", className: "tag-politics" }
     };
-    const categories = [
-      {
-        key: "geopolitique",
-        label: "Géopolitique",
-        className: "tag-geo",
-        score:
-          weighted(["geopolitique","geopolitics","relations internationales","diplomatie","diplomatic","sanction","embargo"], 3) +
-          weighted(["conflit","conflict","guerre","war","occupation","invasion","frontiere","border"], 2, ["etat","state","pays","country","armement","armed"]) +
-          weighted(["otan","nato","onu","un","alliance","treaty","traité","coalition"], 2)
-      },
-      {
-        key: "finance",
-        label: "Finance",
-        className: "tag-finance",
-        score:
-          weighted(["marches","markets","bourse","stocks","indices","bond","obligation","taux","interest rate"], 3) +
-          weighted(["banque","bank","central bank","fed","ecb","inflation","croissance","growth","recession"], 2) +
-          weighted(["entreprise","company","corporate","earnings","results","profit","revenue","fusion","acquisition"], 2, ["entreprise","company","corporate"])
-      },
-      {
-        key: "securitaire",
-        label: "Sécuritaire",
-        className: "tag-security",
-        score:
-          weighted(["securite","security","terrorisme","terror","attaque","attack","police","crime","violence"], 2) +
-          weighted(["militaire","military","defense","defence","armes","weapons"], 2, ["securite","security","militaire","military"]) +
-          weighted(["renseignement","intelligence","cyberattaque","cyberattack"], 2)
-      },
-      {
-        key: "sanitaire",
-        label: "Sanitaire",
-        className: "tag-health",
-        score:
-          weighted(["sante","health","medecine","medicine","hopital","hospital","epidemie","epidemic","pandemie","pandemic"], 3) +
-          weighted(["vaccin","vaccine","traitement","treatment","maladie","disease","sante publique","public health"], 2, ["sante","health","medecine","medicine"])
-      },
-      {
-        key: "sport",
-        label: "Sport",
-        className: "tag-sport",
-        score:
-          weighted(["sport","football","soccer","basket","tennis","rugby","olympique","olympics","championnat","league"], 3) +
-          weighted(["coupe","cup","fifa","uefa","nba","f1","formula 1"], 2, ["sport","football","soccer","basket","tennis"])
-      },
-      {
-        key: "politique",
-        label: "Politique intérieure",
-        className: "tag-politics",
-        score:
-          weighted(["politique interieure","politique intérieure","government","gouvernement","president","président","parlement","election","élection","opposition","ministere","ministère","loi","reforme","réforme"], 3) +
-          weighted(["parti","parties","vote","cabinet","majorite","majorité"], 2)
-      }
-    ];
-
-    const ranked = categories
-      .map(cat => ({ ...cat, score: cat.score || 0 }))
-      .sort((a, b) => b.score - a.score);
-
-    const primary = ranked[0]?.score > 0 ? ranked[0] : { key: "general", label: "Général", className: "tag-general", score: 0 };
-    const secondary = ranked[1] && ranked[1].score >= 3 && ranked[1].score >= primary.score * 0.6
-      ? ranked[1]
-      : null;
-
-    return { primary, secondary };
+    const category = map[item.category] || map.actualites_politiques;
+    return { primary: category, secondary: null };
   }
 
   function renderArticleCard(item, idx){
     return `
       <article>
-        <h3><span class="idx">#${idx + 1}</span><a href="${escapeHtml(item.link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title)}</a></h3>
+        <h3><span class="idx">#${idx + 1}</span><a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title)}</a></h3>
         <div class="meta">
-          <span>${escapeHtml(item.sourceName)}</span>
+          <span>${escapeHtml(item.source)}</span>
           <span>•</span>
-          <span>${escapeHtml(item.pubDate ? new Date(item.pubDate).toLocaleString("fr-FR") : "")}</span>
+          <span>${escapeHtml(item.date ? new Date(item.date).toLocaleString("fr-FR") : "")}</span>
           ${renderTag(item)}
         </div>
-        <div class="snippet">${escapeHtml(item.snippet || "")}</div>
+        <div class="snippet">${escapeHtml(item.summary || "")}</div>
       </article>
     `;
   }
@@ -712,7 +650,7 @@
 
   function matchCountry(item){
     if (!activeCountry) return true;
-    const text = norm([item.title, item.snippet, item.content, item.sourceName].join(" "));
+    const text = norm([item.title, item.summary, item.content, item.source].join(" "));
     const keywords = COUNTRY_KEYWORDS[activeCountry] || [activeCountry];
     return keywords.some(keyword => text.includes(norm(keyword)));
   }
@@ -734,11 +672,11 @@
     }
     const countryItems = ITEMS.filter(matchCountry);
     const categories = [
-      { key: "securitaire", label: "Situation sécuritaire" },
-      { key: "sanitaire", label: "Situation sanitaire" },
-      { key: "operabilite", label: "Situation opérabilité business" },
-      { key: "expat", label: "Situation expatriés" },
-      { key: "global", label: "Situation globale" }
+      { key: "securite_interieure", label: "Situation sécurité intérieure" },
+      { key: "securite_exterieure", label: "Situation sécurité extérieure" },
+      { key: "situation_sanitaire", label: "Situation sanitaire" },
+      { key: "situations_geographiques", label: "Situation géographique" },
+      { key: "actualites_politiques", label: "Situation politique" }
     ];
     const ratings = CategoryRatingsBar(countryItems, categories);
     const cards = ratings.map(r => `
@@ -750,12 +688,11 @@
     `).join("");
     const facts = renderCountryFacts(activeCountry);
     const sections = CategorySections(countryItems, [
-      { key: "sport", label: "Sport" },
-      { key: "geopolitique", label: "Géopolitique" },
-      { key: "finance", label: "Finance" },
-      { key: "sanitaire", label: "Sanitaire" },
-      { key: "securitaire", label: "Sécuritaire" },
-      { key: "politique", label: "Politique intérieure" }
+      { key: "securite_interieure", label: "Sécurité intérieure" },
+      { key: "securite_exterieure", label: "Sécurité extérieure" },
+      { key: "situation_sanitaire", label: "Situation sanitaire" },
+      { key: "situations_geographiques", label: "Situations géographiques" },
+      { key: "actualites_politiques", label: "Actualités politiques" }
     ]);
     const advice = buildEnterpriseAdvice(ratings);
     dashboard.innerHTML = `
@@ -829,11 +766,11 @@
     const profile = getCountryProfile(country);
     if (!profile || !profile.ratings) return [];
     const ratingMap = {
-      securitaire: profile.ratings.security,
-      sanitaire: profile.ratings.health,
-      operabilite: profile.ratings.business,
-      expat: profile.ratings.expat,
-      global: profile.ratings.overall
+      securite_interieure: profile.ratings.security,
+      securite_exterieure: profile.ratings.business,
+      situation_sanitaire: profile.ratings.health,
+      situations_geographiques: profile.ratings.expat,
+      actualites_politiques: profile.ratings.overall
     };
     return categories.map(cat => {
       const score = ratingMap[cat.key];
@@ -848,20 +785,20 @@
   }
 
   function buildRatingNote(key, stars){
-    if (key === "securitaire"){
-      return stars <= 2 ? "Risque élevé, vigilance renforcée" : "Contexte sécuritaire maîtrisé";
+    if (key === "securite_interieure"){
+      return stars <= 2 ? "Situation tendue, vigilance renforcée" : "Contexte sécuritaire maîtrisé";
     }
-    if (key === "sanitaire"){
-      return stars <= 2 ? "Couverture sanitaire limitée" : "Système sanitaire fonctionnel";
+    if (key === "securite_exterieure"){
+      return stars <= 2 ? "Pression externe élevée" : "Contexte externe maîtrisé";
     }
-    if (key === "operabilite"){
-      return stars <= 2 ? "Environnement opérationnel contraint" : "Activité possible avec procédures";
+    if (key === "situation_sanitaire"){
+      return stars <= 2 ? "Système de santé sous tension" : "Situation sanitaire stable";
     }
-    if (key === "expat"){
-      return stars <= 2 ? "Conditions expatriés difficiles" : "Conditions expatriés favorables";
+    if (key === "situations_geographiques"){
+      return stars <= 2 ? "Aléas géographiques marqués" : "Exposition géographique modérée";
     }
-    if (key === "global"){
-      return stars <= 2 ? "Vigilance critique" : "Situation globale favorable";
+    if (key === "actualites_politiques"){
+      return stars <= 2 ? "Tension politique élevée" : "Cadre politique relativement stable";
     }
     return "";
   }
@@ -871,7 +808,7 @@
   }
 
   function buildEnterpriseAdvice(ratings){
-    const overall = ratings.find(r => r.key === "global");
+    const overall = ratings.find(r => r.key === "actualites_politiques") || ratings[0];
     const level = overall?.stars || 3;
     if(level <= 1){
       return "Situation critique : opérations très limitées, plans d’évacuation indispensables.";

@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
 
-const CACHE_TTL_MS = 12 * 60 * 60 * 1000;
+const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 const USER_AGENT = "agoraflux-country-profiles/1.0";
 const CACHE_FILE = path.join(process.cwd(), "assets", "country-profiles-cache.json");
 
@@ -338,6 +338,12 @@ async function fetchRsfRanking() {
   return results;
 }
 
+
+function nonEmpty(value, fallback) {
+  if (value === null || value === undefined || value === "") return fallback;
+  return value;
+}
+
 function buildCountryProfiles({ wikidataFacts, worldBankRatings, rsfRanking }) {
   const profiles = {};
   COUNTRY_LIST.forEach(entry => {
@@ -347,12 +353,12 @@ function buildCountryProfiles({ wikidataFacts, worldBankRatings, rsfRanking }) {
     profiles[entry.name] = {
       country: entry.name,
       iso2: entry.iso2,
-      headOfState: facts.headOfState,
-      rulingParty: facts.rulingParty,
+      headOfState: nonEmpty(facts.headOfState, "Information officielle en cours de synchronisation"),
+      rulingParty: nonEmpty(facts.rulingParty, "Information officielle en cours de synchronisation"),
       nextElection: facts.nextElection,
       isDemocracy: facts.isDemocracy,
-      rsfRank: rsf.rank,
-      rsfScore: rsf.score,
+      rsfRank: rsf.rank ?? null,
+      rsfScore: rsf.score ?? null,
       ratings: {
         security: ratingData.security,
         health: ratingData.health,
@@ -403,14 +409,18 @@ export async function getCountryProfiles({ forceRefresh = false } = {}) {
   if (!forceRefresh && memoryCache && now - new Date(memoryCache.updatedAt).getTime() < CACHE_TTL_MS) {
     return memoryCache;
   }
-  if (!forceRefresh) {
-    const cache = await readCacheFile();
-    if (cache && cache.updatedAt && now - new Date(cache.updatedAt).getTime() < CACHE_TTL_MS) {
-      memoryCache = cache;
-      return cache;
-    }
+  const cache = await readCacheFile();
+  if (!forceRefresh && cache && cache.updatedAt && now - new Date(cache.updatedAt).getTime() < CACHE_TTL_MS) {
+    memoryCache = cache;
+    return cache;
   }
-  return buildAndCacheProfiles();
+  try {
+    return await buildAndCacheProfiles();
+  } catch (error) {
+    if (cache) return cache;
+    if (memoryCache) return memoryCache;
+    throw error;
+  }
 }
 
 export { COUNTRY_LIST };
