@@ -83,6 +83,12 @@
     .country-picker input{width:100%}
     .country-list{display:flex;flex-wrap:wrap;gap:8px}
     .country-list button{border-radius:999px;background:rgba(12,18,32,.38);border:1px solid rgba(255,255,255,.14);padding:6px 10px;font-size:12px}
+
+    .continent-country-panel{margin-top:10px;padding:10px;border:1px solid var(--border);border-radius:12px;background:rgba(12,18,32,.3)}
+    .continent-country-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+    .continent-country-tools input{max-width:320px;flex:1}
+    .continent-country-grid{display:flex;flex-wrap:wrap;gap:8px}
+    .continent-country-grid button{border-radius:999px;background:rgba(12,18,32,.38);border:1px solid rgba(255,255,255,.14);padding:6px 10px;font-size:12px}
     .placeholder{padding:12px;border:1px dashed var(--border);border-radius:12px;color:var(--muted);background:rgba(12,18,32,.25)}
     .ratings{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
     .rating-card{background:rgba(12,18,32,.38);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:10px}
@@ -213,6 +219,7 @@
   let activeCountry = null;
   let activeEntity = null;
   let countrySearch = "";
+  let continentCountryFilter = "";
   let SEARCH_INDEX = { countries: [], continents: [] };
   const CONTINENTS = [
     { key: "global", label: "Global" },
@@ -365,6 +372,10 @@
 
   function setContinent(continent){
     activeContinent = continent;
+    activeCountry = null;
+    activeEntity = null;
+    continentCountryFilter = "";
+    if (continent && continent !== "global") history.pushState({}, "", `/continent/${slugify(continent)}`);
     const scopedSources = continent === "global"
       ? SOURCES
       : SOURCES.filter(s => s.continent === continent);
@@ -415,6 +426,10 @@
 
   function setCountry(country){
     activeCountry = country;
+    activeEntity = null;
+    const targetContinent = continentByCountry(country) || activeContinent || "global";
+    activeContinent = targetContinent;
+    history.pushState({}, "", `/country/${slugify(country)}`);
     renderCountrySlider();
     renderCountryPicker();
     CountryPage();
@@ -450,7 +465,7 @@
 
   function initFromRoute(){
     const { continentId, countryId, entityId } = parseRoute();
-    const resolvedContinent = resolveContinent(continentId) || "global";
+    const resolvedContinent = resolveContinent(continentId) || "Europe";
     activeContinent = resolvedContinent;
     const resolvedCountry = resolveCountry(countryId, resolvedContinent);
     activeEntity = entityId || null;
@@ -609,21 +624,53 @@
 
   function renderContextView(){
     const root = $("#contextView");
-    const countries = activeContinent === "global" ? Object.keys(COUNTRY_CODES) : (CONTINENT_COUNTRIES[activeContinent] || []);
+    const countries = activeContinent === "global"
+      ? Object.keys(COUNTRY_CODES)
+      : (CONTINENT_COUNTRIES[activeContinent] || []);
+
     if (activeCountry) {
       const profileLink = `/country/${slugify(activeCountry)}`;
-      root.innerHTML = `<div class="small"><strong>Profil pays</strong> — <a href="${profileLink}">${escapeHtml(activeCountry)}</a> (${escapeHtml(activeContinent || continentByCountry(activeCountry) || "non précisé")})</div>`;
+      root.innerHTML = `<div class="small"><strong>Profil pays</strong> — <a href="${profileLink}">${escapeHtml(activeCountry)}</a> (${escapeHtml(activeContinent || continentByCountry(activeCountry) || "Global")})</div>`;
       return;
     }
+
     if (activeContinent && activeContinent !== "global") {
-      root.innerHTML = `<div class="small"><strong>Vue continent</strong> — ${escapeHtml(activeContinent)} • Pays: ${countries.map(c => `<a href="/country/${slugify(c)}">${escapeHtml(c)}</a>`).join(" · ")}</div>`;
+      const sorted = [...countries].sort((a, b) => a.localeCompare(b, "fr"));
+      const filtered = sorted.filter(c => !continentCountryFilter || norm(c).includes(norm(continentCountryFilter)));
+      root.innerHTML = `
+        <div class="continent-country-panel">
+          <div class="continent-country-tools">
+            <strong>Liste des pays — ${escapeHtml(activeContinent)}</strong>
+            <input id="continentCountrySearch" type="search" placeholder="Filtrer les pays du continent" value="${escapeHtml(continentCountryFilter)}" />
+          </div>
+          <div class="continent-country-grid">
+            ${filtered.map(c => `<button type="button" data-country-link="${escapeHtml(c)}">${escapeHtml(c)}</button>`).join("")}
+          </div>
+        </div>
+      `;
+      const searchInput = $("#continentCountrySearch");
+      if (searchInput) {
+        searchInput.addEventListener("input", e => {
+          continentCountryFilter = e.target.value;
+          renderContextView();
+        });
+      }
+      root.querySelectorAll("button[data-country-link]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const country = btn.getAttribute("data-country-link");
+          if (!country) return;
+          setCountry(country);
+        });
+      });
       return;
     }
+
     if (activeEntity) {
       root.innerHTML = `<div class="small"><strong>Entité</strong> — ${escapeHtml(activeEntity)} (articles filtrés par thèmes)</div>`;
       return;
     }
-    root.innerHTML = `<div class="small">Recherche pays, continent ou entité pour afficher une vue dédiée.</div>`;
+
+    root.innerHTML = `<div class="small"><strong>Vue monde</strong> — sélectionnez un continent dans la barre latérale pour afficher la liste des pays.</div>`;
   }
 
   async function loadGeopolitics(){
