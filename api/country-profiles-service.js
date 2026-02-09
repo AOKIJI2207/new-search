@@ -40,6 +40,16 @@ const COUNTRY_LIST = [
 
 let memoryCache = null;
 
+
+const COUNTRY_CONTINENT = {
+  Nigeria: "Afrique","South Africa": "Afrique",Kenya: "Afrique",Egypt: "Afrique",Morocco: "Afrique",Ghana: "Afrique",Senegal: "Afrique",
+  "United States": "Amérique du Nord",Canada: "Amérique du Nord",Mexico: "Amérique du Nord",
+  Brazil: "Amérique du Sud",Argentina: "Amérique du Sud",Colombia: "Amérique du Sud",Chile: "Amérique du Sud",Peru: "Amérique du Sud",
+  China: "Asie",India: "Asie",Japan: "Asie","South Korea": "Asie",Indonesia: "Asie",Pakistan: "Asie",
+  France: "Europe",Germany: "Europe","United Kingdom": "Europe",Italy: "Europe",Spain: "Europe",Ukraine: "Europe",Russia: "Europe",
+  Australia: "Océanie","New Zealand": "Océanie"
+};
+
 const ISO_TO_NAME = new Map(COUNTRY_LIST.map(entry => [entry.iso2, entry.name]));
 
 const COUNTRY_NAME_ALIASES = new Map([
@@ -339,11 +349,6 @@ async function fetchRsfRanking() {
 }
 
 
-function nonEmpty(value, fallback) {
-  if (value === null || value === undefined || value === "") return fallback;
-  return value;
-}
-
 function buildCountryProfiles({ wikidataFacts, worldBankRatings, rsfRanking }) {
   const profiles = {};
   COUNTRY_LIST.forEach(entry => {
@@ -353,8 +358,9 @@ function buildCountryProfiles({ wikidataFacts, worldBankRatings, rsfRanking }) {
     profiles[entry.name] = {
       country: entry.name,
       iso2: entry.iso2,
-      headOfState: nonEmpty(facts.headOfState, "Information officielle en cours de synchronisation"),
-      rulingParty: nonEmpty(facts.rulingParty, "Information officielle en cours de synchronisation"),
+      continent: COUNTRY_CONTINENT[entry.name] || "Global",
+      headOfState: facts.headOfState || null,
+      rulingParty: facts.rulingParty || null,
       nextElection: facts.nextElection,
       isDemocracy: facts.isDemocracy,
       rsfRank: rsf.rank ?? null,

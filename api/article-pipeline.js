@@ -8,6 +8,16 @@ export const ALLOWED_CATEGORIES = [
   { key: "actualites_politiques", label: "Actualités politiques" }
 ];
 
+
+const CONTINENT_BY_COUNTRY = {
+  Nigeria: "Afrique","South Africa": "Afrique",Kenya: "Afrique",Egypt: "Afrique",Morocco: "Afrique",Ghana: "Afrique",Senegal: "Afrique",
+  "United States": "Amérique du Nord",Canada: "Amérique du Nord",Mexico: "Amérique du Nord",
+  Brazil: "Amérique du Sud",Argentina: "Amérique du Sud",Colombia: "Amérique du Sud",Chile: "Amérique du Sud",Peru: "Amérique du Sud",
+  China: "Asie",India: "Asie",Japan: "Asie","South Korea": "Asie",Indonesia: "Asie",Pakistan: "Asie",
+  France: "Europe",Germany: "Europe","United Kingdom": "Europe",Italy: "Europe",Spain: "Europe",Ukraine: "Europe",Russia: "Europe",
+  Australia: "Océanie","New Zealand": "Océanie"
+};
+
 const COUNTRY_KEYWORDS = {
   Nigeria: ["nigeria","nigerian","abuja","lagos"],
   "South Africa": ["south africa","south african","johannesburg","pretoria","cape town"],
@@ -107,7 +117,7 @@ export function identifyCountryAndEntities(text) {
     if (corpus.includes(norm(actor))) entities.push(actor.toUpperCase());
   });
 
-  return { country: bestCountry, entities: Array.from(new Set(entities)).slice(0, 8) };
+  return { country: bestCountry, continent: bestCountry ? CONTINENT_BY_COUNTRY[bestCountry] || null : null, entities: Array.from(new Set(entities)).slice(0, 8) };
 }
 
 export function toArticleRecord(item, source) {
@@ -117,7 +127,7 @@ export function toArticleRecord(item, source) {
   const combined = [title, summary, content, source.name].join(" ");
   const category = classifyArticle(combined);
   if (!category) return null;
-  const { country, entities } = identifyCountryAndEntities(combined);
+  const { country, continent, entities } = identifyCountryAndEntities(combined);
   const language_detected = detectLanguage(`${title} ${summary}`);
 
   return {
@@ -131,6 +141,7 @@ export function toArticleRecord(item, source) {
     category: category.key,
     category_label: category.label,
     country,
+    continent,
     entities,
     content
   };
