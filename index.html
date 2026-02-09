@@ -303,6 +303,14 @@
     Australia: "AU",
     "New Zealand": "NZ"
   };
+  const FALLBACK_RATINGS = {
+    security: 3,
+    external: 3,
+    health: 3,
+    geography: 3,
+    politics: 3
+  };
+
   let COUNTRY_PROFILES = {};
   let countryProfilesLoaded = false;
   const DEFAULT_BG = getComputedStyle(document.documentElement).getPropertyValue("--map-image").trim();
@@ -315,21 +323,59 @@
   }
 
   async function loadCountryProfiles(){
+    const buildLocalProfiles = () => {
+      const allCountries = Object.keys(COUNTRY_CODES);
+      const local = {};
+      allCountries.forEach(country => {
+        local[country] = buildFallbackProfile(country);
+      });
+      COUNTRY_PROFILES = local;
+      countryProfilesLoaded = true;
+    };
     try {
-      const r = await fetch("/api/country-profiles");
+      let r = await fetch("/api/country-profiles");
+      if (!r.ok) {
+        await fetch("/api/refresh-country-profiles", { method: "POST" }).catch(() => null);
+        r = await fetch("/api/country-profiles");
+      }
       const data = await r.json();
       COUNTRY_PROFILES = data.profiles || {};
-      countryProfilesLoaded = true;
+      if (!Object.keys(COUNTRY_PROFILES).length) {
+        buildLocalProfiles();
+      } else {
+        countryProfilesLoaded = true;
+      }
       return data;
     } catch (e) {
-      countryProfilesLoaded = false;
-      setStatus("Données pays indisponibles");
+      buildLocalProfiles();
+      setStatus("Données pays chargées en mode local");
       return null;
     }
   }
 
+  function buildFallbackProfile(country){
+    const continent = continentByCountry(country) || "Global";
+    return {
+      country,
+      continent,
+      headOfState: "Information institutionnelle en cours de synchronisation",
+      rulingParty: "Information institutionnelle en cours de synchronisation",
+      nextElection: null,
+      isDemocracy: null,
+      rsfRank: "Non publié",
+      rsfScore: null,
+      ratings: {
+        security: FALLBACK_RATINGS.security,
+        business: FALLBACK_RATINGS.external,
+        health: FALLBACK_RATINGS.health,
+        expat: FALLBACK_RATINGS.geography,
+        overall: FALLBACK_RATINGS.politics
+      }
+    };
+  }
+
   function getCountryProfile(country){
-    return COUNTRY_PROFILES?.[country] || null;
+    return COUNTRY_PROFILES?.[country] || buildFallbackProfile(country);
   }
 
   async function loadSearchIndex(){
@@ -557,15 +603,10 @@
       setStatus(`Profil pays: ${countryMatch.name}`);
       return;
     }
-    if(selected.size === 0){
-      setStatus("Choisis au moins 1 source");
-      return;
-    }
-    setStatus("Recherche…");
+    setStatus("Recherche globale…");
     $("#count").textContent = "";
 
-    const keys = Array.from(selected).join(",");
-    const r = await fetch(`/api/search?q=${encodeURIComponent(q)}&sources=${encodeURIComponent(keys)}`);
+    const r = await fetch(`/api/search?q=${encodeURIComponent(q)}&sources=all`);
     const data = await r.json();
 
     if(data.error){
@@ -798,10 +839,7 @@
       return;
     }
     const profile = getCountryProfile(activeCountry);
-    if (!profile){
-      dashboard.innerHTML = `<div class="small">Profil pays indisponible.</div>`;
-      return;
-    }
+
     const countryItems = ITEMS.filter(matchCountry);
     const categories = [
       { key: "securite_interieure", label: "Situation sécurité intérieure" },
@@ -849,12 +887,12 @@
       : "Non applicable — régime non démocratique";
     const facts = [
       { title: "Continent", value: profile.continent || continentByCountry(country) },
-      { title: "Chef d’État", value: profile.headOfState },
-      { title: "Parti majoritaire", value: profile.rulingParty },
+      { title: "Chef d’État", value: profile.headOfState || "Information institutionnelle en cours de synchronisation" },
+      { title: "Parti majoritaire", value: profile.rulingParty || "Information institutionnelle en cours de synchronisation" },
       profile.isDemocracy !== null && profile.isDemocracy !== undefined
         ? { title: "Prochaines élections", value: electionValue }
         : null,
-      { title: "RSF WPFI — rang", value: profile.rsfRank },
+      { title: "RSF WPFI — rang", value: profile.rsfRank || "Non publié" },
       { title: "RSF WPFI — score", value: profile.rsfScore }
     ].filter(item => item && item.value !== null && item.value !== undefined && item.value !== "");
     const hasRsf = facts.some(item => item.title.startsWith("RSF"));
