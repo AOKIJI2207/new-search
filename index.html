@@ -350,26 +350,6 @@
     return norm(v).replace(/\s+/g, "-");
   }
 
-  function buildCountryUrl(country){
-    const continent = continentByCountry(country);
-    const params = new URLSearchParams();
-    if (continent) params.set("continent", continent);
-    params.set("country", country);
-    return `/?${params.toString()}`;
-  }
-
-  function buildContinentUrl(continent){
-    const params = new URLSearchParams();
-    params.set("continent", continent);
-    return `/?${params.toString()}`;
-  }
-
-  function buildEntityUrl(entity){
-    const params = new URLSearchParams();
-    params.set("entity", entity);
-    return `/?${params.toString()}`;
-  }
-
   function continentByCountry(country){
     return Object.entries(CONTINENT_COUNTRIES).find(([, list]) => list.includes(country))?.[0] || null;
   }
@@ -395,7 +375,6 @@
     activeCountry = null;
     activeEntity = null;
     continentCountryFilter = "";
-    if (continent && continent !== "global") history.pushState({}, "", buildContinentUrl(continent));
     const scopedSources = continent === "global"
       ? SOURCES
       : SOURCES.filter(s => s.continent === continent);
@@ -449,7 +428,6 @@
     activeEntity = null;
     const targetContinent = continentByCountry(country) || activeContinent || "global";
     activeContinent = targetContinent;
-    history.pushState({}, "", buildCountryUrl(country));
     renderCountrySlider();
     renderCountryPicker();
     CountryPage();
@@ -483,42 +461,16 @@
     });
   }
 
-  function initFromRoute(){
-    const { continentId, countryId, entityId } = parseRoute();
-    const resolvedContinent = resolveContinent(continentId) || "Europe";
-    activeContinent = resolvedContinent;
-    const resolvedCountry = resolveCountry(countryId, resolvedContinent);
-    activeEntity = entityId || null;
-    if (resolvedCountry) {
-      activeCountry = resolvedCountry;
-      if (activeContinent === "global") activeContinent = continentByCountry(resolvedCountry) || "global";
-    } else {
-      activeCountry = null;
-    }
+  function initDefaultView(){
+    activeContinent = "Europe";
+    activeCountry = null;
+    activeEntity = null;
     SidebarCountryTabs();
     renderSourceToggles();
     ContinentPage();
     renderContextView();
     renderCountryPage();
     renderArticles();
-  }
-
-  function parseRoute(){
-    const path = window.location.pathname.toLowerCase();
-    const parts = path.split("/").filter(Boolean);
-    const continentIdx = parts.indexOf("continent");
-    const countryIdx = parts.indexOf("country");
-    const entityIdx = parts.indexOf("entity");
-    const continentId = continentIdx >= 0 ? parts[continentIdx + 1] : null;
-    const countryPath = countryIdx >= 0 ? parts[countryIdx + 1] : null;
-    const countryId = continentIdx >= 0 ? parts[continentIdx + 2] : countryPath;
-    const entityId = entityIdx >= 0 ? decodeURIComponent(parts[entityIdx + 1] || "") : null;
-    const params = new URLSearchParams(window.location.search);
-    return {
-      continentId: params.get("continent") || continentId,
-      countryId: params.get("country") || countryId,
-      entityId: params.get("entity") || entityId
-    };
   }
 
   function resolveContinent(input){
@@ -579,8 +531,6 @@
     const qNorm = norm(q);
     const continentMatch = index.continents.find(c => norm(c.name) === qNorm || c.slug === qNorm.replace(/\s+/g, "-"));
     if (continentMatch) {
-      const url = buildContinentUrl(continentMatch.name);
-      history.pushState({}, "", url);
       activeContinent = continentMatch.name;
       activeCountry = null;
       activeEntity = null;
@@ -595,8 +545,6 @@
     }
     const countryMatch = index.countries.find(c => norm(c.name) === qNorm || c.slug === qNorm.replace(/\s+/g, "-"));
     if (countryMatch) {
-      const url = buildCountryUrl(countryMatch.name);
-      history.pushState({}, "", url);
       activeContinent = countryMatch.continent || "global";
       activeCountry = countryMatch.name;
       activeEntity = null;
@@ -631,7 +579,6 @@
 
     ITEMS = data.items || [];
     activeEntity = q || null;
-    history.pushState({}, "", buildEntityUrl(q || "recherche"));
     const warningText = data.warnings?.length
       ? ` — ${data.warnings.length} source(s) en échec`
       : "";
@@ -649,8 +596,14 @@
       : (CONTINENT_COUNTRIES[activeContinent] || []);
 
     if (activeCountry) {
-      const profileLink = buildCountryUrl(activeCountry);
-      root.innerHTML = `<div class="small"><strong>Profil pays</strong> — <a href="${profileLink}">${escapeHtml(activeCountry)}</a> (${escapeHtml(activeContinent || continentByCountry(activeCountry) || "Global")})</div>`;
+      root.innerHTML = `<div class="small"><strong>Profil pays</strong> — <button type="button" class="ghost" data-country-link="${escapeHtml(activeCountry)}">${escapeHtml(activeCountry)}</button> (${escapeHtml(activeContinent || continentByCountry(activeCountry) || "Global")})</div>`;
+      root.querySelectorAll("button[data-country-link]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const country = btn.getAttribute("data-country-link");
+          if (!country) return;
+          setCountry(country);
+        });
+      });
       return;
     }
 
@@ -780,6 +733,13 @@
     }
     root.innerHTML = list.map((it, idx) => renderArticleCard(it, idx))
       .join("") || `<div class="small">Aucun résultat pour ce contexte.</div>`;
+    root.querySelectorAll("button[data-country-link]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const country = btn.getAttribute("data-country-link");
+        if (!country) return;
+        setCountry(country);
+      });
+    });
   }
 
   function classifyCountryCategory(item){
@@ -804,7 +764,7 @@
           <span>${escapeHtml(item.date ? new Date(item.date).toLocaleString("fr-FR") : "")}</span>
           ${renderTag(item)}
           ${item.continent ? `<span>•</span><span>${escapeHtml(item.continent)}</span>` : ""}
-          ${item.country ? `<span>•</span><a href="${buildCountryUrl(item.country)}">${escapeHtml(item.country)}</a>` : ""}
+          ${item.country ? `<span>•</span><button type="button" class="ghost" data-country-link="${escapeHtml(item.country)}">${escapeHtml(item.country)}</button>` : ""}
         </div>
         <div class="snippet">${escapeHtml(item.summary || "")}</div>
       </article>
@@ -1051,7 +1011,7 @@
   async function boot(){
     setStatus("Chargement…");
     await Promise.all([loadSources(), loadCountryProfiles(), loadSearchIndex()]);
-    initFromRoute();
+    initDefaultView();
     setStatus("Prêt");
   }
 
