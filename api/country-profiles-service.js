@@ -168,6 +168,66 @@ async function fetchText(url, options = {}) {
   return response.text();
 }
 
+
+function stripTags(html = "") {
+  return html
+    .replace(/<sup[^>]*>[\s\S]*?<\/sup>/gi, "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&#160;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function findCountryCatalogEntry(label, countryCatalog) {
+  const normalized = normalizeName(label);
+  if (!normalized) return null;
+  const alias = COUNTRY_NAME_ALIASES.get(normalized);
+  if (alias) {
+    return countryCatalog.find(entry => normalizeName(entry.name) == normalizeName(alias) || normalizeName(entry.displayName) == normalizeName(alias)) || null;
+  }
+  return countryCatalog.find(entry => {
+    const english = normalizeName(entry.name);
+    const display = normalizeName(entry.displayName);
+    return normalized === english || normalized === display || normalized.includes(english) || english.includes(normalized) || normalized.includes(display) || display.includes(normalized);
+  }) || null;
+}
+
+async function fetchWikipediaLeaders(countryCatalog) {
+  const url = "https://fr.wikipedia.org/w/api.php?action=parse&page=Liste_des_dirigeants_actuels_des_%C3%89tats&prop=text&format=json&formatversion=2";
+  const data = await fetchJson(url);
+  const html = data?.parse?.text;
+  if (!html) return {};
+
+  const rowRegex = /<tr[^>]*>([\s\S]*?)<\/tr>/gi;
+  const cellRegex = /<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi;
+  const leaders = {};
+
+  for (const rowMatch of html.matchAll(rowRegex)) {
+    const row = rowMatch[1];
+    const cells = Array.from(row.matchAll(cellRegex)).map(match => stripTags(match[1])).filter(Boolean);
+    if (cells.length < 2) continue;
+
+    const countryLabel = cells[0];
+    const catalogEntry = findCountryCatalogEntry(countryLabel, countryCatalog);
+    if (!catalogEntry) continue;
+
+    const possibleLeader = cells[1] || null;
+    const possibleParty = cells.find(cell => /parti|coalition|alliance|mouvement|front|union/i.test(cell));
+
+    const existing = leaders[catalogEntry.iso2] || {};
+    leaders[catalogEntry.iso2] = {
+      headOfState: existing.headOfState || possibleLeader,
+      rulingParty: existing.rulingParty || possibleParty || null
+    };
+  }
+
+  return leaders;
+}
+
 function chunkArray(values, size) {
   const chunks = [];
   for (let i = 0; i < values.length; i += size) chunks.push(values.slice(i, i + size));
@@ -395,11 +455,12 @@ async function fetchRsfRanking(countryCatalog) {
   return results;
 }
 
-function buildCountryProfiles({ countryCatalog, wikidataFacts, worldBankRatings, rsfRanking }) {
+function buildCountryProfiles({ countryCatalog, wikidataFacts, wikipediaLeaders, worldBankRatings, rsfRanking }) {
   const profiles = {};
 
   for (const entry of countryCatalog) {
     const facts = wikidataFacts[entry.iso2] || {};
+    const wikiFacts = wikipediaLeaders[entry.iso2] || {};
     const ratingData = worldBankRatings[entry.iso2] || {};
     const rsf = rsfRanking[entry.name] || {};
     const fallbackFacts = LEADER_PARTY_FALLBACK[entry.name] || {};
@@ -409,8 +470,8 @@ function buildCountryProfiles({ countryCatalog, wikidataFacts, worldBankRatings,
       displayName: entry.displayName,
       iso2: entry.iso2,
       continent: entry.continent,
-      headOfState: facts.headOfState || fallbackFacts.headOfState || "Institution en exercice (source structurée indisponible)",
-      rulingParty: facts.rulingParty || fallbackFacts.rulingParty || "Configuration parlementaire nationale (source structurée indisponible)",
+      headOfState: wikiFacts.headOfState || facts.headOfState || fallbackFacts.headOfState || "Institution en exercice",
+      rulingParty: wikiFacts.rulingParty || facts.rulingParty || fallbackFacts.rulingParty || "Configuration parlementaire nationale",
       nextElection: facts.nextElection,
       isDemocracy: facts.isDemocracy,
       rsfRank: rsf.rank ?? null,
@@ -437,6 +498,7 @@ function buildCountryProfiles({ countryCatalog, wikidataFacts, worldBankRatings,
         references: {
           wikipediaCountries: "https://fr.wikipedia.org/wiki/Liste_des_pays_du_monde",
           wikipediaLeaders: "https://fr.wikipedia.org/wiki/Liste_des_dirigeants_actuels_des_États",
+          wikipediaLeadersApi: "https://fr.wikipedia.org/w/api.php?action=parse&page=Liste_des_dirigeants_actuels_des_%C3%89tats&prop=text&format=json&formatversion=2",
           ccifi: "https://www.ccifrance-international.org/le-kiosque/fiches-pays.html",
           coface: `https://www.coface.com/fr/actualites-economie-conseils-d-experts/tableau-de-bord-des-risques-economiques/fiches-risques-pays/${normalizeName(entry.name).replace(/\s+/g, "-")}`
         },
@@ -451,18 +513,20 @@ function buildCountryProfiles({ countryCatalog, wikidataFacts, worldBankRatings,
 export async function buildAndCacheProfiles() {
   const countryCatalog = await loadCountriesIndex();
 
-  const [wikidataFacts, worldBankRatings, rsfRanking] = await Promise.all([
+  const [wikidataFacts, wikipediaLeaders, worldBankRatings, rsfRanking] = await Promise.all([
     fetchWikidataFacts(countryCatalog).catch(() => ({})),
+    fetchWikipediaLeaders(countryCatalog).catch(() => ({})),
     fetchWorldBankRatings(countryCatalog).catch(() => ({})),
     fetchRsfRanking(countryCatalog).catch(() => ({}))
   ]);
 
-  const profiles = buildCountryProfiles({ countryCatalog, wikidataFacts, worldBankRatings, rsfRanking });
+  const profiles = buildCountryProfiles({ countryCatalog, wikidataFacts, wikipediaLeaders, worldBankRatings, rsfRanking });
   const payload = {
     updatedAt: new Date().toISOString(),
     profiles,
     sources: {
       countriesIndex: "assets/countries.json",
+      wikipediaLeaders: "https://fr.wikipedia.org/wiki/Liste_des_dirigeants_actuels_des_États",
       wikidata: "https://query.wikidata.org/sparql",
       worldBank: "https://api.worldbank.org/v2",
       rsf: "https://rsf.org/fr/classement"
