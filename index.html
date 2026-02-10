@@ -231,7 +231,7 @@
     { key: "Océanie", label: "Océanie" },
     { key: "Antarctique", label: "Antarctique" }
   ];
-  const CONTINENT_COUNTRIES = {
+  let CONTINENT_COUNTRIES = {
     Afrique: ["Nigeria","South Africa","Kenya","Egypt","Morocco","Ghana","Senegal"],
     "Amérique du Nord": ["United States","Canada","Mexico"],
     "Amérique du Sud": ["Brazil","Argentina","Colombia","Chile","Peru"],
@@ -271,7 +271,7 @@
     Australia: ["australia","australian","canberra","sydney","melbourne"],
     "New Zealand": ["new zealand","kiwi","wellington","auckland"]
   };
-  const COUNTRY_CODES = {
+  let COUNTRY_CODES = {
     Nigeria: "NG",
     "South Africa": "ZA",
     Kenya: "KE",
@@ -379,9 +379,11 @@
       } else {
         countryProfilesLoaded = true;
       }
+      hydrateCountryMapsFromProfiles();
       return data;
     } catch (e) {
       buildLocalProfiles();
+      hydrateCountryMapsFromProfiles();
       setStatus("Données pays chargées en mode local");
       return null;
     }
@@ -412,6 +414,25 @@
   function getCountryProfile(country){
     return COUNTRY_PROFILES?.[country] || buildFallbackProfile(country);
   }
+  function hydrateCountryMapsFromProfiles(){
+    const nextCountries = {};
+    const nextCodes = {};
+    const all = Object.values(COUNTRY_PROFILES || {});
+    all.forEach(profile => {
+      const name = profile.country;
+      const continent = profile.continent || "Global";
+      if (!name) return;
+      if (!nextCountries[continent]) nextCountries[continent] = [];
+      nextCountries[continent].push(name);
+      if (profile.iso2) nextCodes[name] = profile.iso2;
+    });
+    Object.keys(nextCountries).forEach(continent => {
+      nextCountries[continent] = Array.from(new Set(nextCountries[continent])).sort((a, b) => a.localeCompare(b, "fr"));
+    });
+    if (Object.keys(nextCountries).length) CONTINENT_COUNTRIES = nextCountries;
+    if (Object.keys(nextCodes).length) COUNTRY_CODES = { ...COUNTRY_CODES, ...nextCodes };
+  }
+
 
   async function loadSearchIndex(){
     try {

@@ -5,7 +5,7 @@ const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 const USER_AGENT = "agoraflux-country-profiles/1.0";
 const CACHE_FILE = path.join(process.cwd(), "assets", "country-profiles-cache.json");
 
-const COUNTRY_LIST = [
+const CORE_COUNTRY_LIST = [
   { name: "Nigeria", iso2: "NG" },
   { name: "South Africa", iso2: "ZA" },
   { name: "Kenya", iso2: "KE" },
@@ -50,7 +50,7 @@ const COUNTRY_CONTINENT = {
   Australia: "Océanie","New Zealand": "Océanie"
 };
 
-const ISO_TO_NAME = new Map(COUNTRY_LIST.map(entry => [entry.iso2, entry.name]));
+const ISO_TO_NAME = new Map(CORE_COUNTRY_LIST.map(entry => [entry.iso2, entry.name]));
 
 
 const LEADER_PARTY_FALLBACK = {
@@ -86,6 +86,43 @@ const LEADER_PARTY_FALLBACK = {
   "New Zealand": { headOfState: "Charles III", rulingParty: "New Zealand National Party" }
 };
 
+
+
+function mapContinent(region = "") {
+  const key = normalizeName(region);
+  if (key === "africa") return "Afrique";
+  if (key === "europe") return "Europe";
+  if (key === "asia") return "Asie";
+  if (key === "north america") return "Amérique du Nord";
+  if (key === "south america") return "Amérique du Sud";
+  if (key === "oceania") return "Océanie";
+  if (key === "antarctic") return "Antarctique";
+  return "Global";
+}
+
+async function fetchAllCountriesCatalog() {
+  try {
+    const data = await fetchJson("https://restcountries.com/v3.1/all?fields=name,cca2,independent,region");
+    const rows = (Array.isArray(data) ? data : [])
+      .filter(row => row && row.cca2 && row.name?.common)
+      .map(row => ({
+        name: row.name.common,
+        iso2: String(row.cca2).toUpperCase(),
+        continent: mapContinent(row.region)
+      }));
+    const unique = new Map();
+    rows.forEach(row => {
+      if (!unique.has(row.iso2)) unique.set(row.iso2, row);
+    });
+    if (unique.size > 0) return Array.from(unique.values()).sort((a, b) => a.name.localeCompare(b.name));
+  } catch (_e) {
+    // fallback below
+  }
+  return CORE_COUNTRY_LIST.map(entry => ({
+    ...entry,
+    continent: COUNTRY_CONTINENT[entry.name] || "Global"
+  }));
+}
 
 const COUNTRY_NAME_ALIASES = new Map([
   ["united states of america", "United States"],
@@ -171,8 +208,9 @@ async function fetchText(url, options = {}) {
   return response.text();
 }
 
-async function fetchWikidataFacts() {
-  const values = COUNTRY_LIST.map(entry => `"${entry.iso2}"`).join(" ");
+async function fetchWikidataFacts(countryCatalog) {
+  const focusCountries = countryCatalog.filter(entry => CORE_COUNTRY_LIST.some(base => base.iso2 === entry.iso2));
+  const values = focusCountries.map(entry => `"${entry.iso2}"`).join(" ");
   const query = `
     SELECT ?iso2
       (SAMPLE(?headOfStateLabel) AS ?headOfState)
@@ -256,7 +294,7 @@ function averageRating(values) {
   return clampRating(Math.round(avg));
 }
 
-async function fetchWorldBankRatings() {
+async function fetchWorldBankRatings(countryCatalog) {
   const indicators = {
     security: "PV.PER.RNK",
     business: "GE.PER.RNK",
@@ -265,7 +303,8 @@ async function fetchWorldBankRatings() {
     gdpPerCapita: "NY.GDP.PCAP.CD"
   };
   const results = {};
-  await Promise.all(COUNTRY_LIST.map(async entry => {
+  const focusCountries = countryCatalog.filter(entry => CORE_COUNTRY_LIST.some(base => base.iso2 === entry.iso2));
+  await Promise.all(focusCountries.map(async entry => {
     const [securityRaw, businessRaw, expatRaw, healthRaw, gdpPerCapitaRaw] = await Promise.all([
       fetchWorldBankIndicator(entry.iso2, indicators.security),
       fetchWorldBankIndicator(entry.iso2, indicators.business),
@@ -340,10 +379,10 @@ function extractRankingEntries(root) {
   });
 }
 
-function resolveCountryName(entry) {
+function resolveCountryName(entry, isoToName) {
   const iso2 = entry.iso2 || entry.iso || entry.code || entry.country_code || entry.countryCode;
-  if (iso2 && ISO_TO_NAME.has(String(iso2).toUpperCase())) {
-    return ISO_TO_NAME.get(String(iso2).toUpperCase());
+  if (iso2 && isoToName.has(String(iso2).toUpperCase())) {
+    return isoToName.get(String(iso2).toUpperCase());
   }
   const rawName = entry.country || entry.country_name || entry.name || entry.countryName;
   if (!rawName) return null;
@@ -354,7 +393,7 @@ function resolveCountryName(entry) {
   return match ? match.name : null;
 }
 
-async function fetchRsfRanking() {
+async function fetchRsfRanking(countryCatalog) {
   const html = await fetchText("https://rsf.org/fr/classement");
   let data = null;
   const nuxtMatch = html.match(/window\.__NUXT__=([\s\S]*?);<\/script>/);
@@ -378,8 +417,9 @@ async function fetchRsfRanking() {
   }
   const entries = extractRankingEntries(data);
   const results = {};
+  const isoToName = new Map(countryCatalog.map(entry => [entry.iso2, entry.name]));
   entries.forEach(entry => {
-    const name = resolveCountryName(entry);
+    const name = resolveCountryName(entry, isoToName);
     if (!name) return;
     const rankValue = entry.rank || entry.ranking || entry.position || entry.rank_position;
     const scoreValue = entry.score || entry.points || entry.note || entry.indice || entry.total;
@@ -395,7 +435,7 @@ async function fetchRsfRanking() {
 }
 
 
-function buildCountryProfiles({ wikidataFacts, worldBankRatings, rsfRanking }) {
+function buildCountryProfiles({ countryCatalog, wikidataFacts, worldBankRatings, rsfRanking }) {
   const profiles = {};
   COUNTRY_LIST.forEach(entry => {
     const facts = wikidataFacts[entry.iso2] || {};
@@ -404,7 +444,7 @@ function buildCountryProfiles({ wikidataFacts, worldBankRatings, rsfRanking }) {
     profiles[entry.name] = {
       country: entry.name,
       iso2: entry.iso2,
-      continent: COUNTRY_CONTINENT[entry.name] || "Global",
+      continent: entry.continent || COUNTRY_CONTINENT[entry.name] || "Global",
       headOfState: facts.headOfState || LEADER_PARTY_FALLBACK[entry.name]?.headOfState || null,
       rulingParty: facts.rulingParty || LEADER_PARTY_FALLBACK[entry.name]?.rulingParty || null,
       nextElection: facts.nextElection,
@@ -413,11 +453,11 @@ function buildCountryProfiles({ wikidataFacts, worldBankRatings, rsfRanking }) {
       rsfScore: rsf.score ?? null,
       gdpPerCapita: ratingData.gdpPerCapita ?? null,
       ratings: {
-        security: ratingData.security,
-        health: ratingData.health,
-        business: ratingData.business,
-        expat: ratingData.expat,
-        overall: ratingData.overall
+        security: ratingData.security ?? 3,
+        health: ratingData.health ?? 3,
+        business: ratingData.business ?? 3,
+        expat: ratingData.expat ?? 3,
+        overall: ratingData.overall ?? 3
       },
       sources: {
         worldBank: ratingData.raw || {},
@@ -442,12 +482,13 @@ function buildCountryProfiles({ wikidataFacts, worldBankRatings, rsfRanking }) {
 }
 
 export async function buildAndCacheProfiles() {
+  const countryCatalog = await fetchAllCountriesCatalog();
   const [wikidataFacts, worldBankRatings, rsfRanking] = await Promise.all([
-    fetchWikidataFacts(),
-    fetchWorldBankRatings(),
-    fetchRsfRanking()
+    fetchWikidataFacts(countryCatalog),
+    fetchWorldBankRatings(countryCatalog),
+    fetchRsfRanking(countryCatalog)
   ]);
-  const profiles = buildCountryProfiles({ wikidataFacts, worldBankRatings, rsfRanking });
+  const profiles = buildCountryProfiles({ countryCatalog, wikidataFacts, worldBankRatings, rsfRanking });
   const payload = {
     updatedAt: new Date().toISOString(),
     profiles,
@@ -481,4 +522,4 @@ export async function getCountryProfiles({ forceRefresh = false } = {}) {
   }
 }
 
-export { COUNTRY_LIST };
+export { CORE_COUNTRY_LIST as COUNTRY_LIST };
