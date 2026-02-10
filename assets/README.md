@@ -12,7 +12,10 @@
 - `GET /api/search-index` : index léger continents→pays pour navigation rapide sidebar.
 - `GET /api/ticker` : flux du bandeau avec titres traduits en français (cache translation).
 
-## Navigation UI
-- Sidebar continents cliquables sur l’accueil.
-- Vue continent : route `/continent/:slug` avec liste des pays triée + filtre local instantané.
-- Profil pays : route `/country/:slug`.
+## Sources pays utilisées
+- Wikidata SPARQL : chef d’État, parti majoritaire, régime, prochaines élections.
+- World Bank API : notations 1–5 (modèle), PIB/habitant (`NY.GDP.PCAP.CD`).
+- RSF : classement WPFI.
+- Références risque pays affichées dans les profils :
+  - CCI France International : `https://www.ccifrance-international.org/le-kiosque/fiches-pays.html`
+  - Coface : `https://www.coface.com/fr/actualites-economie-conseils-d-experts/tableau-de-bord-des-risques-economiques/fiches-risques-pays/france`

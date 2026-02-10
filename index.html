@@ -398,6 +398,7 @@
       isDemocracy: null,
       rsfRank: "Non publié",
       rsfScore: null,
+      gdpPerCapita: null,
       ratings: {
         security: FALLBACK_RATINGS.security,
         business: FALLBACK_RATINGS.external,
@@ -919,8 +920,12 @@
     const electionValue = profile.isDemocracy
       ? formatDate(profile.nextElection)
       : "Non applicable — régime non démocratique";
+    const gdpPerCapita = typeof profile.gdpPerCapita === "number"
+      ? `${new Intl.NumberFormat("fr-FR").format(profile.gdpPerCapita)} USD`
+      : "Non publié";
     const facts = [
       { title: "Continent", value: profile.continent || continentByCountry(country) },
+      { title: "PIB par habitant", value: gdpPerCapita },
       { title: "Chef d’État", value: profile.headOfState || LEADER_PARTY_FALLBACK[country]?.headOfState || "Chef d’État non publié" },
       { title: "Parti majoritaire", value: profile.rulingParty || LEADER_PARTY_FALLBACK[country]?.rulingParty || "Parti majoritaire non publié" },
       profile.isDemocracy !== null && profile.isDemocracy !== undefined
@@ -939,7 +944,7 @@
             <div class="fact-value">${escapeHtml(String(item.value))}</div>
           </div>
         `).join("")}
-        ${hasRsf ? `<div class="fact-note">Classement mondial de la liberté de la presse (WPFI) — Reporters sans Frontières.</div>` : ""}
+        ${hasRsf ? `<div class="fact-note">Sources: RSF WPFI + indicateurs macro (World Bank), référentiels risque pays Coface/CCI.</div>` : ""}
       </div>
     `;
   }

@@ -242,6 +242,13 @@ function ratingFromLifeExpectancy(value) {
   return clampRating(score);
 }
 
+function formatCurrency(value) {
+  if (value === null || value === undefined) return null;
+  const n = Number(value);
+  if (Number.isNaN(n)) return null;
+  return Math.round(n);
+}
+
 function averageRating(values) {
   const valid = values.filter(v => typeof v === "number" && !Number.isNaN(v));
   if (valid.length === 0) return null;
@@ -254,15 +261,17 @@ async function fetchWorldBankRatings() {
     security: "PV.PER.RNK",
     business: "GE.PER.RNK",
     expat: "RL.PER.RNK",
-    health: "SP.DYN.LE00.IN"
+    health: "SP.DYN.LE00.IN",
+    gdpPerCapita: "NY.GDP.PCAP.CD"
   };
   const results = {};
   await Promise.all(COUNTRY_LIST.map(async entry => {
-    const [securityRaw, businessRaw, expatRaw, healthRaw] = await Promise.all([
+    const [securityRaw, businessRaw, expatRaw, healthRaw, gdpPerCapitaRaw] = await Promise.all([
       fetchWorldBankIndicator(entry.iso2, indicators.security),
       fetchWorldBankIndicator(entry.iso2, indicators.business),
       fetchWorldBankIndicator(entry.iso2, indicators.expat),
-      fetchWorldBankIndicator(entry.iso2, indicators.health)
+      fetchWorldBankIndicator(entry.iso2, indicators.health),
+      fetchWorldBankIndicator(entry.iso2, indicators.gdpPerCapita)
     ]);
     const security = ratingFromPercentile(securityRaw);
     const business = ratingFromPercentile(businessRaw);
@@ -276,11 +285,13 @@ async function fetchWorldBankRatings() {
       expat: expat ?? fallback,
       health: health ?? fallback,
       overall,
+      gdpPerCapita: formatCurrency(gdpPerCapitaRaw),
       raw: {
         security: securityRaw,
         business: businessRaw,
         expat: expatRaw,
-        health: healthRaw
+        health: healthRaw,
+        gdpPerCapita: gdpPerCapitaRaw
       }
     };
   }));
@@ -400,6 +411,7 @@ function buildCountryProfiles({ wikidataFacts, worldBankRatings, rsfRanking }) {
       isDemocracy: facts.isDemocracy,
       rsfRank: rsf.rank ?? null,
       rsfScore: rsf.score ?? null,
+      gdpPerCapita: ratingData.gdpPerCapita ?? null,
       ratings: {
         security: ratingData.security,
         health: ratingData.health,
@@ -417,7 +429,12 @@ function buildCountryProfiles({ wikidataFacts, worldBankRatings, rsfRanking }) {
         rsf: {
           rank: rsf.rank,
           score: rsf.score
-        }
+        },
+        references: {
+          ccifi: "https://www.ccifrance-international.org/le-kiosque/fiches-pays.html",
+          coface: `https://www.coface.com/fr/actualites-economie-conseils-d-experts/tableau-de-bord-des-risques-economiques/fiches-risques-pays/${normalizeName(entry.name).replace(/\s+/g, "-")}`
+        },
+        ratingsMethodology: "Score 1–5 dérivé d’indicateurs World Bank (gouvernance/sécurité/santé) et aligné sur une lecture risque pays de type Coface/CCI."
       }
     };
   });
