@@ -52,6 +52,41 @@ const COUNTRY_CONTINENT = {
 
 const ISO_TO_NAME = new Map(COUNTRY_LIST.map(entry => [entry.iso2, entry.name]));
 
+
+const LEADER_PARTY_FALLBACK = {
+  Nigeria: { headOfState: "Bola Tinubu", rulingParty: "All Progressives Congress" },
+  "South Africa": { headOfState: "Cyril Ramaphosa", rulingParty: "African National Congress" },
+  Kenya: { headOfState: "William Ruto", rulingParty: "United Democratic Alliance" },
+  Egypt: { headOfState: "Abdel Fattah al-Sissi", rulingParty: "Nation's Future Party" },
+  Morocco: { headOfState: "Mohammed VI", rulingParty: "Rassemblement national des indépendants" },
+  Ghana: { headOfState: "Nana Akufo-Addo", rulingParty: "New Patriotic Party" },
+  Senegal: { headOfState: "Bassirou Diomaye Faye", rulingParty: "Pastef" },
+  "United States": { headOfState: "Donald Trump", rulingParty: "Parti républicain" },
+  Canada: { headOfState: "Mark Carney", rulingParty: "Parti libéral du Canada" },
+  Mexico: { headOfState: "Claudia Sheinbaum", rulingParty: "Morena" },
+  Brazil: { headOfState: "Luiz Inácio Lula da Silva", rulingParty: "Parti des travailleurs" },
+  Argentina: { headOfState: "Javier Milei", rulingParty: "La Libertad Avanza" },
+  Colombia: { headOfState: "Gustavo Petro", rulingParty: "Pacto Histórico" },
+  Chile: { headOfState: "Gabriel Boric", rulingParty: "Convergencia Social" },
+  Peru: { headOfState: "Dina Boluarte", rulingParty: "Gouvernement sans majorité parlementaire" },
+  China: { headOfState: "Xi Jinping", rulingParty: "Parti communiste chinois" },
+  India: { headOfState: "Droupadi Murmu", rulingParty: "Bharatiya Janata Party" },
+  Japan: { headOfState: "Naruhito", rulingParty: "Parti libéral-démocrate" },
+  "South Korea": { headOfState: "Yoon Suk Yeol", rulingParty: "People Power Party" },
+  Indonesia: { headOfState: "Prabowo Subianto", rulingParty: "Coalition Indonésie avancée" },
+  Pakistan: { headOfState: "Asif Ali Zardari", rulingParty: "Pakistan Muslim League (N)" },
+  France: { headOfState: "Emmanuel Macron", rulingParty: "Renaissance" },
+  Germany: { headOfState: "Frank-Walter Steinmeier", rulingParty: "SPD" },
+  "United Kingdom": { headOfState: "Charles III", rulingParty: "Labour Party" },
+  Italy: { headOfState: "Sergio Mattarella", rulingParty: "Fratelli d'Italia" },
+  Spain: { headOfState: "Felipe VI", rulingParty: "PSOE" },
+  Ukraine: { headOfState: "Volodymyr Zelensky", rulingParty: "Serviteur du peuple" },
+  Russia: { headOfState: "Vladimir Poutine", rulingParty: "Russie unie" },
+  Australia: { headOfState: "Charles III", rulingParty: "Australian Labor Party" },
+  "New Zealand": { headOfState: "Charles III", rulingParty: "New Zealand National Party" }
+};
+
+
 const COUNTRY_NAME_ALIASES = new Map([
   ["united states of america", "United States"],
   ["russian federation", "Russia"],
@@ -359,8 +394,8 @@ function buildCountryProfiles({ wikidataFacts, worldBankRatings, rsfRanking }) {
       country: entry.name,
       iso2: entry.iso2,
       continent: COUNTRY_CONTINENT[entry.name] || "Global",
-      headOfState: facts.headOfState || null,
-      rulingParty: facts.rulingParty || null,
+      headOfState: facts.headOfState || LEADER_PARTY_FALLBACK[entry.name]?.headOfState || null,
+      rulingParty: facts.rulingParty || LEADER_PARTY_FALLBACK[entry.name]?.rulingParty || null,
       nextElection: facts.nextElection,
       isDemocracy: facts.isDemocracy,
       rsfRank: rsf.rank ?? null,
