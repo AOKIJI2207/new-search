@@ -4,5 +4,8 @@
   "type": "module",
   "dependencies": {
     "rss-parser": "^3.13.0"
+  },
+  "scripts": {
+    "test:countries-index": "node scripts/check-countries-index.mjs"
   }
 }
