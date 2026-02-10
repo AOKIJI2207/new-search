@@ -168,19 +168,27 @@ async function fetchText(url, options = {}) {
   return response.text();
 }
 
-async function fetchWikidataFacts(countryCatalog) {
-  const values = countryCatalog.map(entry => `"${entry.iso2}"`).join(" ");
-  if (!values) return {};
+function chunkArray(values, size) {
+  const chunks = [];
+  for (let i = 0; i < values.length; i += size) chunks.push(values.slice(i, i + size));
+  return chunks;
+}
+
+async function fetchWikidataBatch(batch) {
+  const values = batch.map(entry => `"${entry.iso2}"`).join(" ");
   const query = `
     SELECT ?iso2
       (SAMPLE(?headOfStateLabel) AS ?headOfState)
-      (SAMPLE(?rulingPartyLabel) AS ?rulingParty)
+      (SAMPLE(COALESCE(?rulingPartyLabel, ?headPartyLabel)) AS ?rulingParty)
       (MIN(?electionDate) AS ?nextElection)
       (SAMPLE(?isDemocracy) AS ?isDemocracy)
     WHERE {
       VALUES ?iso2 { ${values} }
       ?country wdt:P297 ?iso2 .
-      OPTIONAL { ?country wdt:P35 ?headOfState . }
+      OPTIONAL {
+        ?country wdt:P35 ?headOfState .
+        OPTIONAL { ?headOfState wdt:P102 ?headParty . }
+      }
       OPTIONAL { ?country wdt:P3078 ?rulingParty . }
       OPTIONAL {
         ?election wdt:P31/wdt:P279* wd:Q40231 ;
@@ -214,6 +222,22 @@ async function fetchWikidataFacts(countryCatalog) {
       isDemocracy: row.isDemocracy?.value === "true"
     };
   }
+  return output;
+}
+
+async function fetchWikidataFacts(countryCatalog) {
+  const batches = chunkArray(countryCatalog, 40);
+  const output = {};
+
+  for (const batch of batches) {
+    try {
+      const partial = await fetchWikidataBatch(batch);
+      Object.assign(output, partial);
+    } catch {
+      // continue with remaining batches
+    }
+  }
+
   return output;
 }
 
@@ -412,6 +436,7 @@ function buildCountryProfiles({ countryCatalog, wikidataFacts, worldBankRatings,
         },
         references: {
           wikipediaCountries: "https://fr.wikipedia.org/wiki/Liste_des_pays_du_monde",
+          wikipediaLeaders: "https://fr.wikipedia.org/wiki/Liste_des_dirigeants_actuels_des_États",
           ccifi: "https://www.ccifrance-international.org/le-kiosque/fiches-pays.html",
           coface: `https://www.coface.com/fr/actualites-economie-conseils-d-experts/tableau-de-bord-des-risques-economiques/fiches-risques-pays/${normalizeName(entry.name).replace(/\s+/g, "-")}`
         },

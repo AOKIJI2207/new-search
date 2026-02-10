@@ -15,6 +15,7 @@
 
 ## Sources pays utilisées
 - Liste des pays (référentiel) : `https://fr.wikipedia.org/wiki/Liste_des_pays_du_monde`.
+- Liste des dirigeants actuels des États (référence chefs d’État / partis) : `https://fr.wikipedia.org/wiki/Liste_des_dirigeants_actuels_des_États`.
 - Wikidata SPARQL : chef d’État, parti majoritaire, régime, prochaines élections.
 - World Bank API : notations 1–5 (modèle), PIB/habitant (`NY.GDP.PCAP.CD`).
 - RSF : classement WPFI.
