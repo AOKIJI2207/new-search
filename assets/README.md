@@ -27,3 +27,7 @@
 ## Vérification du référentiel continents→pays
 - Lancer `npm run test:countries-index`.
 - Le test échoue explicitement si les seuils minimums ne sont pas respectés (Europe > 40, Afrique > 50, Asie > 40, Amérique du Nord > 20, Amérique du Sud > 10, Océanie > 10).
+
+
+## Recherche globale
+- L'onglet `Global` sert de moteur de recherche transverse : une requête (`/api/search?q=...&sources=all`) interroge toutes les sources scrappées et renvoie les articles les plus récents.

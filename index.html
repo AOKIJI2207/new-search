@@ -633,6 +633,10 @@
     const q = $("#q").value.trim();
     const index = buildSearchIndex();
     const qNorm = norm(q);
+
+    // Global tab acts as the main cross-media search engine.
+    activeContinent = "global";
+    activeCountry = null;
     const continentMatch = index.continents.find(c => norm(c.name) === qNorm || c.slug === qNorm.replace(/\s+/g, "-"));
     if (continentMatch) {
       activeContinent = continentMatch.name;
@@ -676,13 +680,15 @@
       return;
     }
 
-    ITEMS = data.items || [];
+    ITEMS = (data.items || []).sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
     activeEntity = q || null;
+    selected = new Set(SOURCES.map(s => s.key));
     const warningText = data.warnings?.length
       ? ` — ${data.warnings.length} source(s) en échec`
       : "";
     setStatus(`Résultats pour: ${q || "tout"}${warningText}`);
     $("#count").textContent = `${ITEMS.length} item(s)`;
+    renderSourceToggles();
     renderContextView();
     renderArticles();
     renderCountryPage();
