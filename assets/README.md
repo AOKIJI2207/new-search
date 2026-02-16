@@ -1,6 +1,6 @@
 # Assets & caches de données
 
-- `world-map.svg` : carte du monde stylisée utilisée comme fond visuel principal du site.
+- `world-map.svg` : fallback local de carte du monde. Fond par défaut: planisphère Wikimedia (référence Wikipédia `https://fr.wikipedia.org/wiki/Planisphère`).
 - `countries.json` : référentiel complet des pays du monde (source de référence alignée sur la liste Wikipédia) avec regroupement par continent.
 - `country-profiles-cache.json` : cache disque des profils pays (Wikidata + World Bank + RSF), revalidation cible 24h.
 - `wikipedia-leaders-cache.json` : cache local des dirigeants (chef d’État / parti majoritaire) issus de Wikipédia, réutilisé si la source distante est temporairement indisponible.

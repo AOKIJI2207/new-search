@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AGORAFLUX</title>
   <style>
-    :root{--bg:#cfe8d1;--card:#121a29;--text:#e7ecf5;--muted:#a9b4c7;--border:rgba(255,255,255,.10);--accent:#6aa6ff;--glow:rgba(106,166,255,.25);--map-image:url("assets/world-map.svg")}
+    :root{--bg:#cfe8d1;--card:#121a29;--text:#e7ecf5;--muted:#a9b4c7;--border:rgba(255,255,255,.10);--accent:#6aa6ff;--glow:rgba(106,166,255,.25);--map-image:url("https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg")}
     *{box-sizing:border-box}
     body{
       margin:0;
@@ -356,6 +356,7 @@
   let COUNTRY_PROFILES = {};
   let countryProfilesLoaded = false;
   const DEFAULT_BG = getComputedStyle(document.documentElement).getPropertyValue("--map-image").trim();
+  const FALLBACK_BG = `url("assets/world-map.svg")`;
   const BG_STORAGE_KEY = "customMapImageV2";
   const isValidBg = url => /^data:image\//i.test(url) || /^https?:\/\//i.test(url);
 
@@ -1141,6 +1142,14 @@
     applyBackground(storedBg);
   } else if(storedBg) {
     localStorage.removeItem(BG_STORAGE_KEY);
+  }
+
+  if(!storedBg){
+    const probe = new Image();
+    probe.onerror = () => {
+      document.documentElement.style.setProperty("--map-image", FALLBACK_BG);
+    };
+    probe.src = "https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg";
   }
 </script>
 </body>
