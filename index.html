@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AGORAFLUX</title>
   <style>
-    :root{--bg:#cfe8d1;--card:#121a29;--text:#e7ecf5;--muted:#a9b4c7;--border:rgba(255,255,255,.10);--accent:#6aa6ff;--glow:rgba(106,166,255,.25);--map-image:url("assets/world-map.png")}
+    :root{--bg:#cfe8d1;--card:#121a29;--text:#e7ecf5;--muted:#a9b4c7;--border:rgba(255,255,255,.10);--accent:#6aa6ff;--glow:rgba(106,166,255,.25);--map-image:url("assets/world-map.svg")}
     *{box-sizing:border-box}
     body{
       margin:0;
@@ -25,10 +25,18 @@
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      opacity: 0.6;
-      filter: contrast(1.15) saturate(1.15);
+      opacity: 0.5;
+      filter: contrast(1.08) saturate(1.05);
       pointer-events: none;
       z-index: -1;
+    }
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:radial-gradient(1200px 700px at 50% 40%, rgba(255,255,255,.08), rgba(12,18,32,.32));
+      pointer-events:none;
+      z-index:-1;
     }
     header{position:sticky;top:0;z-index:10;backdrop-filter:blur(10px);background:rgba(11,15,23,.75);border-bottom:1px solid var(--border)}
     .wrap{max-width:1100px;margin:0 auto;padding:16px}
