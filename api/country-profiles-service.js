@@ -9,6 +9,7 @@ const WIKIPEDIA_LEADERS_CACHE_FILE = path.join(process.cwd(), "assets", "wikiped
 
 let memoryCache = null;
 let countriesIndexCache = null;
+const PROFILE_SCOPE = "wikipedia-leaders-only";
 
 const CONTINENT_THRESHOLDS = {
   Europe: 40,
@@ -128,6 +129,21 @@ async function loadCountriesIndex() {
   return countryCatalog;
 }
 
+function filterCatalogToLeadersList(countryCatalog, wikipediaLeaders) {
+  const allowedIso = new Set(
+    Object.entries(wikipediaLeaders || {})
+      .filter(([, value]) => value && value.headOfState)
+      .map(([iso2]) => String(iso2 || "").toUpperCase())
+      .filter(Boolean)
+  );
+
+  const filtered = countryCatalog.filter(entry => allowedIso.has(entry.iso2));
+  if (filtered.length === 0) {
+    throw new Error("La liste Wikipédia des dirigeants n'a renvoyé aucun pays exploitable.");
+  }
+  return filtered;
+}
+
 async function readCacheFile() {
   try {
     return await readJsonFile(CACHE_FILE);
@@ -234,12 +250,22 @@ function cleanupLeaderName(value) {
 async function fetchWikipediaLeaders(countryCatalog) {
   const url = "https://fr.wikipedia.org/w/api.php?action=parse&page=Liste_des_dirigeants_actuels_des_%C3%89tats&prop=text&format=json&formatversion=2";
   const cached = await readWikipediaLeadersCache();
+  const seededCache = Object.keys(cached || {}).length
+    ? cached
+    : Object.fromEntries(
+      countryCatalog
+        .filter(entry => LEADER_PARTY_FALLBACK[entry.name])
+        .map(entry => [entry.iso2, {
+          headOfState: LEADER_PARTY_FALLBACK[entry.name].headOfState,
+          rulingParty: LEADER_PARTY_FALLBACK[entry.name].rulingParty || null
+        }])
+    );
   const leaders = {};
 
   try {
     const data = await fetchJson(url);
     const html = data?.parse?.text;
-    if (!html) return cached;
+    if (!html) return seededCache;
 
     const rowRegex = /<tr[^>]*>([\s\S]*?)<\/tr>/gi;
     const cellRegex = /<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi;
@@ -257,14 +283,14 @@ async function fetchWikipediaLeaders(countryCatalog) {
       const leaderRaw = cleanupLeaderName(cells[1]) || cleanupLeaderName(cells[2]) || null;
       const partyRaw = cells.find(cell => /parti|coalition|alliance|mouvement|front|union/i.test(cell)) || null;
 
-      const existing = leaders[catalogEntry.iso2] || cached[catalogEntry.iso2] || {};
+      const existing = leaders[catalogEntry.iso2] || seededCache[catalogEntry.iso2] || {};
       leaders[catalogEntry.iso2] = {
         headOfState: existing.headOfState || leaderRaw || null,
         rulingParty: existing.rulingParty || partyRaw || null
       };
     }
 
-    let merged = { ...cached, ...leaders };
+    let merged = { ...seededCache, ...leaders };
     merged = await fillWikipediaLeadersFromCountryPages(countryCatalog, merged);
 
     const filled = Object.values(merged).filter(v => v?.headOfState).length;
@@ -273,7 +299,7 @@ async function fetchWikipediaLeaders(countryCatalog) {
     }
     return merged;
   } catch {
-    return cached;
+    return seededCache;
   }
 }
 
@@ -603,16 +629,19 @@ function buildCountryProfiles({ countryCatalog, wikidataFacts, wikipediaLeaders,
 export async function buildAndCacheProfiles() {
   const countryCatalog = await loadCountriesIndex();
 
-  const [wikidataFacts, wikipediaLeaders, worldBankRatings, rsfRanking] = await Promise.all([
-    fetchWikidataFacts(countryCatalog).catch(() => ({})),
-    fetchWikipediaLeaders(countryCatalog).catch(() => ({})),
-    fetchWorldBankRatings(countryCatalog).catch(() => ({})),
-    fetchRsfRanking(countryCatalog).catch(() => ({}))
+  const wikipediaLeaders = await fetchWikipediaLeaders(countryCatalog).catch(() => ({}));
+  const filteredCatalog = filterCatalogToLeadersList(countryCatalog, wikipediaLeaders);
+
+  const [wikidataFacts, worldBankRatings, rsfRanking] = await Promise.all([
+    fetchWikidataFacts(filteredCatalog).catch(() => ({})),
+    fetchWorldBankRatings(filteredCatalog).catch(() => ({})),
+    fetchRsfRanking(filteredCatalog).catch(() => ({}))
   ]);
 
-  const profiles = buildCountryProfiles({ countryCatalog, wikidataFacts, wikipediaLeaders, worldBankRatings, rsfRanking });
+  const profiles = buildCountryProfiles({ countryCatalog: filteredCatalog, wikidataFacts, wikipediaLeaders, worldBankRatings, rsfRanking });
   const payload = {
     updatedAt: new Date().toISOString(),
+    scope: PROFILE_SCOPE,
     profiles,
     sources: {
       countriesIndex: "assets/countries.json",
@@ -630,12 +659,12 @@ export async function buildAndCacheProfiles() {
 
 export async function getCountryProfiles({ forceRefresh = false } = {}) {
   const now = Date.now();
-  if (!forceRefresh && memoryCache && now - new Date(memoryCache.updatedAt).getTime() < CACHE_TTL_MS) {
+  if (!forceRefresh && memoryCache && memoryCache.scope === PROFILE_SCOPE && now - new Date(memoryCache.updatedAt).getTime() < CACHE_TTL_MS) {
     return memoryCache;
   }
 
   const cache = await readCacheFile();
-  if (!forceRefresh && cache?.updatedAt && now - new Date(cache.updatedAt).getTime() < CACHE_TTL_MS) {
+  if (!forceRefresh && cache?.scope === PROFILE_SCOPE && cache?.updatedAt && now - new Date(cache.updatedAt).getTime() < CACHE_TTL_MS) {
     memoryCache = cache;
     return cache;
   }
@@ -643,8 +672,8 @@ export async function getCountryProfiles({ forceRefresh = false } = {}) {
   try {
     return await buildAndCacheProfiles();
   } catch (error) {
-    if (cache) return cache;
-    if (memoryCache) return memoryCache;
+    if (cache?.scope === PROFILE_SCOPE) return cache;
+    if (memoryCache?.scope === PROFILE_SCOPE) return memoryCache;
     throw error;
   }
 }

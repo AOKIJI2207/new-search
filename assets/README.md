@@ -9,7 +9,7 @@
 ## Endpoints et rafraîchissement
 - `GET /api/sources` : sources RSS (ETag + Cache-Control).
 - `GET /api/search` : scraping/filtrage d’articles sur les 5 thèmes autorisés.
-- `GET /api/country-profiles` : profils pays pré-calculés (cache HTTP + mémoire + disque).
+- `GET /api/country-profiles` : profils pays pré-calculés (cache HTTP + mémoire + disque), restreints aux pays présents dans la liste Wikipédia des dirigeants (scope `wikipedia-leaders-only`).
 - `GET|POST /api/refresh-country-profiles` : forcer le refresh des profils pays.
 - `GET /api/search-index` : index léger continents→pays pour navigation rapide sidebar.
 - `GET /api/ticker` : flux du bandeau avec titres traduits en français (cache translation).
