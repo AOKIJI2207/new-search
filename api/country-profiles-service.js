@@ -264,7 +264,9 @@ async function fetchWikipediaLeaders(countryCatalog) {
       };
     }
 
-    const merged = { ...cached, ...leaders };
+    let merged = { ...cached, ...leaders };
+    merged = await fillWikipediaLeadersFromCountryPages(countryCatalog, merged);
+
     const filled = Object.values(merged).filter(v => v?.headOfState).length;
     if (filled >= 180) {
       await writeWikipediaLeadersCache(merged);
@@ -273,6 +275,47 @@ async function fetchWikipediaLeaders(countryCatalog) {
   } catch {
     return cached;
   }
+}
+
+
+async function fetchWikipediaCountryPageLeader(displayName) {
+  const page = encodeURIComponent(displayName);
+  const url = `https://fr.wikipedia.org/w/api.php?action=parse&page=${page}&prop=text&format=json&formatversion=2`;
+  const data = await fetchJson(url);
+  const html = data?.parse?.text;
+  if (!html) return null;
+
+  const rows = Array.from(html.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi));
+  for (const rowMatch of rows) {
+    const row = rowMatch[1];
+    const header = stripTags((row.match(/<th[^>]*>([\s\S]*?)<\/th>/i) || [])[1] || "");
+    if (!header) continue;
+    if (!/chef de l.?etat|chef d.?etat|president|monarque|roi|souverain|emir|empereur/i.test(normalizeName(header))) continue;
+    const cellHtml = (row.match(/<td[^>]*>([\s\S]*?)<\/td>/i) || [])[1] || "";
+    const anchor = extractAnchorText(cellHtml);
+    const cleaned = cleanupLeaderName(anchor || stripTags(cellHtml));
+    if (cleaned) return cleaned;
+  }
+  return null;
+}
+
+async function fillWikipediaLeadersFromCountryPages(countryCatalog, leaders) {
+  const missing = countryCatalog.filter(entry => !leaders[entry.iso2]?.headOfState);
+  for (const entry of missing) {
+    try {
+      const headOfState = await fetchWikipediaCountryPageLeader(entry.displayName || entry.name);
+      if (headOfState) {
+        leaders[entry.iso2] = {
+          ...(leaders[entry.iso2] || {}),
+          headOfState,
+          rulingParty: leaders[entry.iso2]?.rulingParty || null
+        };
+      }
+    } catch {
+      // ignore per country failure
+    }
+  }
+  return leaders;
 }
 
 function chunkArray(values, size) {
