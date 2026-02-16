@@ -24,12 +24,12 @@ const LEADER_PARTY_FALLBACK = {
   Nigeria: { headOfState: "Bola Tinubu", rulingParty: "All Progressives Congress" },
   "South Africa": { headOfState: "Cyril Ramaphosa", rulingParty: "African National Congress" },
   Kenya: { headOfState: "William Ruto", rulingParty: "United Democratic Alliance" },
-  Egypt: { headOfState: "Abdel Fattah al-Sissi", rulingParty: "Nation's Future Party" },
-  Morocco: { headOfState: "Mohammed VI", rulingParty: "Rassemblement national des indépendants" },
+  Egypt: { headOfState: "Abdel Fattah al-Sissi", rulingParty: "Nation's Future Party", primeMinister: "Moustafa Madbouli" },
+  Morocco: { headOfState: "Mohammed VI", rulingParty: "Rassemblement national des indépendants", primeMinister: "Aziz Akhannouch" },
   Ghana: { headOfState: "Nana Akufo-Addo", rulingParty: "New Patriotic Party" },
-  Senegal: { headOfState: "Bassirou Diomaye Faye", rulingParty: "Pastef" },
+  Senegal: { headOfState: "Bassirou Diomaye Faye", rulingParty: "Pastef", primeMinister: "Ousmane Sonko" },
   "United States": { headOfState: "Donald Trump", rulingParty: "Parti républicain" },
-  Canada: { headOfState: "Mark Carney", rulingParty: "Parti libéral du Canada" },
+  Canada: { headOfState: "Mark Carney", rulingParty: "Parti libéral du Canada", primeMinister: "Mark Carney", governor: "Mary Simon" },
   Mexico: { headOfState: "Claudia Sheinbaum", rulingParty: "Morena" },
   Brazil: { headOfState: "Luiz Inácio Lula da Silva", rulingParty: "Parti des travailleurs" },
   Argentina: { headOfState: "Javier Milei", rulingParty: "La Libertad Avanza" },
@@ -37,20 +37,20 @@ const LEADER_PARTY_FALLBACK = {
   Chile: { headOfState: "Gabriel Boric", rulingParty: "Convergencia Social" },
   Peru: { headOfState: "Dina Boluarte", rulingParty: "Gouvernement sans majorité parlementaire" },
   China: { headOfState: "Xi Jinping", rulingParty: "Parti communiste chinois" },
-  India: { headOfState: "Droupadi Murmu", rulingParty: "Bharatiya Janata Party" },
-  Japan: { headOfState: "Naruhito", rulingParty: "Parti libéral-démocrate" },
+  India: { headOfState: "Droupadi Murmu", rulingParty: "Bharatiya Janata Party", primeMinister: "Narendra Modi" },
+  Japan: { headOfState: "Naruhito", rulingParty: "Parti libéral-démocrate", primeMinister: "Shigeru Ishiba" },
   "South Korea": { headOfState: "Yoon Suk Yeol", rulingParty: "People Power Party" },
   Indonesia: { headOfState: "Prabowo Subianto", rulingParty: "Coalition Indonésie avancée" },
-  Pakistan: { headOfState: "Asif Ali Zardari", rulingParty: "Pakistan Muslim League (N)" },
+  Pakistan: { headOfState: "Asif Ali Zardari", rulingParty: "Pakistan Muslim League (N)", primeMinister: "Shehbaz Sharif" },
   France: { headOfState: "Emmanuel Macron", rulingParty: "Renaissance" },
-  Germany: { headOfState: "Frank-Walter Steinmeier", rulingParty: "SPD" },
-  "United Kingdom": { headOfState: "Charles III", rulingParty: "Labour Party" },
-  Italy: { headOfState: "Sergio Mattarella", rulingParty: "Fratelli d'Italia" },
-  Spain: { headOfState: "Felipe VI", rulingParty: "PSOE" },
-  Ukraine: { headOfState: "Volodymyr Zelensky", rulingParty: "Serviteur du peuple" },
-  Russia: { headOfState: "Vladimir Poutine", rulingParty: "Russie unie" },
-  Australia: { headOfState: "Charles III", rulingParty: "Australian Labor Party" },
-  "New Zealand": { headOfState: "Charles III", rulingParty: "New Zealand National Party" }
+  Germany: { headOfState: "Frank-Walter Steinmeier", rulingParty: "SPD", primeMinister: "Olaf Scholz" },
+  "United Kingdom": { headOfState: "Charles III", rulingParty: "Labour Party", primeMinister: "Keir Starmer" },
+  Italy: { headOfState: "Sergio Mattarella", rulingParty: "Fratelli d'Italia", primeMinister: "Giorgia Meloni" },
+  Spain: { headOfState: "Felipe VI", rulingParty: "PSOE", primeMinister: "Pedro Sánchez" },
+  Ukraine: { headOfState: "Volodymyr Zelensky", rulingParty: "Serviteur du peuple", primeMinister: "Denys Chmyhal" },
+  Russia: { headOfState: "Vladimir Poutine", rulingParty: "Russie unie", primeMinister: "Mikhaïl Michoustine" },
+  Australia: { headOfState: "Charles III", rulingParty: "Australian Labor Party", primeMinister: "Anthony Albanese", governor: "Sam Mostyn" },
+  "New Zealand": { headOfState: "Charles III", rulingParty: "New Zealand National Party", primeMinister: "Christopher Luxon", governor: "Cindy Kiro" }
 };
 
 const COUNTRY_NAME_ALIASES = new Map([
@@ -247,6 +247,17 @@ function cleanupLeaderName(value) {
   return text;
 }
 
+
+function parseExecutiveFromCells(cells = []) {
+  const cleaned = cells.map(value => cleanupLeaderName(value)).filter(Boolean);
+  const headOfState = cleaned[0] || null;
+  const party = cleaned.find(value => /parti|coalition|alliance|mouvement|front|union/i.test(normalizeName(value))) || null;
+  const primeMinister = cleaned.find(value => /premier ministre|premiere ministre|chef du gouvernement|prime minister|chancelier|taoiseach/i.test(normalizeName(value)))
+    || (cleaned[1] && cleaned[1] !== headOfState && cleaned[1] !== party ? cleaned[1] : null);
+  const governor = cleaned.find(value => /gouverneur|gouverneure|gouverneur general|haut commissaire|administrateur/i.test(normalizeName(value))) || null;
+  return { headOfState, rulingParty: party, primeMinister, governor };
+}
+
 async function fetchWikipediaLeaders(countryCatalog) {
   const url = "https://fr.wikipedia.org/w/api.php?action=parse&page=Liste_des_dirigeants_actuels_des_%C3%89tats&prop=text&format=json&formatversion=2";
   const cached = await readWikipediaLeadersCache();
@@ -280,13 +291,14 @@ async function fetchWikipediaLeaders(countryCatalog) {
       if (!catalogEntry) continue;
 
       const cells = rawCells.map(stripTags).filter(Boolean);
-      const leaderRaw = cleanupLeaderName(cells[1]) || cleanupLeaderName(cells[2]) || null;
-      const partyRaw = cells.find(cell => /parti|coalition|alliance|mouvement|front|union/i.test(cell)) || null;
+      const parsed = parseExecutiveFromCells(cells.slice(1));
 
       const existing = leaders[catalogEntry.iso2] || seededCache[catalogEntry.iso2] || {};
       leaders[catalogEntry.iso2] = {
-        headOfState: existing.headOfState || leaderRaw || null,
-        rulingParty: existing.rulingParty || partyRaw || null
+        headOfState: existing.headOfState || parsed.headOfState || null,
+        rulingParty: existing.rulingParty || parsed.rulingParty || null,
+        primeMinister: existing.primeMinister || parsed.primeMinister || null,
+        governor: existing.governor || parsed.governor || null
       };
     }
 
@@ -304,37 +316,61 @@ async function fetchWikipediaLeaders(countryCatalog) {
 }
 
 
-async function fetchWikipediaCountryPageLeader(displayName) {
+async function fetchWikipediaCountryPageExecutives(displayName) {
   const page = encodeURIComponent(displayName);
   const url = `https://fr.wikipedia.org/w/api.php?action=parse&page=${page}&prop=text&format=json&formatversion=2`;
   const data = await fetchJson(url);
   const html = data?.parse?.text;
   if (!html) return null;
 
+  const output = {
+    headOfState: null,
+    primeMinister: null,
+    governor: null
+  };
+
   const rows = Array.from(html.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi));
   for (const rowMatch of rows) {
     const row = rowMatch[1];
     const header = stripTags((row.match(/<th[^>]*>([\s\S]*?)<\/th>/i) || [])[1] || "");
     if (!header) continue;
-    if (!/chef de l.?etat|chef d.?etat|president|monarque|roi|souverain|emir|empereur/i.test(normalizeName(header))) continue;
+    const normalizedHeader = normalizeName(header);
+
     const cellHtml = (row.match(/<td[^>]*>([\s\S]*?)<\/td>/i) || [])[1] || "";
     const anchor = extractAnchorText(cellHtml);
     const cleaned = cleanupLeaderName(anchor || stripTags(cellHtml));
-    if (cleaned) return cleaned;
+    if (!cleaned) continue;
+
+    if (!output.headOfState && /chef de l.?etat|chef d.?etat|president|monarque|roi|souverain|emir|empereur/i.test(normalizedHeader)) {
+      output.headOfState = cleaned;
+      continue;
+    }
+    if (!output.primeMinister && /premier ministre|premiere ministre|chef du gouvernement|prime minister|chancelier|taoiseach/i.test(normalizedHeader)) {
+      output.primeMinister = cleaned;
+      continue;
+    }
+    if (!output.governor && /gouverneur|gouverneure|gouverneur general|haut commissaire|administrateur/i.test(normalizedHeader)) {
+      output.governor = cleaned;
+      continue;
+    }
   }
-  return null;
+
+  return output;
 }
+
 
 async function fillWikipediaLeadersFromCountryPages(countryCatalog, leaders) {
   const missing = countryCatalog.filter(entry => !leaders[entry.iso2]?.headOfState);
   for (const entry of missing) {
     try {
-      const headOfState = await fetchWikipediaCountryPageLeader(entry.displayName || entry.name);
-      if (headOfState) {
+      const exec = await fetchWikipediaCountryPageExecutives(entry.displayName || entry.name);
+      if (exec && (exec.headOfState || exec.primeMinister || exec.governor)) {
         leaders[entry.iso2] = {
           ...(leaders[entry.iso2] || {}),
-          headOfState,
-          rulingParty: leaders[entry.iso2]?.rulingParty || null
+          headOfState: leaders[entry.iso2]?.headOfState || exec.headOfState || null,
+          rulingParty: leaders[entry.iso2]?.rulingParty || null,
+          primeMinister: leaders[entry.iso2]?.primeMinister || exec.primeMinister || null,
+          governor: leaders[entry.iso2]?.governor || exec.governor || null
         };
       }
     } catch {
@@ -588,6 +624,8 @@ function buildCountryProfiles({ countryCatalog, wikidataFacts, wikipediaLeaders,
       continent: entry.continent,
       headOfState: wikiFacts.headOfState || facts.headOfState || fallbackFacts.headOfState || "Institution en exercice",
       rulingParty: wikiFacts.rulingParty || facts.rulingParty || fallbackFacts.rulingParty || "Configuration parlementaire nationale",
+      primeMinister: wikiFacts.primeMinister || fallbackFacts.primeMinister || null,
+      governor: wikiFacts.governor || fallbackFacts.governor || null,
       nextElection: facts.nextElection,
       isDemocracy: facts.isDemocracy,
       rsfRank: rsf.rank ?? null,
@@ -606,6 +644,12 @@ function buildCountryProfiles({ countryCatalog, wikidataFacts, wikipediaLeaders,
           headOfState: Boolean(facts.headOfState),
           rulingParty: Boolean(facts.rulingParty),
           nextElection: Boolean(facts.nextElection)
+        },
+        wikipediaLeaders: {
+          headOfState: Boolean(wikiFacts.headOfState),
+          rulingParty: Boolean(wikiFacts.rulingParty),
+          primeMinister: Boolean(wikiFacts.primeMinister),
+          governor: Boolean(wikiFacts.governor)
         },
         rsf: {
           rank: rsf.rank,
