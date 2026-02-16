@@ -5,6 +5,7 @@ const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 const USER_AGENT = "agoraflux-country-profiles/1.0";
 const CACHE_FILE = path.join(process.cwd(), "assets", "country-profiles-cache.json");
 const COUNTRIES_INDEX_FILE = path.join(process.cwd(), "assets", "countries.json");
+const WIKIPEDIA_LEADERS_CACHE_FILE = path.join(process.cwd(), "assets", "wikipedia-leaders-cache.json");
 
 let memoryCache = null;
 let countriesIndexCache = null;
@@ -196,36 +197,82 @@ function findCountryCatalogEntry(label, countryCatalog) {
   }) || null;
 }
 
+async function readWikipediaLeadersCache() {
+  try {
+    return await readJsonFile(WIKIPEDIA_LEADERS_CACHE_FILE);
+  } catch {
+    return {};
+  }
+}
+
+async function writeWikipediaLeadersCache(leaders) {
+  try {
+    await fs.mkdir(path.dirname(WIKIPEDIA_LEADERS_CACHE_FILE), { recursive: true });
+    await fs.writeFile(WIKIPEDIA_LEADERS_CACHE_FILE, JSON.stringify(leaders, null, 2));
+  } catch {
+    // ignore
+  }
+}
+
+function extractAnchorText(html = "") {
+  const match = html.match(/<a[^>]*>([\s\S]*?)<\/a>/i);
+  return match ? stripTags(match[1]) : stripTags(html);
+}
+
+function cleanupLeaderName(value) {
+  if (!value) return null;
+  const text = String(value)
+    .replace(/\[[^\]]+\]/g, " ")
+    .replace(/\([^)]*\)/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!text) return null;
+  if (text.includes("—")) return text.split("—").pop().trim() || null;
+  return text;
+}
+
 async function fetchWikipediaLeaders(countryCatalog) {
   const url = "https://fr.wikipedia.org/w/api.php?action=parse&page=Liste_des_dirigeants_actuels_des_%C3%89tats&prop=text&format=json&formatversion=2";
-  const data = await fetchJson(url);
-  const html = data?.parse?.text;
-  if (!html) return {};
-
-  const rowRegex = /<tr[^>]*>([\s\S]*?)<\/tr>/gi;
-  const cellRegex = /<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi;
+  const cached = await readWikipediaLeadersCache();
   const leaders = {};
 
-  for (const rowMatch of html.matchAll(rowRegex)) {
-    const row = rowMatch[1];
-    const cells = Array.from(row.matchAll(cellRegex)).map(match => stripTags(match[1])).filter(Boolean);
-    if (cells.length < 2) continue;
+  try {
+    const data = await fetchJson(url);
+    const html = data?.parse?.text;
+    if (!html) return cached;
 
-    const countryLabel = cells[0];
-    const catalogEntry = findCountryCatalogEntry(countryLabel, countryCatalog);
-    if (!catalogEntry) continue;
+    const rowRegex = /<tr[^>]*>([\s\S]*?)<\/tr>/gi;
+    const cellRegex = /<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi;
 
-    const possibleLeader = cells[1] || null;
-    const possibleParty = cells.find(cell => /parti|coalition|alliance|mouvement|front|union/i.test(cell));
+    for (const rowMatch of html.matchAll(rowRegex)) {
+      const row = rowMatch[1];
+      const rawCells = Array.from(row.matchAll(cellRegex)).map(match => match[1]);
+      if (rawCells.length < 2) continue;
 
-    const existing = leaders[catalogEntry.iso2] || {};
-    leaders[catalogEntry.iso2] = {
-      headOfState: existing.headOfState || possibleLeader,
-      rulingParty: existing.rulingParty || possibleParty || null
-    };
+      const countryLabel = extractAnchorText(rawCells[0]);
+      const catalogEntry = findCountryCatalogEntry(countryLabel, countryCatalog);
+      if (!catalogEntry) continue;
+
+      const cells = rawCells.map(stripTags).filter(Boolean);
+      const leaderRaw = cleanupLeaderName(cells[1]) || cleanupLeaderName(cells[2]) || null;
+      const partyRaw = cells.find(cell => /parti|coalition|alliance|mouvement|front|union/i.test(cell)) || null;
+
+      const existing = leaders[catalogEntry.iso2] || cached[catalogEntry.iso2] || {};
+      leaders[catalogEntry.iso2] = {
+        headOfState: existing.headOfState || leaderRaw || null,
+        rulingParty: existing.rulingParty || partyRaw || null
+      };
+    }
+
+    const merged = { ...cached, ...leaders };
+    const filled = Object.values(merged).filter(v => v?.headOfState).length;
+    if (filled >= 180) {
+      await writeWikipediaLeadersCache(merged);
+    }
+    return merged;
+  } catch {
+    return cached;
   }
-
-  return leaders;
 }
 
 function chunkArray(values, size) {

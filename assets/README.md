@@ -3,6 +3,7 @@
 - `world-map.png` : fond visuel principal du site.
 - `countries.json` : référentiel complet des pays du monde (source de référence alignée sur la liste Wikipédia) avec regroupement par continent.
 - `country-profiles-cache.json` : cache disque des profils pays (Wikidata + World Bank + RSF), revalidation cible 24h.
+- `wikipedia-leaders-cache.json` : cache local des dirigeants (chef d’État / parti majoritaire) issus de Wikipédia, réutilisé si la source distante est temporairement indisponible.
 - `translations-cache.json` : cache disque des traductions ticker vers FR (clé hash texte+langue+fr), TTL 7 jours.
 
 ## Endpoints et rafraîchissement
