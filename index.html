@@ -112,6 +112,12 @@
     .fact-note{font-size:11px;color:var(--muted);margin-top:6px;grid-column:1/-1}
     .fact-link{grid-column:1/-1;display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;border:1px solid rgba(106,166,255,.4);background:rgba(106,166,255,.16);color:#dce9ff;font-size:13px;text-decoration:none;width:fit-content}
     .fact-link:hover{background:rgba(106,166,255,.24)}
+
+    #live-news-ticker{max-width:1200px;margin:8px auto 0;padding:8px 16px;overflow:hidden;white-space:nowrap;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:rgba(11,15,23,.68);backdrop-filter:blur(8px)}
+    #live-news-ticker .ticker-content{display:inline-block;min-width:100%;padding-left:100%;animation:liveTickerScroll 45s linear infinite}
+    #live-news-ticker a{color:#dce9ff;text-decoration:none;margin-right:16px}
+    #live-news-ticker a:hover{text-decoration:underline}
+    @keyframes liveTickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
   </style>
 </head>
 <body>
@@ -121,7 +127,7 @@
       </div>
 </header>
 
-
+<div id="live-news-ticker"><div class="ticker-content" id="liveNewsContent">Chargement des actualités…</div></div>
 
 <main>
   <aside class="panel continents">
@@ -193,6 +199,8 @@
   let SOURCES = [];
   let selected = new Set();
   let ITEMS = [];
+  const translationCache = {};
+  let liveNewsTimer = null;
   let activeContinent = "global";
   let activeCountry = null;
   let activeEntity = null;
@@ -432,6 +440,33 @@
     return COUNTRY_TRANSLATIONS[name] || name;
   }
 
+  function detectLanguage(input){
+    const text = norm(input || "");
+    if (!text) return "und";
+    const frenchHints = /\b(le|la|les|des|une|pour|avec|sans|selon|face|contre|actualite|gouvernement)\b/.test(text);
+    return frenchHints ? "fr" : "en";
+  }
+
+  async function translateToFrench(text, sourceLang = "und"){
+    if (!text) return "";
+    if (translationCache[text]) return translationCache[text];
+    const lang = sourceLang && sourceLang !== "und" ? sourceLang : detectLanguage(text);
+    if (lang === "fr") {
+      translationCache[text] = text;
+      return text;
+    }
+    try {
+      const r = await fetch(`/api/translation-service?q=${encodeURIComponent(text)}&sourceLang=${encodeURIComponent(lang)}`);
+      const data = await r.json();
+      const translated = data?.text || text;
+      translationCache[text] = translated;
+      return translated;
+    } catch (_e) {
+      translationCache[text] = text;
+      return text;
+    }
+  }
+
   function continentByCountry(country){
     return Object.entries(CONTINENT_COUNTRIES).find(([, list]) => list.includes(country))?.[0] || null;
   }
@@ -577,7 +612,7 @@
     });
   }
 
-  function renderArticles(){
+  async function renderArticles(){
     const root = $("#articles");
     const visible = ITEMS.filter(item => {
       if (item.sourceKey && selected.size && !selected.has(item.sourceKey)) return false;
@@ -585,9 +620,11 @@
       return true;
     });
 
-    root.innerHTML = visible.map((item, idx) => `
+    const cards = await Promise.all(visible.map(async (item, idx) => {
+      const translatedTitle = await translateToFrench(item.title || "", item.titleLanguage || item.language_detected || "und");
+      return `
       <article>
-        <h3><span class="idx">#${idx + 1}</span><a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title || "")}</a></h3>
+        <h3><span class="idx">#${idx + 1}</span><a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(translatedTitle)}</a></h3>
         <div class="meta">
           <span>${escapeHtml(item.source || "")}</span>
           <span>•</span>
@@ -597,7 +634,37 @@
         </div>
         <div class="snippet">${escapeHtml(item.summary || "")}</div>
       </article>
-    `).join("") || `<div class="small">Aucun résultat pour ce filtre.</div>`;
+    `;
+    }));
+
+    root.innerHTML = cards.join("") || `<div class="small">Aucun résultat pour ce filtre.</div>`;
+  }
+
+  async function fetchLatestNews(){
+    const root = $("#liveNewsContent");
+    if (!root) return;
+    try {
+      const r = await fetch('/api/ticker');
+      const data = await r.json();
+      const items = (data.items || []).slice(0, 20);
+      if (!items.length){
+        root.textContent = 'Aucune actualité récente.';
+        return;
+      }
+      const links = await Promise.all(items.map(async it => {
+        const translated = await translateToFrench(it.title_fr || it.title || '', it.language || 'und');
+        return `<a href="${escapeHtml(it.url || '#')}" target="_blank" rel="noopener noreferrer">${escapeHtml(translated)}</a>`;
+      }));
+      root.innerHTML = links.join('<span> • </span>');
+    } catch (_e) {
+      root.textContent = 'Flux en direct indisponible.';
+    }
+  }
+
+  function startLiveNewsTicker(){
+    fetchLatestNews();
+    if (liveNewsTimer) clearInterval(liveNewsTimer);
+    liveNewsTimer = setInterval(fetchLatestNews, 30000);
   }
 
   function setStatus(text){ $("#status").textContent = text; }
@@ -692,6 +759,7 @@
   }
 
   boot();
+  startLiveNewsTicker();
 </script>
 </body>
 </html>

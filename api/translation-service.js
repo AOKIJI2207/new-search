@@ -73,3 +73,15 @@ export async function translateToFrench(text, sourceLang = null) {
     return { text, language };
   }
 }
+
+
+export default async function handler(req, res) {
+  try {
+    const text = (req.query?.q || req.query?.text || "").toString();
+    const sourceLang = (req.query?.sourceLang || "").toString() || null;
+    const translated = await translateToFrench(text, sourceLang);
+    res.status(200).json(translated);
+  } catch (e) {
+    res.status(500).json({ text: (req.query?.q || "").toString(), language: "und", error: String(e?.message || e) });
+  }
+}
