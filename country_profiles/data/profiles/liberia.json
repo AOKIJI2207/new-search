@@ -1,0 +1,112 @@
+{
+  "country": "Liberia",
+  "updated_at": "2026-03-09T13:05:35Z",
+  "risk_global": "Élevé",
+  "risk_score": 3.05,
+  "barometer": {
+    "geopolitique": 4,
+    "politique": 2,
+    "socio_economique": 2,
+    "criminalite": 3,
+    "terrorisme": 4,
+    "sanitaire_catastrophes": 3,
+    "deplacements": 4
+  },
+  "security_overview": "Profil de risque élevé pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
+  "main_risks": [
+    "Criminalité opportuniste",
+    "Risque cyber",
+    "Manifestations ponctuelles"
+  ],
+  "key_data": {
+    "Population": 29300000,
+    "Indice de corruption": 22,
+    "Facilité de faire des affaires": 81,
+    "Indice de développement humain": 0.81,
+    "Croissance du PIB": 0.6
+  },
+  "risk_zones": [
+    "Capitale et périphérie",
+    "Axes logistiques",
+    "Certaines zones frontalières"
+  ],
+  "context": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique.",
+  "next_milestones": [
+    "Échéance électorale nationale",
+    "Revue budgétaire gouvernementale"
+  ],
+  "category_analysis": {
+    "Géopolitique": "Analyse basée sur signaux multi-sources.",
+    "Politique": "Stabilité institutionnelle et calendrier politique suivis.",
+    "Socio-économique": "Tendances inflation/emploi/croissance intégrées.",
+    "Criminalité": "Niveau de menace criminelle pour actifs et personnels.",
+    "Terrorisme": "Exposition terroriste évaluée par criticité locale.",
+    "Sanitaire & catastrophes": "Risque sanitaire et aléas naturels agrégés.",
+    "Déplacements": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux."
+  },
+  "best_practices": {
+    "comportement": "Appliquer protocole voyage et sûreté entreprise.",
+    "législation": "Vérifier conformité locale avant opération.",
+    "risques spécifiques": "Prévoir plans de continuité et évacuation."
+  },
+  "important_dates": [
+    "Révision semestrielle du risque",
+    "Publication indicateurs macro"
+  ],
+  "zone_analysis": {
+    "capitale": "N/A",
+    "grandes villes": "Prioriser cartographie des risques urbains.",
+    "régions sensibles": "Actualiser selon événements sécurité.",
+    "zones frontalières": "Contrôles renforcés et variabilité locale."
+  },
+  "raw_sources": {
+    "macro": {
+      "population": 29300000,
+      "corruption_index": 22,
+      "ease_of_doing_business": 81,
+      "hdi": 0.81,
+      "gdp_growth": 0.6
+    },
+    "political": {
+      "stability_score": 2,
+      "upcoming_events": [
+        "Échéance électorale nationale",
+        "Revue budgétaire gouvernementale"
+      ],
+      "recent_events": [
+        "Mobilisations sociales localisées",
+        "Ajustements de politique publique"
+      ]
+    },
+    "security": {
+      "crime_score": 3,
+      "terrorism_score": 4,
+      "main_risks": [
+        "Criminalité opportuniste",
+        "Risque cyber",
+        "Manifestations ponctuelles"
+      ],
+      "risk_zones": [
+        "Capitale et périphérie",
+        "Axes logistiques",
+        "Certaines zones frontalières"
+      ]
+    },
+    "health": {
+      "health_risk": 5,
+      "catastrophe_risk": 1
+    },
+    "mobility": {
+      "travel_risk": 4,
+      "mobility_notes": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux."
+    },
+    "events": {
+      "context": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique.",
+      "important_dates": [
+        "Révision semestrielle du risque",
+        "Publication indicateurs macro"
+      ]
+    }
+  },
+  "validation_errors": []
+}
