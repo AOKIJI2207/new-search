@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "vercel dev",
     "start": "vercel dev",
-    "check": "node --check api/search.js && node --check api/sources.js"
+    "check": "node --check api/search.js && node --check api/sources.js",
+    "test:countries-index": "node scripts/check-countries-index.mjs"
   },
   "dependencies": {
     "rss-parser": "^3.13.0"
