@@ -1,8 +1,18 @@
 {
   "name": "news-search",
   "private": true,
+  "version": "1.0.0",
+  "description": "Static news search UI with Vercel serverless RSS endpoints.",
   "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "start": "vercel dev",
+    "check": "node --check api/search.js && node --check api/sources.js"
+  },
   "dependencies": {
     "rss-parser": "^3.13.0"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
