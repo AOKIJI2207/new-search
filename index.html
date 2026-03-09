@@ -3,65 +3,52 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Moteur d’actualité — recherche par mots-clés</title>
+  <title>AGORAFLUX</title>
   <style>
-    :root{--bg:#0b0f17;--card:#121a29;--text:#e7ecf5;--muted:#a9b4c7;--border:rgba(255,255,255,.10);--accent:#6aa6ff}
+    :root{--text:#e7ecf5;--muted:#a9b4c7;--border:rgba(255,255,255,.10)}
     *{box-sizing:border-box}
     body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;background:linear-gradient(180deg,#070a12,#0b0f17);color:var(--text)}
-    header{position:sticky;top:0;z-index:10;backdrop-filter:blur(10px);background:rgba(11,15,23,.75);border-bottom:1px solid var(--border)}
-    .wrap{max-width:1100px;margin:0 auto;padding:12px 16px}
-    h1{margin:0;font-size:20px;letter-spacing:.02em;text-align:center}
-    main{padding:10px 16px 24px;max-width:1100px;margin:0 auto;display:grid;gap:14px}
+    header{position:sticky;top:0;z-index:10;backdrop-filter:blur(10px);background:rgba(11,15,23,.78);border-bottom:1px solid var(--border)}
+    .wrap{max-width:1200px;margin:0 auto;padding:12px 16px}
+    h1{margin:0;text-align:center;font-size:20px;letter-spacing:.03em}
+    main{max-width:1200px;margin:0 auto;padding:10px 16px 24px;display:grid;gap:14px}
     .panel{background:rgba(18,26,41,.75);border:1px solid var(--border);border-radius:14px;overflow:hidden}
     .hd{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:12px;border-bottom:1px solid var(--border);flex-wrap:wrap}
     .bd{padding:12px}
     .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-    .searchbar{justify-content:center;width:100%;padding-top:2px}
-    input,button{background:#0c1220;color:var(--text);border:1px solid var(--border);padding:10px 11px;border-radius:12px;font:inherit}
+    .searchbar{justify-content:center;width:100%}
+    input,select,button{background:#0c1220;color:var(--text);border:1px solid var(--border);padding:10px 11px;border-radius:12px;font:inherit}
     button{cursor:pointer}
     button.primary{background:linear-gradient(180deg,rgba(106,166,255,.25),rgba(106,166,255,.12));border-color:rgba(106,166,255,.35)}
     .badge{font-size:12px;color:var(--muted);border:1px solid var(--border);padding:6px 10px;border-radius:999px}
-    .filters{display:flex;flex-wrap:wrap;gap:8px;padding-bottom:8px}
-    .filter{font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center}
+    .small{font-size:12px;color:var(--muted)}
+    .filters,.sources{display:flex;flex-wrap:wrap;gap:10px}
+    .filter,.src{font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center}
     .articles{display:grid;gap:10px}
     article{background:rgba(12,18,32,.6);border:1px solid var(--border);border-radius:14px;padding:12px}
-    article h3{margin:0 0 6px 0;font-size:15px;line-height:1.25}
-    .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;color:var(--muted);font-size:12px}
-    .snippet{margin-top:8px;color:#d7def0;line-height:1.45;font-size:14px}
-    a{color:#cfe1ff}
-    .small{font-size:12px;color:var(--muted);line-height:1.35}
-    .sources{display:flex;flex-wrap:wrap;gap:10px}
-    .src{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted)}
-    .country-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}
-    .country-card{background:rgba(12,18,32,.6);border:1px solid var(--border);border-radius:14px;padding:12px}
-    .country-card h3{margin:0 0 8px 0;font-size:18px}
+    article h3{margin:0 0 6px 0;font-size:15px}
+    .meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:12px}
+    .snippet{margin-top:8px;color:#d7def0;font-size:14px;line-height:1.4}
     .country-fields{display:grid;gap:7px;font-size:13px;line-height:1.4}
     .country-fields dt{font-weight:700;color:#cfe1ff}
     .country-fields dd{margin:2px 0 8px;color:#d7def0}
     .country-fields ul{margin:6px 0 10px 18px;padding:0}
     .section-title{font-weight:700;color:#cfe1ff;margin-top:8px}
+    a{color:#cfe1ff}
   </style>
 </head>
 <body>
-<header>
-  <div class="wrap">
-    <h1>AGORAFLUX</h1>
-  </div>
-</header>
+<header><div class="wrap"><h1>AGORAFLUX</h1></div></header>
 
 <main>
   <section class="panel">
     <div class="hd">
-      <div class="row">
-        <span class="badge" id="status">Prêt</span>
-        <span class="small" id="count"></span>
-      </div>
+      <div class="row"><span class="badge" id="status">Prêt</span><span class="small" id="count"></span></div>
       <div class="row searchbar">
         <input id="q" type="search" placeholder='Ex: Groenland | cybersécurité | OTAN arctique' style="min-width:360px; width:min(640px, 100%)"/>
         <button class="primary" id="searchBtn">Rechercher</button>
       </div>
     </div>
-
     <div class="bd">
       <div class="filters" id="continentFilters"></div>
       <div class="sources" id="sourceToggles"></div>
@@ -73,358 +60,148 @@
   <section class="panel">
     <div class="hd">
       <span class="badge">Fiches pays</span>
+      <div class="row">
+        <select id="countrySelect" style="min-width:260px"></select>
+        <button class="primary" id="loadCountryBtn">Charger la fiche</button>
+      </div>
     </div>
-    <div class="bd">
-      <div class="country-grid" id="countryCards"></div>
-    </div>
+    <div class="bd" id="countryCard"></div>
   </section>
 </main>
 
 <script>
-  const $ = s => document.querySelector(s);
-  const escapeHtml = s => (s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const CONTINENTS = ["Europe", "Amériques", "Asie", "Afrique", "Moyen-Orient", "Monde"];
-  const SOURCE_CONTINENT = {
-    bbc_world: "Monde",
-    bbc_sci: "Monde",
-    guardian_world: "Europe",
-    guardian_tech: "Europe",
-    france24: "Europe"
-  };
+const $ = s => document.querySelector(s);
+const escapeHtml = s => (s ?? "").toString().replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const list = arr => `<ul>${(arr||[]).map(v => `<li>${escapeHtml(v)}</li>`).join("")}</ul>`;
 
-  const COUNTRY_PROFILES = [
-    {
-      nom: "Pérou",
-      dateMaj: "2026-03-09",
-      risqueGlobal: "Modéré à élevé",
-      barometre: {geopolitique:3, politique:4, socioEconomique:3, criminalite:4, terrorisme:2, sanitaireCatastrophes:4, deplacements:3},
-      situationSecuritaire: "Le pays reste praticable pour les déplacements d’affaires, mais avec une volatilité politique, une criminalité urbaine significative et une exposition élevée aux aléas naturels (séismes, inondations, glissements de terrain).",
-      risquesPrincipaux: ["Manifestations et blocages routiers ponctuels","Vols avec violence dans les grandes agglomérations","Risque sismique important sur la côte et dans les Andes","Perturbations logistiques lors de mouvements sociaux"],
-      donneesCles: {population:"~34,6 M", corruption:"Indice de perception de la corruption: moyen-faible", affaires:"Facilité de faire des affaires: intermédiaire", idh:"IDH: élevé (tranche supérieure Amérique latine)", croissance:"Croissance PIB: reprise modérée, sensible au cycle minier"},
-      zonesRisques:["Lima métropolitaine (délinquance opportuniste)","Axes andins avec blocages sociaux ponctuels","Zones frontalières isolées et vallées de culture illicite"],
-      contexte:"Les derniers trimestres sont marqués par une conflictualité sociale intermittente et des tensions entre pouvoir exécutif et acteurs territoriaux. L’activité minière reste motrice mais politiquement sensible.",
-      echeances:["Fenêtres de mobilisation sociale liées au calendrier budgétaire","Négociations sectorielles minières et environnementales","Révisions réglementaires sur l’investissement et l’extraction"],
-      analyse:{
-        geopolitique:"Risque externe limité; le pays reste aligné sur des logiques de coopération régionale pragmatique.",
-        politique:"Instabilité institutionnelle récurrente, risque de changements de cap administratifs et de rotations ministérielles.",
-        socioEconomique:"Inégalités territoriales persistantes; sensibilité sociale aux prix, au coût de la vie et à la redistribution des revenus extractifs.",
-        criminalite:"Vols aggravés, extorsion locale et opportunisme criminel dans les centres urbains et les nœuds de transport.",
-        terrorisme:"Menace résiduelle, localisée, faible pour les voyageurs d’affaires standards.",
-        sanitaireCatastrophes:"Sismicité structurelle, épisodes El Niño pouvant dégrader routes/chaînes logistiques et réseaux sanitaires régionaux.",
-        deplacements:"Déplacements faisables avec préparation: suivi des routes, horaires de mobilité, prestataires transport fiables."
-      },
-      bonnesPratiques:{
-        comportement:"Limiter l’exposition ostentatoire, privilégier les rendez-vous en journée, appliquer un protocole de déplacement sécurisé.",
-        legislation:"Vérifier en amont les exigences douanières, fiscales et les clauses de conformité locale (anti-corruption, emploi, sous-traitance).",
-        risquesSpecifiques:"Prévoir des plans de continuité pour blocages routiers, alternatives d’itinéraire et marges logistiques."
-      },
-      datesImportantes:["Calendrier social minier (périodes de négociation)","Saisons de pluies andines (impact transport)","Échéances politiques nationales et régionales"],
-      analyseZones:{
-        villes:"Lima: principal hub business avec délinquance de rue; Arequipa et Trujillo: risque modéré, vigilance mobilité urbaine.",
-        regions:"Andes minières: risque social ponctuel; Amazonie: contraintes logistiques et couverture sanitaire inégale.",
-        frontieres:"Frontières nord et est: contrôle variable, trafic illicite localisé, prudence renforcée hors circuits encadrés."
-      }
-    },
-    {
-      nom: "France",
-      dateMaj: "2026-03-09",
-      risqueGlobal: "Modéré",
-      barometre: {geopolitique:2, politique:2, socioEconomique:2, criminalite:3, terrorisme:3, sanitaireCatastrophes:2, deplacements:2},
-      situationSecuritaire: "Environnement globalement stable pour les entreprises, avec exposition principale au risque terroriste résiduel, aux mouvements sociaux et à la criminalité urbaine opportuniste.",
-      risquesPrincipaux:["Mouvements sociaux et perturbations transport","Risque terroriste persistant à bas bruit","Cybermenaces contre entreprises stratégiques"],
-      donneesCles:{population:"~68,4 M", corruption:"Faible à modérée", affaires:"Élevée", idh:"Très élevé", croissance:"Modérée"},
-      zonesRisques:["Quartiers sensibles de grandes métropoles","Nœuds transport lors de grèves","Sites exposés aux inondations saisonnières"],
-      contexte:"Cycle politique relativement stable; tensions sociales ponctuelles autour du pouvoir d’achat et des réformes.",
-      echeances:["Négociations sociales sectorielles","Calendrier budgétaire et réformes structurelles"],
-      analyse:{geopolitique:"Bonne posture internationale, faible risque de rupture externe.", politique:"Institutions solides, risque surtout réputationnel en période de protestation.", socioEconomique:"Inflation maîtrisée mais pression sur marges dans certains secteurs.", criminalite:"Risque modéré en zone urbaine dense et transport.", terrorisme:"Niveau de vigilance maintenu, menace diffuse.", sanitaireCatastrophes:"Système sanitaire robuste; aléas climatiques plus fréquents.", deplacements:"Mobilité fluide hors pics sociaux et événements majeurs."},
-      bonnesPratiques:{comportement:"Planifier les déplacements avec marges horaires, éviter les zones de rassemblement.", legislation:"Conformité RGPD, devoir de vigilance, anticorruption.", risquesSpecifiques:"Sécuriser chaîne IT et accès sites sensibles."},
-      datesImportantes:["Périodes de grèves nationales","Échéances électorales"],
-      analyseZones:{villes:"Paris/Lyon/Marseille: vigilance pickpocketing et manifestations.", regions:"Arc méditerranéen exposé feux de forêt estivaux.", frontieres:"Flux transfrontaliers Schengen généralement fluides."}
-    },
-    {
-      nom: "Royaume-Uni",
-      dateMaj: "2026-03-09",
-      risqueGlobal: "Modéré",
-      barometre: {geopolitique:2, politique:2, socioEconomique:3, criminalite:3, terrorisme:3, sanitaireCatastrophes:2, deplacements:2},
-      situationSecuritaire: "Cadre juridique prévisible et favorable aux affaires; risques concentrés sur criminalité urbaine, cybermenaces et tensions sociales localisées.",
-      risquesPrincipaux:["Cybercriminalité financière","Manifestations ponctuelles","Vols ciblés dans hubs urbains"],
-      donneesCles:{population:"~68 M", corruption:"Faible", affaires:"Élevée", idh:"Très élevé", croissance:"Faible à modérée"},
-      zonesRisques:["Londres (zones touristiques/transport)","Certains centres urbains du nord de l’Angleterre"],
-      contexte:"Ajustements économiques post-Brexit en cours, maintien de l’attractivité services/finance.",
-      echeances:["Arbitrages commerciaux UK-UE","Négociations sectorielles énergie-travail"],
-      analyse:{geopolitique:"Risque externe contenu, alliances solides.", politique:"Stabilité institutionnelle élevée.", socioEconomique:"Croissance modérée et coûts élevés.", criminalite:"Risque de vol et fraude.", terrorisme:"Menace basse mais persistante.", sanitaireCatastrophes:"Système robuste; aléas climatiques limités.", deplacements:"Très bonne connectivité, perturbations ponctuelles rail/aérien."},
-      bonnesPratiques:{comportement:"Limiter exposition en soirée dans zones à risque.", legislation:"Conformité sanctions/export controls et AML.", risquesSpecifiques:"Renforcer due diligence partenaires fintech."},
-      datesImportantes:["Budget statement","Révisions réglementaires financières"],
-      analyseZones:{villes:"Londres: risque opportuniste élevé dans zones très fréquentées.", regions:"Écosse/Pays de Galles: risque global faible.", frontieres:"Contrôles UK spécifiques (hors Schengen)."}
-    },
-    {
-      nom: "États-Unis",
-      dateMaj: "2026-03-09",
-      risqueGlobal: "Modéré à élevé",
-      barometre: {geopolitique:2, politique:3, socioEconomique:3, criminalite:4, terrorisme:3, sanitaireCatastrophes:4, deplacements:3},
-      situationSecuritaire: "Marché clé mais hétérogène: risque variable selon État/ville, forte exposition à criminalité locale, catastrophes naturelles et contentieux réglementaires.",
-      risquesPrincipaux:["Criminalité armée dans certaines métropoles","Ouragans/incendies/inondations selon régions","Risque juridique et conformité multi-États"],
-      donneesCles:{population:"~335 M", corruption:"Faible à modérée", affaires:"Très élevée", idh:"Très élevé", croissance:"Modérée"},
-      zonesRisques:["Certaines zones urbaines de la côte ouest et sud","Couloir ouragan Golfe/Atlantique","Zones exposées feux de forêt en Californie"],
-      contexte:"Polarisation politique persistante, robustesse macroéconomique relative, vigilance réglementaire renforcée sur données et commerce.",
-      echeances:["Calendrier électoral fédéral/étatique","Évolutions réglementaires tech/commerce"],
-      analyse:{geopolitique:"Risque externe maîtrisé à court terme.", politique:"Polarisation pouvant générer protestations localisées.", socioEconomique:"Consommation solide mais disparités régionales marquées.", criminalite:"Risque élevé selon zip code; forte variabilité locale.", terrorisme:"Menace diffuse, surveillance accrue.", sanitaireCatastrophes:"Aléas naturels majeurs récurrents.", deplacements:"Bon réseau mais perturbable par météo extrême."},
-      bonnesPratiques:{comportement:"Protocoles de sûreté adaptés par ville et horaires.", legislation:"Vérifier conformité État par État (emploi, données, fiscalité).", risquesSpecifiques:"Assurance responsabilité et plans de crise juridiques."},
-      datesImportantes:["Saison des ouragans","Primaires/élections","Deadlines réglementaires sectorielles"],
-      analyseZones:{villes:"NYC/Chicago/LA: risques différenciés par quartier.", regions:"Sud-est exposé ouragans; Ouest exposé feux/sécheresse.", frontieres:"Frontière sud: tensions migratoires et contrôles renforcés."}
-    },
-    {
-      nom: "Canada",
-      dateMaj: "2026-03-09",
-      risqueGlobal: "Faible à modéré",
-      barometre: {geopolitique:1, politique:1, socioEconomique:2, criminalite:2, terrorisme:2, sanitaireCatastrophes:3, deplacements:2},
-      situationSecuritaire: "Cadre très favorable aux affaires et stable politiquement; principaux risques liés au climat extrême et à la cybersécurité.",
-      risquesPrincipaux:["Épisodes climatiques sévères","Pression cyber sur infrastructures","Coûts logistiques élevés hors grands corridors"],
-      donneesCles:{population:"~41 M", corruption:"Faible", affaires:"Élevée", idh:"Très élevé", croissance:"Modérée"},
-      zonesRisques:["Régions nordiques isolées","Axes exposés incendies de forêt"],
-      contexte:"Croissance contenue, politique économique prévisible, bonne coopération transatlantique.",
-      echeances:["Budgets provinciaux","Négociations énergie-mines"],
-      analyse:{geopolitique:"Très faible risque externe.", politique:"Stabilité forte.", socioEconomique:"Bonne résilience, sensibilité immobilière.", criminalite:"Risque urbain modéré.", terrorisme:"Faible.", sanitaireCatastrophes:"Risque feux/inondations en hausse.", deplacements:"Très bon niveau global, vigilance météo."},
-      bonnesPratiques:{comportement:"Intégrer alertes météo dans plan de mission.", legislation:"Conformité provinciale (emploi, privacy).", risquesSpecifiques:"Prévoir redondance télécom pour sites éloignés."},
-      datesImportantes:["Saison incendies","Changements réglementaires provinciaux"],
-      analyseZones:{villes:"Toronto/Montréal/Vancouver: faible risque business.", regions:"Nord et ouest intérieur plus contraints logistiquement.", frontieres:"Frontière US fluide mais contrôles renforcés selon contexte."}
-    },
-    {
-      nom: "Allemagne",
-      dateMaj: "2026-03-09",
-      risqueGlobal: "Faible à modéré",
-      barometre: {geopolitique:2, politique:1, socioEconomique:2, criminalite:2, terrorisme:2, sanitaireCatastrophes:2, deplacements:1},
-      situationSecuritaire: "Environnement très structuré, favorable au business industriel; risques concentrés sur cyber, sabotage économique et protestations sectorielles.",
-      risquesPrincipaux:["Cyberespionnage industriel","Manifestations sectorielles","Pressions énergétiques sur coûts"],
-      donneesCles:{population:"~84,5 M", corruption:"Faible", affaires:"Très élevée", idh:"Très élevé", croissance:"Faible à modérée"},
-      zonesRisques:["Grands hubs logistiques lors de grèves","Sites industriels critiques"],
-      contexte:"Transition industrielle/énergétique en cours; cadre réglementaire robuste.",
-      echeances:["Négociations sociales industrielles","Réformes énergie-climat"],
-      analyse:{geopolitique:"Risque externe faible.", politique:"Haute stabilité institutionnelle.", socioEconomique:"Ralentissement industriel mais base solide.", criminalite:"Risque limité hors poches urbaines.", terrorisme:"Faible à modéré.", sanitaireCatastrophes:"Crues ponctuelles, gestion efficace.", deplacements:"Réseau performant avec aléas sociaux ponctuels."},
-      bonnesPratiques:{comportement:"Coordonner déplacements avec actualité sociale.", legislation:"Conformité RGPD, concurrence, export control.", risquesSpecifiques:"Protéger propriété intellectuelle et accès OT."},
-      datesImportantes:["Calendrier conventions collectives","Échéances réglementaires énergie"],
-      analyseZones:{villes:"Berlin/Francfort/Hambourg: faible risque général.", regions:"Bassin industriel sensible aux mouvements sociaux.", frontieres:"Frontières UE fluides."}
-    },
-    {
-      nom: "Japon",
-      dateMaj: "2026-03-09",
-      risqueGlobal: "Modéré",
-      barometre: {geopolitique:3, politique:1, socioEconomique:2, criminalite:1, terrorisme:1, sanitaireCatastrophes:4, deplacements:2},
-      situationSecuritaire: "Très sûr au quotidien pour les voyageurs d’affaires; principaux enjeux sur les catastrophes naturelles et la continuité d’activité supply chain.",
-      risquesPrincipaux:["Séismes/tsunamis","Typhons et interruption logistique","Risque géopolitique régional en Asie de l’Est"],
-      donneesCles:{population:"~124 M", corruption:"Faible", affaires:"Élevée", idh:"Très élevé", croissance:"Faible"},
-      zonesRisques:["Littoral pacifique exposé sismique","Régions touchées par typhons"],
-      contexte:"Stabilité politique interne, vigilance géostratégique régionale accrue.",
-      echeances:["Saison typhons","Mises à jour plans de résilience entreprise"],
-      analyse:{geopolitique:"Tensions régionales surveillées.", politique:"Stabilité élevée.", socioEconomique:"Marché mature, faible inflation structurelle.", criminalite:"Très faible.", terrorisme:"Très faible.", sanitaireCatastrophes:"Risque naturel élevé mais excellent niveau de préparation.", deplacements:"Très bonne mobilité, interruptions météo possibles."},
-      bonnesPratiques:{comportement:"Suivre protocoles d’alerte locale et drills séisme.", legislation:"Respect strict conformité commerciale et données.", risquesSpecifiques:"Prévoir BCP et stock sécurité pour composants critiques."},
-      datesImportantes:["Saison des typhons","Exercices nationaux de prévention"],
-      analyseZones:{villes:"Tokyo/Osaka: risque criminel faible, risque sismique structurel.", regions:"Côtes pacifiques plus exposées aléas naturels.", frontieres:"Faible enjeu frontalier pour missions business classiques."}
-    },
-    {
-      nom: "Inde",
-      dateMaj: "2026-03-09",
-      risqueGlobal: "Élevé hétérogène",
-      barometre: {geopolitique:3, politique:3, socioEconomique:4, criminalite:4, terrorisme:3, sanitaireCatastrophes:4, deplacements:4},
-      situationSecuritaire: "Potentiel business majeur mais profil risque très différencié selon États; exiger une gestion sécurité structurée pour voyageurs et sites.",
-      risquesPrincipaux:["Risque urbain et fraude business","Contraintes logistiques et trafic","Aléas climatiques extrêmes (chaleur, inondations)"],
-      donneesCles:{population:"~1,43 Md", corruption:"Modérée à élevée", affaires:"Intermédiaire à élevée selon État", idh:"Moyen", croissance:"Élevée"},
-      zonesRisques:["Mégapoles à forte densité","Régions frontalières sensibles","Zones à infrastructures sanitaires limitées"],
-      contexte:"Accélération industrielle et numérique, mais pression sur services urbains et cadres de conformité variables.",
-      echeances:["Calendriers électoraux étatiques","Réformes sectorielles industrie/données"],
-      analyse:{geopolitique:"Tensions régionales persistantes.", politique:"Stabilité fédérale mais variabilité réglementaire locale.", socioEconomique:"Forte croissance avec écarts sociaux marqués.", criminalite:"Fraude/vol/risque routier significatifs.", terrorisme:"Menace localisée selon zones.", sanitaireCatastrophes:"Vagues de chaleur, mousson, qualité de l’air.", deplacements:"Complexité élevée, besoin d’escorte/logistique fiable."},
-      bonnesPratiques:{comportement:"Protocoles sécurité renforcés et déplacements encadrés.", legislation:"Vérifier licences, fiscalité et exigences locales par État.", risquesSpecifiques:"Due diligence fournisseurs et contrôle anti-corruption renforcé."},
-      datesImportantes:["Saison de mousson","Pics de pollution urbaine","Élections régionales"],
-      analyseZones:{villes:"Delhi/Mumbai/Bangalore: opportunités élevées, risque opérationnel élevé.", regions:"États industrialisés plus prévisibles que zones rurales éloignées.", frontieres:"Certaines frontières nord/est à éviter hors nécessité."}
-    },
-    {
-      nom: "Émirats arabes unis",
-      dateMaj: "2026-03-09",
-      risqueGlobal: "Modéré",
-      barometre: {geopolitique:3, politique:1, socioEconomique:2, criminalite:1, terrorisme:2, sanitaireCatastrophes:2, deplacements:1},
-      situationSecuritaire: "Cadre business sécurisé et pro-investissement; risques principaux liés au contexte régional et à la conformité locale.",
-      risquesPrincipaux:["Risque géopolitique régional indirect","Conformité réglementaire stricte","Risque réputationnel en cas de non-conformité"],
-      donneesCles:{population:"~10 M", corruption:"Faible", affaires:"Très élevée", idh:"Très élevé", croissance:"Solide"},
-      zonesRisques:["Sites industriels stratégiques","Exposition chaleur extrême estivale"],
-      contexte:"Diversification économique soutenue, attractivité forte pour sièges régionaux.",
-      echeances:["Réformes sectorielles investissement","Calendrier grands projets publics"],
-      analyse:{geopolitique:"Exposition indirecte aux tensions régionales.", politique:"Très stable.", socioEconomique:"Marché dynamique, sensible aux cycles globaux.", criminalite:"Faible.", terrorisme:"Faible à modéré dans le contexte régional.", sanitaireCatastrophes:"Chaleur extrême et poussières saisonnières.", deplacements:"Excellente mobilité et infrastructures."},
-      bonnesPratiques:{comportement:"Respect strict des normes locales et usages.", legislation:"Conformité travail, données, sanctions et KYC.", risquesSpecifiques:"Plan chaleur pour équipes terrain et audits compliance."},
-      datesImportantes:["Périodes de chaleur extrême","Échéances de grands salons/projets"],
-      analyseZones:{villes:"Dubaï/Abou Dabi: faible risque sécuritaire business.", regions:"Zones désertiques: contraintes climatiques/logistiques.", frontieres:"Frontières terrestres peu concernées pour voyages corporate standards."}
-    }
-  ];
+const CONTINENTS = ["Europe", "Amériques", "Asie", "Afrique", "Moyen-Orient", "Monde"];
+const SOURCE_CONTINENT = { bbc_world:"Monde", bbc_sci:"Monde", guardian_world:"Europe", guardian_tech:"Europe", france24:"Europe" };
 
-  let SOURCES = [];
-  let selectedContinents = new Set(CONTINENTS);
-  let selected = new Set();
-  let ITEMS = [];
+let SOURCES = [];
+let selectedContinents = new Set(CONTINENTS);
+let selected = new Set();
+let ITEMS = [];
+let COUNTRIES = [];
 
-  async function loadSources(){
-    const r = await fetch("/api/sources");
-    SOURCES = await r.json();
+function setStatus(text){ $("#status").textContent = text; }
+
+async function loadSources(){
+  const r = await fetch("/api/sources");
+  SOURCES = await r.json();
+  syncSelectedSources();
+  renderContinentFilters();
+  renderSourceToggles();
+}
+
+function syncSelectedSources(){
+  selected = new Set(SOURCES.filter(s => s.enabledByDefault && selectedContinents.has(SOURCE_CONTINENT[s.key] || "Monde")).map(s => s.key));
+}
+
+function renderContinentFilters(){
+  const root = $("#continentFilters");
+  root.innerHTML = CONTINENTS.map(c => `<label class="filter"><input type="checkbox" data-continent="${escapeHtml(c)}" ${selectedContinents.has(c)?"checked":""}/> ${escapeHtml(c)}</label>`).join("");
+  root.querySelectorAll("input").forEach(cb => cb.addEventListener("change", e => {
+    const c = e.target.getAttribute("data-continent");
+    if(e.target.checked) selectedContinents.add(c); else selectedContinents.delete(c);
     syncSelectedSources();
-    renderContinentFilters();
     renderSourceToggles();
-    setStatus("Prêt");
-  }
+  }));
+}
 
-  function syncSelectedSources(){
-    selected = new Set(
-      SOURCES
-        .filter(s => s.enabledByDefault && selectedContinents.has(SOURCE_CONTINENT[s.key] || "Monde"))
-        .map(s => s.key)
-    );
-  }
+function renderSourceToggles(){
+  const root = $("#sourceToggles");
+  root.innerHTML = SOURCES.filter(s => selectedContinents.has(SOURCE_CONTINENT[s.key] || "Monde")).map(s => `<label class="src"><input type="checkbox" data-key="${escapeHtml(s.key)}" ${selected.has(s.key)?"checked":""}/> ${escapeHtml(s.name)}</label>`).join("");
+  root.querySelectorAll("input").forEach(cb => cb.addEventListener("change", e => {
+    const k = e.target.getAttribute("data-key");
+    if(e.target.checked) selected.add(k); else selected.delete(k);
+  }));
+}
 
-  function renderContinentFilters(){
-    const root = $("#continentFilters");
-    root.innerHTML = CONTINENTS.map(c => `
-      <label class="filter">
-        <input type="checkbox" data-continent="${escapeHtml(c)}" ${selectedContinents.has(c) ? "checked" : ""}/>
-        ${escapeHtml(c)}
-      </label>
-    `).join("");
+async function search(){
+  const q = $("#q").value.trim();
+  if(selected.size === 0){ setStatus("Choisis au moins 1 source"); return; }
+  setStatus("Recherche…");
+  $("#count").textContent = "";
+  const keys = Array.from(selected).join(",");
+  const r = await fetch(`/api/search?q=${encodeURIComponent(q)}&sources=${encodeURIComponent(keys)}`);
+  const data = await r.json();
+  if(data.error){ setStatus("Erreur"); $("#articles").innerHTML = `<div class="small">${escapeHtml(data.error)}</div>`; return; }
+  ITEMS = data.items || [];
+  setStatus(`Résultats pour: ${q || "tout"}`);
+  $("#count").textContent = `${ITEMS.length} item(s)`;
+  renderArticles();
+}
 
-    root.querySelectorAll("input[type=checkbox]").forEach(cb => {
-      cb.addEventListener("change", e => {
-        const continent = e.target.getAttribute("data-continent");
-        if (e.target.checked) selectedContinents.add(continent);
-        else selectedContinents.delete(continent);
-        syncSelectedSources();
-        renderSourceToggles();
-      });
-    });
-  }
+function renderArticles(){
+  const root = $("#articles");
+  root.innerHTML = ITEMS.map(it => `
+    <article>
+      <h3><a href="${escapeHtml(it.link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(it.title)}</a></h3>
+      <div class="meta"><span>${escapeHtml(it.sourceName)}</span><span>•</span><span>${escapeHtml(it.pubDate ? new Date(it.pubDate).toLocaleString("fr-FR") : "")}</span></div>
+      <div class="snippet">${escapeHtml(it.snippet || "")}</div>
+    </article>
+  `).join("") || `<div class="small">Aucun résultat.</div>`;
+}
 
-  function renderSourceToggles(){
-    const root = $("#sourceToggles");
-    root.innerHTML = SOURCES
-    .filter(s => selectedContinents.has(SOURCE_CONTINENT[s.key] || "Monde"))
-    .map(s => `
-      <label class="src">
-        <input type="checkbox" data-key="${escapeHtml(s.key)}" ${selected.has(s.key) ? "checked":""}/>
-        ${escapeHtml(s.name)}
-      </label>
-    `).join("");
-    root.querySelectorAll("input[type=checkbox]").forEach(cb=>{
-      cb.addEventListener("change", e=>{
-        const k = e.target.getAttribute("data-key");
-        if(e.target.checked) selected.add(k); else selected.delete(k);
-      });
-    });
-  }
+async function loadCountries(){
+  const r = await fetch('/api/countries');
+  const data = await r.json();
+  COUNTRIES = data.countries || [];
+  const select = $('#countrySelect');
+  select.innerHTML = COUNTRIES.map(c => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`).join('');
+  const preferred = ['Peru','France','Japan'];
+  const first = preferred.find(p => COUNTRIES.some(c => c.name === p)) || (COUNTRIES[0] && COUNTRIES[0].name);
+  if(first){ select.value = first; await loadCountryProfile(first); }
+}
 
-  function setStatus(text){ $("#status").textContent = text; }
+async function loadCountryProfile(country){
+  const r = await fetch(`/api/country-profile?country=${encodeURIComponent(country)}`);
+  const data = await r.json();
+  if(data.error){ $('#countryCard').innerHTML = `<div class="small">${escapeHtml(data.error)}</div>`; return; }
+  renderCountryProfile(data);
+}
 
-  async function search(){
-    const q = $("#q").value.trim();
-    if(selected.size === 0){
-      setStatus("Choisis au moins 1 source");
-      return;
-    }
-    setStatus("Recherche…");
-    $("#count").textContent = "";
+function renderCountryProfile(country){
+  $('#countryCard').innerHTML = `
+    <article>
+      <h3>1. Nom du pays — ${escapeHtml(country.country)}</h3>
+      <dl class="country-fields">
+        <dt>2. Date de mise à jour</dt><dd>${escapeHtml(country.updated_at)}</dd>
+        <dt>3. Niveau de risque global</dt><dd>${escapeHtml(country.risk_global)} (score ${escapeHtml(country.risk_score)}/5)</dd>
+        <dt>4. Baromètre des risques (1 à 5)</dt>
+        <dd>
+          Géopolitique: ${escapeHtml(country.barometer?.geopolitique)} / 5<br/>
+          Politique: ${escapeHtml(country.barometer?.politique)} / 5<br/>
+          Socio-économique: ${escapeHtml(country.barometer?.socio_economique)} / 5<br/>
+          Criminalité: ${escapeHtml(country.barometer?.criminalite)} / 5<br/>
+          Terrorisme: ${escapeHtml(country.barometer?.terrorisme)} / 5<br/>
+          Sanitaire & catastrophes: ${escapeHtml(country.barometer?.sanitaire_catastrophes)} / 5<br/>
+          Déplacements: ${escapeHtml(country.barometer?.deplacements)} / 5
+        </dd>
+        <dt>5. Situation sécuritaire globale</dt><dd>${escapeHtml(country.security_overview)}</dd>
+        <dt>6. Risques principaux</dt><dd>${list(country.main_risks)}</dd>
+        <dt>7. Données clés</dt><dd>${list(Object.entries(country.key_data||{}).map(([k,v])=>`${k}: ${v}`))}</dd>
+        <dt>8. Zones à risques</dt><dd>${list(country.risk_zones)}</dd>
+        <dt>9. Contexte – derniers événements</dt><dd>${escapeHtml(country.context)}</dd>
+        <dt>10. Prochaines échéances</dt><dd>${list(country.next_milestones)}</dd>
+        <dt>11. Analyse détaillée par catégorie</dt>
+        <dd>
+          ${Object.entries(country.category_analysis||{}).map(([k,v]) => `<span class="section-title">${escapeHtml(k)}</span><br/>${escapeHtml(v)}`).join('<br/>')}
+        </dd>
+        <dt>12. Bonnes pratiques</dt><dd>${list(Object.entries(country.best_practices||{}).map(([k,v])=>`${k}: ${v}`))}</dd>
+        <dt>13. Dates importantes</dt><dd>${list(country.important_dates)}</dd>
+        <dt>14. Analyse par zones</dt><dd>${list(Object.entries(country.zone_analysis||{}).map(([k,v])=>`${k}: ${v}`))}</dd>
+      </dl>
+    </article>
+  `;
+}
 
-    const keys = Array.from(selected).join(",");
-    const r = await fetch(`/api/search?q=${encodeURIComponent(q)}&sources=${encodeURIComponent(keys)}`);
-    const data = await r.json();
+$('#searchBtn').addEventListener('click', search);
+$('#q').addEventListener('keydown', e => { if(e.key==='Enter'){ e.preventDefault(); search(); } });
+$('#loadCountryBtn').addEventListener('click', () => loadCountryProfile($('#countrySelect').value));
+$('#countrySelect').addEventListener('change', e => loadCountryProfile(e.target.value));
 
-    if(data.error){
-      setStatus("Erreur");
-      $("#articles").innerHTML = `<div class="small">${escapeHtml(data.error)} ${escapeHtml(data.details||"")}</div>`;
-      return;
-    }
-
-    ITEMS = data.items || [];
-    setStatus(`Résultats pour: ${q || "tout"}`);
-    $("#count").textContent = `${ITEMS.length} item(s)`;
-    renderArticles();
-  }
-
-  function renderArticles(){
-    const root = $("#articles");
-    root.innerHTML = ITEMS.map(it => `
-      <article>
-        <h3><a href="${escapeHtml(it.link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(it.title)}</a></h3>
-        <div class="meta">
-          <span>${escapeHtml(it.sourceName)}</span>
-          <span>•</span>
-          <span>${escapeHtml(it.pubDate ? new Date(it.pubDate).toLocaleString("fr-FR") : "")}</span>
-        </div>
-        <div class="snippet">${escapeHtml(it.snippet || "")}</div>
-      </article>
-    `).join("") || `<div class="small">Aucun résultat. Essaie un autre mot-clé (ex: “arctic”, “nato”, “ransomware”).</div>`;
-  }
-
-  const list = arr => `<ul>${arr.map(v => `<li>${escapeHtml(v)}</li>`).join("")}</ul>`;
-
-  function renderCountryCards(){
-    const root = $("#countryCards");
-    root.innerHTML = COUNTRY_PROFILES.map(country => `
-      <article class="country-card">
-        <h3>1. Nom du pays — ${escapeHtml(country.nom)}</h3>
-        <div class="country-fields">
-          <dt>2. Date de mise à jour</dt><dd>${escapeHtml(country.dateMaj)}</dd>
-          <dt>3. Niveau de risque global</dt><dd>${escapeHtml(country.risqueGlobal)}</dd>
-          <dt>4. Baromètre des risques (1 à 5)</dt>
-          <dd>
-            Géopolitique: ${escapeHtml(String(country.barometre.geopolitique))} / 5<br/>
-            Politique: ${escapeHtml(String(country.barometre.politique))} / 5<br/>
-            Socio-économique: ${escapeHtml(String(country.barometre.socioEconomique))} / 5<br/>
-            Criminalité: ${escapeHtml(String(country.barometre.criminalite))} / 5<br/>
-            Terrorisme: ${escapeHtml(String(country.barometre.terrorisme))} / 5<br/>
-            Sanitaire & catastrophes: ${escapeHtml(String(country.barometre.sanitaireCatastrophes))} / 5<br/>
-            Déplacements: ${escapeHtml(String(country.barometre.deplacements))} / 5
-          </dd>
-          <dt>5. Situation sécuritaire globale</dt><dd>${escapeHtml(country.situationSecuritaire)}</dd>
-          <dt>6. Risques principaux</dt><dd>${list(country.risquesPrincipaux)}</dd>
-          <dt>7. Données clés</dt>
-          <dd>
-            Population: ${escapeHtml(country.donneesCles.population)}<br/>
-            Indice de corruption: ${escapeHtml(country.donneesCles.corruption)}<br/>
-            Facilité de faire des affaires: ${escapeHtml(country.donneesCles.affaires)}<br/>
-            Indice de développement humain: ${escapeHtml(country.donneesCles.idh)}<br/>
-            Croissance du PIB: ${escapeHtml(country.donneesCles.croissance)}
-          </dd>
-          <dt>8. Zones à risques</dt><dd>${list(country.zonesRisques)}</dd>
-          <dt>9. Contexte – derniers événements</dt><dd>${escapeHtml(country.contexte)}</dd>
-          <dt>10. Prochaines échéances</dt><dd>${list(country.echeances)}</dd>
-          <dt>11. Analyse détaillée par catégorie</dt>
-          <dd>
-            <span class="section-title">Géopolitique</span><br/>${escapeHtml(country.analyse.geopolitique)}<br/>
-            <span class="section-title">Politique</span><br/>${escapeHtml(country.analyse.politique)}<br/>
-            <span class="section-title">Socio-économique</span><br/>${escapeHtml(country.analyse.socioEconomique)}<br/>
-            <span class="section-title">Criminalité</span><br/>${escapeHtml(country.analyse.criminalite)}<br/>
-            <span class="section-title">Terrorisme</span><br/>${escapeHtml(country.analyse.terrorisme)}<br/>
-            <span class="section-title">Sanitaire & catastrophes</span><br/>${escapeHtml(country.analyse.sanitaireCatastrophes)}<br/>
-            <span class="section-title">Déplacements</span><br/>${escapeHtml(country.analyse.deplacements)}
-          </dd>
-          <dt>12. Bonnes pratiques</dt>
-          <dd>
-            comportement: ${escapeHtml(country.bonnesPratiques.comportement)}<br/>
-            législation: ${escapeHtml(country.bonnesPratiques.legislation)}<br/>
-            risques spécifiques: ${escapeHtml(country.bonnesPratiques.risquesSpecifiques)}
-          </dd>
-          <dt>13. Dates importantes</dt><dd>${list(country.datesImportantes)}</dd>
-          <dt>14. Analyse par zones</dt>
-          <dd>
-            principales villes: ${escapeHtml(country.analyseZones.villes)}<br/>
-            régions sensibles: ${escapeHtml(country.analyseZones.regions)}<br/>
-            zones frontalières: ${escapeHtml(country.analyseZones.frontieres)}
-          </dd>
-        </div>
-      </article>
-    `).join("");
-  }
-
-  $("#searchBtn").addEventListener("click", search);
-  $("#q").addEventListener("keydown", e => {
-    if(e.key === "Enter"){ e.preventDefault(); search(); }
-  });
-
-  renderCountryCards();
-  loadSources();
+Promise.all([loadSources(), loadCountries()]).then(() => setStatus('Prêt')).catch(err => setStatus(`Erreur init: ${err.message}`));
 </script>
 </body>
 </html>
