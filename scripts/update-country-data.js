@@ -1,9 +1,9 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { spawnSync } from "node:child_process";
 import {
   flattenCountries,
   loadCountryProfileBySlug,
-  slugify,
   writeCountryProfileBySlug
 } from "../server/country-store.js";
 
@@ -249,6 +249,14 @@ async function main() {
 
   await fs.mkdir(LOGS_DIR, { recursive: true });
   await fs.writeFile(REPORT_PATH, `${JSON.stringify(report, null, 2)}\n`, "utf-8");
+  const buildStep = spawnSync("node", ["scripts/build-platform-data.js"], {
+    cwd: ROOT,
+    stdio: "inherit",
+    env: process.env
+  });
+  if (buildStep.status !== 0) {
+    throw new Error("Failed to rebuild dashboard static data after country update.");
+  }
   console.log(JSON.stringify({
     generatedAt: report.generatedAt,
     totalCountries: report.totalCountries,

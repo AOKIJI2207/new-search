@@ -1,0 +1,139 @@
+[
+  {
+    "date": "2026-03-04",
+    "title": "Red Sea disruption persists across key trade lanes",
+    "countries": [
+      "Egypt",
+      "Saudi Arabia",
+      "Yemen"
+    ],
+    "region": "Asie",
+    "risk_category": "transport",
+    "summary": "Commercial traffic remains under pressure from maritime security incidents and rerouting costs."
+  },
+  {
+    "date": "2026-02-18",
+    "title": "Sudan conflict keeps regional displacement pressure elevated",
+    "countries": [
+      "Sudan",
+      "South Sudan",
+      "Egypt",
+      "Chad"
+    ],
+    "region": "Afrique",
+    "risk_category": "security",
+    "summary": "Cross-border humanitarian movements continue to affect security and logistical planning."
+  },
+  {
+    "date": "2026-01-29",
+    "title": "Taiwan Strait tensions trigger renewed contingency planning",
+    "countries": [
+      "China"
+    ],
+    "region": "Asie",
+    "risk_category": "geopolitics",
+    "summary": "Military signaling and supply-chain exposure remain central concerns for regional operators."
+  },
+  {
+    "date": "2025-12-11",
+    "title": "Sahel security environment remains highly fragmented",
+    "countries": [
+      "Mali",
+      "Burkina Faso",
+      "Niger"
+    ],
+    "region": "Afrique",
+    "risk_category": "terrorism",
+    "summary": "Insurgent activity and weak state control continue to reshape access and operating conditions."
+  },
+  {
+    "date": "2025-11-07",
+    "title": "Haiti crisis intensifies international stabilization debate",
+    "countries": [
+      "Haiti"
+    ],
+    "region": "Amérique du Nord",
+    "risk_category": "crime",
+    "summary": "Gang violence and governance paralysis keep the country under sustained crisis monitoring."
+  },
+  {
+    "date": "2025-10-16",
+    "title": "Horn of Africa drought stress compounds socio-economic fragility",
+    "countries": [
+      "Ethiopia",
+      "Somalia",
+      "Kenya"
+    ],
+    "region": "Afrique",
+    "risk_category": "health_disasters",
+    "summary": "Climate stress continues to interact with food security and mobility risks."
+  },
+  {
+    "date": "2025-09-02",
+    "title": "South China Sea incidents increase pressure on regional navies",
+    "countries": [
+      "Philippines",
+      "Vietnam",
+      "China"
+    ],
+    "region": "Asie",
+    "risk_category": "geopolitics",
+    "summary": "Repeated incidents reinforce military alert postures and energy corridor sensitivities."
+  },
+  {
+    "date": "2025-08-21",
+    "title": "Ukraine front line volatility keeps Europe on elevated alert",
+    "countries": [
+      "Ukraine",
+      "Russia",
+      "Poland"
+    ],
+    "region": "Europe",
+    "risk_category": "security",
+    "summary": "Missile threats, logistics risks, and alliance planning remain dominant regional drivers."
+  },
+  {
+    "date": "2025-06-13",
+    "title": "Venezuela election tensions deepen regional diplomatic strain",
+    "countries": [
+      "Venezuela",
+      "Colombia",
+      "Brazil"
+    ],
+    "region": "Amérique du Sud",
+    "risk_category": "politics",
+    "summary": "Political polarization and migration spillovers continue to shape cross-border risk monitoring."
+  },
+  {
+    "date": "2024-11-18",
+    "title": "Russia-Ukraine escalation reshapes European security planning",
+    "countries": [
+      "Ukraine",
+      "Russia"
+    ],
+    "region": "Europe",
+    "risk_category": "geopolitics",
+    "summary": "Escalatory signaling and allied support decisions remain decisive for continental risk posture."
+  },
+  {
+    "date": "2023-04-20",
+    "title": "Sudan civil war redraws humanitarian and security priorities",
+    "countries": [
+      "Sudan",
+      "South Sudan"
+    ],
+    "region": "Afrique",
+    "risk_category": "security",
+    "summary": "Urban fighting and humanitarian disruption created lasting instability across the region."
+  },
+  {
+    "date": "2022-08-03",
+    "title": "Taiwan tensions reframe Indo-Pacific deterrence posture",
+    "countries": [
+      "China"
+    ],
+    "region": "Asie",
+    "risk_category": "geopolitics",
+    "summary": "Strategic rivalry and military signaling triggered a durable step-up in regional contingency planning."
+  }
+]

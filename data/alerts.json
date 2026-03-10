@@ -1,0 +1,58 @@
+[
+  {
+    "timestamp": "2026-03-10T08:10:00Z",
+    "headline": "Maritime insurers raise scrutiny on Red Sea-bound cargo",
+    "country": "Yemen",
+    "category": "transport",
+    "severity": 5
+  },
+  {
+    "timestamp": "2026-03-10T07:30:00Z",
+    "headline": "Cross-border monitoring intensified around eastern DRC corridors",
+    "country": "DR Congo",
+    "category": "security",
+    "severity": 5
+  },
+  {
+    "timestamp": "2026-03-10T06:45:00Z",
+    "headline": "Political mobilization rises ahead of a fragile coalition vote",
+    "country": "Israel",
+    "category": "politics",
+    "severity": 4
+  },
+  {
+    "timestamp": "2026-03-10T06:00:00Z",
+    "headline": "Drought impact alerts renewed for Horn of Africa logistics routes",
+    "country": "Somalia",
+    "category": "health_disasters",
+    "severity": 4
+  },
+  {
+    "timestamp": "2026-03-10T05:20:00Z",
+    "headline": "Energy transit operators review contingency assumptions",
+    "country": "Ukraine",
+    "category": "geopolitics",
+    "severity": 4
+  },
+  {
+    "timestamp": "2026-03-10T04:45:00Z",
+    "headline": "Major urban security posture tightened after gang escalation",
+    "country": "Haiti",
+    "category": "crime",
+    "severity": 5
+  },
+  {
+    "timestamp": "2026-03-10T04:00:00Z",
+    "headline": "Taiwan Strait commercial operators report elevated routing sensitivity",
+    "country": "China",
+    "category": "geopolitics",
+    "severity": 4
+  },
+  {
+    "timestamp": "2026-03-10T03:20:00Z",
+    "headline": "Fiscal stress indicators prompt sovereign monitoring review",
+    "country": "Argentina",
+    "category": "socio_economic",
+    "severity": 3
+  }
+]

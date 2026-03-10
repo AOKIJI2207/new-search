@@ -7,8 +7,9 @@
   "scripts": {
     "dev": "vercel dev",
     "start": "vercel dev",
-    "build": "npm run check && npm run validate-data",
-    "check": "node --check server/country-store.js && node --check scripts/update-country-data.js && node --check scripts/validate-dataset.js",
+    "build": "npm run build-platform-data && npm run check && npm run validate-data",
+    "check": "node --check server/country-store.js && node --check scripts/update-country-data.js && node --check scripts/validate-dataset.js && node --check scripts/build-platform-data.js && node --check components/app.js && node --check components/platform.js && node --check components/charts.js && node --check pages/platform-pages.js",
+    "build-platform-data": "node scripts/build-platform-data.js",
     "update-data": "node scripts/update-country-data.js",
     "validate-data": "node scripts/validate-dataset.js"
   },
