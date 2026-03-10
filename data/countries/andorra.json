@@ -1,0 +1,40 @@
+{
+  "name": "Andorra",
+  "continent": "Europe",
+  "risk_global": 3,
+  "risk_barometer": {
+    "geopolitics": 3,
+    "politics": 2,
+    "socio_economic": 3,
+    "crime": 3,
+    "terrorism": 4,
+    "health_disasters": 3,
+    "transport": 4
+  },
+  "key_data": {
+    "capital": "Andorra la Vella",
+    "population": "88,406",
+    "political_system": "National institutional system of Andorra",
+    "head_of_state": "Current head of state of Andorra",
+    "gdp": "$4,039,842,405",
+    "gdp_per_capita": "$49,304",
+    "growth": "0.1%",
+    "inflation": "Data unavailable",
+    "public_debt": "Data unavailable",
+    "unemployment": "Data unavailable",
+    "hdi": "0.66",
+    "corruption_index": "65"
+  },
+  "analysis": {
+    "security": "Profil de risque élevé pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
+    "geopolitics": "Analyse basée sur signaux multi-sources.",
+    "politics": "Stabilité institutionnelle et calendrier politique suivis.",
+    "economy": "Tendances inflation/emploi/croissance intégrées.",
+    "crime": "Niveau de menace criminelle pour actifs et personnels.",
+    "terrorism": "Exposition terroriste évaluée par criticité locale.",
+    "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
+    "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
+    "regional_analysis": "European exposure is shaped by regulatory stability, proximity to NATO and EU dynamics, and spillovers from the Russia-Ukraine war.",
+    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
+  }
+}

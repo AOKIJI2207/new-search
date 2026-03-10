@@ -1,0 +1,40 @@
+{
+  "name": "Tonga",
+  "continent": "Océanie",
+  "risk_global": 3,
+  "risk_barometer": {
+    "geopolitics": 3,
+    "politics": 1,
+    "socio_economic": 3,
+    "crime": 2,
+    "terrorism": 3,
+    "health_disasters": 4,
+    "transport": 3
+  },
+  "key_data": {
+    "capital": "Nuku'alofa",
+    "population": "100,179",
+    "political_system": "National institutional system of Tonga",
+    "head_of_state": "Current head of state of Tonga",
+    "gdp": "$591,139,749",
+    "gdp_per_capita": "$5,652",
+    "growth": "-0.5%",
+    "inflation": "3.2%",
+    "public_debt": "43.1%",
+    "unemployment": "2.0%",
+    "hdi": "0.6",
+    "corruption_index": "68"
+  },
+  "analysis": {
+    "security": "Profil de risque modéré pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
+    "geopolitics": "Analyse basée sur signaux multi-sources.",
+    "politics": "Stabilité institutionnelle et calendrier politique suivis.",
+    "economy": "Tendances inflation/emploi/croissance intégrées.",
+    "crime": "Niveau de menace criminelle pour actifs et personnels.",
+    "terrorism": "Exposition terroriste évaluée par criticité locale.",
+    "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
+    "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
+    "regional_analysis": "Oceania exposure is shaped by remoteness, climate hazards, maritime connectivity, and strong variance between advanced and small island states.",
+    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
+  }
+}

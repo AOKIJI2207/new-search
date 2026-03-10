@@ -1,0 +1,40 @@
+{
+  "name": "Eritrea",
+  "continent": "Afrique",
+  "risk_global": 3,
+  "risk_barometer": {
+    "geopolitics": 3,
+    "politics": 2,
+    "socio_economic": 2,
+    "crime": 3,
+    "terrorism": 4,
+    "health_disasters": 3,
+    "transport": 4
+  },
+  "key_data": {
+    "capital": "Asmara",
+    "population": "3,607,000",
+    "political_system": "National institutional system of Eritrea",
+    "head_of_state": "Current head of state of Eritrea",
+    "gdp": "$2,065,001,626",
+    "gdp_per_capita": "$689",
+    "growth": "0.6%",
+    "inflation": "Data unavailable",
+    "public_debt": "Data unavailable",
+    "unemployment": "6.0%",
+    "hdi": "0.71",
+    "corruption_index": "62"
+  },
+  "analysis": {
+    "security": "Profil de risque modéré pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
+    "geopolitics": "Analyse basée sur signaux multi-sources.",
+    "politics": "Stabilité institutionnelle et calendrier politique suivis.",
+    "economy": "Tendances inflation/emploi/croissance intégrées.",
+    "crime": "Niveau de menace criminelle pour actifs et personnels.",
+    "terrorism": "Exposition terroriste évaluée par criticité locale.",
+    "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
+    "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
+    "regional_analysis": "African exposure is driven by uneven state capacity, security fragmentation in selected corridors, commodity dependency, and infrastructure stress.",
+    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
+  }
+}

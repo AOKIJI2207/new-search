@@ -1,0 +1,40 @@
+{
+  "name": "Jordan",
+  "continent": "Asie",
+  "risk_global": 3,
+  "risk_barometer": {
+    "geopolitics": 3,
+    "politics": 2,
+    "socio_economic": 3,
+    "crime": 3,
+    "terrorism": 4,
+    "health_disasters": 3,
+    "transport": 4
+  },
+  "key_data": {
+    "capital": "Amman",
+    "population": "11,734,000",
+    "political_system": "National institutional system of Jordan",
+    "head_of_state": "Current head of state of Jordan",
+    "gdp": "$53,352,289,577",
+    "gdp_per_capita": "$4,618",
+    "growth": "-0.4%",
+    "inflation": "1.6%",
+    "public_debt": "102.8%",
+    "unemployment": "16.5%",
+    "hdi": "0.61",
+    "corruption_index": "67"
+  },
+  "analysis": {
+    "security": "Profil de risque élevé pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
+    "geopolitics": "Analyse basée sur signaux multi-sources.",
+    "politics": "Stabilité institutionnelle et calendrier politique suivis.",
+    "economy": "Tendances inflation/emploi/croissance intégrées.",
+    "crime": "Niveau de menace criminelle pour actifs et personnels.",
+    "terrorism": "Exposition terroriste évaluée par criticité locale.",
+    "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
+    "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
+    "regional_analysis": "Asian exposure is influenced by great-power rivalry, maritime trade routes, domestic political concentration, and supply-chain sensitivity.",
+    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
+  }
+}

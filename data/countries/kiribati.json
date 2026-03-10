@@ -1,0 +1,40 @@
+{
+  "name": "Kiribati",
+  "continent": "Océanie",
+  "risk_global": 2,
+  "risk_barometer": {
+    "geopolitics": 3,
+    "politics": 1,
+    "socio_economic": 2,
+    "crime": 2,
+    "terrorism": 3,
+    "health_disasters": 4,
+    "transport": 3
+  },
+  "key_data": {
+    "capital": "South Tarawa",
+    "population": "120,740",
+    "political_system": "National institutional system of Kiribati",
+    "head_of_state": "Current head of state of Kiribati",
+    "gdp": "$307,862,564",
+    "gdp_per_capita": "$2,289",
+    "growth": "0.5%",
+    "inflation": "2.5%",
+    "public_debt": "Data unavailable",
+    "unemployment": "Data unavailable",
+    "hdi": "0.7",
+    "corruption_index": "63"
+  },
+  "analysis": {
+    "security": "Profil de risque modéré pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
+    "geopolitics": "Analyse basée sur signaux multi-sources.",
+    "politics": "Stabilité institutionnelle et calendrier politique suivis.",
+    "economy": "Tendances inflation/emploi/croissance intégrées.",
+    "crime": "Niveau de menace criminelle pour actifs et personnels.",
+    "terrorism": "Exposition terroriste évaluée par criticité locale.",
+    "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
+    "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
+    "regional_analysis": "Oceania exposure is shaped by remoteness, climate hazards, maritime connectivity, and strong variance between advanced and small island states.",
+    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
+  }
+}

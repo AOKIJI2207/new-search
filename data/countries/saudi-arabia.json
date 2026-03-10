@@ -1,0 +1,40 @@
+{
+  "name": "Saudi Arabia",
+  "continent": "Asie",
+  "risk_global": 3,
+  "risk_barometer": {
+    "geopolitics": 3,
+    "politics": 1,
+    "socio_economic": 3,
+    "crime": 2,
+    "terrorism": 3,
+    "health_disasters": 4,
+    "transport": 3
+  },
+  "key_data": {
+    "capital": "Riyadh",
+    "population": "35,300,280",
+    "political_system": "National institutional system of Saudi Arabia",
+    "head_of_state": "Current head of state of Saudi Arabia",
+    "gdp": "$1,239,804,533,333",
+    "gdp_per_capita": "$35,122",
+    "growth": "0.0%",
+    "inflation": "1.7%",
+    "public_debt": "Data unavailable",
+    "unemployment": "3.0%",
+    "hdi": "0.65",
+    "corruption_index": "65"
+  },
+  "analysis": {
+    "security": "Profil de risque modéré pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
+    "geopolitics": "Analyse basée sur signaux multi-sources.",
+    "politics": "Stabilité institutionnelle et calendrier politique suivis.",
+    "economy": "Tendances inflation/emploi/croissance intégrées.",
+    "crime": "Niveau de menace criminelle pour actifs et personnels.",
+    "terrorism": "Exposition terroriste évaluée par criticité locale.",
+    "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
+    "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
+    "regional_analysis": "Asian exposure is influenced by great-power rivalry, maritime trade routes, domestic political concentration, and supply-chain sensitivity.",
+    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "name": "Germany",
+  "continent": "Europe",
+  "risk_global": 3,
+  "risk_barometer": {
+    "geopolitics": 3,
+    "politics": 4,
+    "socio_economic": 2,
+    "crime": 5,
+    "terrorism": 1,
+    "health_disasters": 2,
+    "transport": 1
+  },
+  "key_data": {
+    "capital": "Berlin",
+    "population": "83,491,249",
+    "political_system": "National institutional system of Germany",
+    "head_of_state": "Frank-Walter Steinmeier",
+    "gdp": "$4,685,592,577,805",
+    "gdp_per_capita": "$56,104",
+    "growth": "1.3%",
+    "inflation": "2.3%",
+    "public_debt": "20.9%",
+    "unemployment": "3.7%",
+    "hdi": "0.78",
+    "corruption_index": "59"
+  },
+  "analysis": {
+    "security": "Profil de risque modéré pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
+    "geopolitics": "Analyse basée sur signaux multi-sources.",
+    "politics": "Stabilité institutionnelle et calendrier politique suivis.",
+    "economy": "Tendances inflation/emploi/croissance intégrées.",
+    "crime": "Niveau de menace criminelle pour actifs et personnels.",
+    "terrorism": "Exposition terroriste évaluée par criticité locale.",
+    "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
+    "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
+    "regional_analysis": "European exposure is shaped by regulatory stability, proximity to NATO and EU dynamics, and spillovers from the Russia-Ukraine war.",
+    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
+  }
+}

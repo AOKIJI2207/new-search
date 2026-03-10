@@ -1,0 +1,40 @@
+{
+  "name": "United States",
+  "continent": "Amérique du Nord",
+  "risk_global": 3,
+  "risk_barometer": {
+    "geopolitics": 3,
+    "politics": 3,
+    "socio_economic": 3,
+    "crime": 4,
+    "terrorism": 5,
+    "health_disasters": 2,
+    "transport": 5
+  },
+  "key_data": {
+    "capital": "Washington, D.C.",
+    "population": "340,110,988",
+    "political_system": "National institutional system of United States",
+    "head_of_state": "Donald Trump",
+    "gdp": "$28,750,956,130,731",
+    "gdp_per_capita": "$84,534",
+    "growth": "6.7%",
+    "inflation": "2.9%",
+    "public_debt": "118.1%",
+    "unemployment": "4.2%",
+    "hdi": "0.62",
+    "corruption_index": "32"
+  },
+  "analysis": {
+    "security": "Profil de risque élevé pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
+    "geopolitics": "Analyse basée sur signaux multi-sources.",
+    "politics": "Stabilité institutionnelle et calendrier politique suivis.",
+    "economy": "Tendances inflation/emploi/croissance intégrées.",
+    "crime": "Niveau de menace criminelle pour actifs et personnels.",
+    "terrorism": "Exposition terroriste évaluée par criticité locale.",
+    "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
+    "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
+    "regional_analysis": "North American exposure reflects cross-border logistics, hurricane and seismic risk pockets, organized crime routes, and US policy spillovers.",
+    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
+  }
+}

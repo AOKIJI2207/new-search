@@ -1,0 +1,40 @@
+{
+  "name": "Cambodia",
+  "continent": "Asie",
+  "risk_global": 3,
+  "risk_barometer": {
+    "geopolitics": 3,
+    "politics": 5,
+    "socio_economic": 3,
+    "crime": 1,
+    "terrorism": 2,
+    "health_disasters": 4,
+    "transport": 2
+  },
+  "key_data": {
+    "capital": "Phnom Penh",
+    "population": "17,577,760",
+    "political_system": "National institutional system of Cambodia",
+    "head_of_state": "Current head of state of Cambodia",
+    "gdp": "$46,352,647,037",
+    "gdp_per_capita": "$2,628",
+    "growth": "-0.6%",
+    "inflation": "0.8%",
+    "public_debt": "50.3%",
+    "unemployment": "0.3%",
+    "hdi": "0.69",
+    "corruption_index": "28"
+  },
+  "analysis": {
+    "security": "Profil de risque modéré pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
+    "geopolitics": "Analyse basée sur signaux multi-sources.",
+    "politics": "Stabilité institutionnelle et calendrier politique suivis.",
+    "economy": "Tendances inflation/emploi/croissance intégrées.",
+    "crime": "Niveau de menace criminelle pour actifs et personnels.",
+    "terrorism": "Exposition terroriste évaluée par criticité locale.",
+    "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
+    "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
+    "regional_analysis": "Asian exposure is influenced by great-power rivalry, maritime trade routes, domestic political concentration, and supply-chain sensitivity.",
+    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
+  }
+}

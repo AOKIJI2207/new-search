@@ -1,0 +1,40 @@
+{
+  "name": "Ireland",
+  "continent": "Europe",
+  "risk_global": 3,
+  "risk_barometer": {
+    "geopolitics": 3,
+    "politics": 4,
+    "socio_economic": 3,
+    "crime": 5,
+    "terrorism": 1,
+    "health_disasters": 2,
+    "transport": 1
+  },
+  "key_data": {
+    "capital": "Dublin",
+    "population": "5,458,600",
+    "political_system": "National institutional system of Ireland",
+    "head_of_state": "Current head of state of Ireland",
+    "gdp": "$609,157,459,747",
+    "gdp_per_capita": "$112,895",
+    "growth": "-0.7%",
+    "inflation": "2.1%",
+    "public_debt": "Data unavailable",
+    "unemployment": "4.6%",
+    "hdi": "0.58",
+    "corruption_index": "69"
+  },
+  "analysis": {
+    "security": "Profil de risque élevé pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
+    "geopolitics": "Analyse basée sur signaux multi-sources.",
+    "politics": "Stabilité institutionnelle et calendrier politique suivis.",
+    "economy": "Tendances inflation/emploi/croissance intégrées.",
+    "crime": "Niveau de menace criminelle pour actifs et personnels.",
+    "terrorism": "Exposition terroriste évaluée par criticité locale.",
+    "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
+    "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
+    "regional_analysis": "European exposure is shaped by regulatory stability, proximity to NATO and EU dynamics, and spillovers from the Russia-Ukraine war.",
+    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
+  }
+}

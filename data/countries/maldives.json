@@ -1,0 +1,40 @@
+{
+  "name": "Maldives",
+  "continent": "Asie",
+  "risk_global": 3,
+  "risk_barometer": {
+    "geopolitics": 3,
+    "politics": 2,
+    "socio_economic": 2,
+    "crime": 3,
+    "terrorism": 4,
+    "health_disasters": 3,
+    "transport": 4
+  },
+  "key_data": {
+    "capital": "Malé",
+    "population": "515,132",
+    "political_system": "National institutional system of Maldives",
+    "head_of_state": "Current head of state of Maldives",
+    "gdp": "$7,061,608,267",
+    "gdp_per_capita": "$13,379",
+    "growth": "1.1%",
+    "inflation": "1.4%",
+    "public_debt": "57.3%",
+    "unemployment": "4.5%",
+    "hdi": "0.76",
+    "corruption_index": "60"
+  },
+  "analysis": {
+    "security": "Profil de risque modéré pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
+    "geopolitics": "Analyse basée sur signaux multi-sources.",
+    "politics": "Stabilité institutionnelle et calendrier politique suivis.",
+    "economy": "Tendances inflation/emploi/croissance intégrées.",
+    "crime": "Niveau de menace criminelle pour actifs et personnels.",
+    "terrorism": "Exposition terroriste évaluée par criticité locale.",
+    "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
+    "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
+    "regional_analysis": "Asian exposure is influenced by great-power rivalry, maritime trade routes, domestic political concentration, and supply-chain sensitivity.",
+    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "name": "Peru",
+  "continent": "Amérique du Sud",
+  "risk_global": 3,
+  "risk_barometer": {
+    "geopolitics": 3,
+    "politics": 3,
+    "socio_economic": 3,
+    "crime": 4,
+    "terrorism": 5,
+    "health_disasters": 2,
+    "transport": 5
+  },
+  "key_data": {
+    "capital": "Lima",
+    "population": "34,350,244",
+    "political_system": "National institutional system of Peru",
+    "head_of_state": "Current head of state of Peru",
+    "gdp": "$289,221,969,063",
+    "gdp_per_capita": "$8,452",
+    "growth": "0.2%",
+    "inflation": "2.0%",
+    "public_debt": "35.2%",
+    "unemployment": "5.1%",
+    "hdi": "0.67",
+    "corruption_index": "64"
+  },
+  "analysis": {
+    "security": "Profil de risque élevé pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
+    "geopolitics": "Analyse basée sur signaux multi-sources.",
+    "politics": "Stabilité institutionnelle et calendrier politique suivis.",
+    "economy": "Tendances inflation/emploi/croissance intégrées.",
+    "crime": "Niveau de menace criminelle pour actifs et personnels.",
+    "terrorism": "Exposition terroriste évaluée par criticité locale.",
+    "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
+    "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
+    "regional_analysis": "South American exposure depends on political volatility, commodity cycles, organized crime pressure, and environmental disruption risks.",
+    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
+  }
+}

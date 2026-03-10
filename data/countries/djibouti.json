@@ -1,0 +1,40 @@
+{
+  "name": "Djibouti",
+  "continent": "Afrique",
+  "risk_global": 3,
+  "risk_barometer": {
+    "geopolitics": 3,
+    "politics": 2,
+    "socio_economic": 2,
+    "crime": 3,
+    "terrorism": 4,
+    "health_disasters": 3,
+    "transport": 4
+  },
+  "key_data": {
+    "capital": "Djibouti",
+    "population": "1,066,809",
+    "political_system": "National institutional system of Djibouti",
+    "head_of_state": "Current head of state of Djibouti",
+    "gdp": "$4,152,145,940",
+    "gdp_per_capita": "$3,553",
+    "growth": "1.6%",
+    "inflation": "2.1%",
+    "public_debt": "Data unavailable",
+    "unemployment": "26.0%",
+    "hdi": "0.81",
+    "corruption_index": "57"
+  },
+  "analysis": {
+    "security": "Profil de risque modéré pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
+    "geopolitics": "Analyse basée sur signaux multi-sources.",
+    "politics": "Stabilité institutionnelle et calendrier politique suivis.",
+    "economy": "Tendances inflation/emploi/croissance intégrées.",
+    "crime": "Niveau de menace criminelle pour actifs et personnels.",
+    "terrorism": "Exposition terroriste évaluée par criticité locale.",
+    "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
+    "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
+    "regional_analysis": "African exposure is driven by uneven state capacity, security fragmentation in selected corridors, commodity dependency, and infrastructure stress.",
+    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
+  }
+}

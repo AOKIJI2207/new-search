@@ -1,0 +1,40 @@
+{
+  "name": "Seychelles",
+  "continent": "Afrique",
+  "risk_global": 3,
+  "risk_barometer": {
+    "geopolitics": 3,
+    "politics": 2,
+    "socio_economic": 3,
+    "crime": 3,
+    "terrorism": 4,
+    "health_disasters": 3,
+    "transport": 4
+  },
+  "key_data": {
+    "capital": "Victoria",
+    "population": "122,729",
+    "political_system": "National institutional system of Seychelles",
+    "head_of_state": "Current head of state of Seychelles",
+    "gdp": "$2,167,239,562",
+    "gdp_per_capita": "$17,859",
+    "growth": "3.1%",
+    "inflation": "0.3%",
+    "public_debt": "174.7%",
+    "unemployment": "Data unavailable",
+    "hdi": "0.61",
+    "corruption_index": "50"
+  },
+  "analysis": {
+    "security": "Profil de risque élevé pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
+    "geopolitics": "Analyse basée sur signaux multi-sources.",
+    "politics": "Stabilité institutionnelle et calendrier politique suivis.",
+    "economy": "Tendances inflation/emploi/croissance intégrées.",
+    "crime": "Niveau de menace criminelle pour actifs et personnels.",
+    "terrorism": "Exposition terroriste évaluée par criticité locale.",
+    "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
+    "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
+    "regional_analysis": "African exposure is driven by uneven state capacity, security fragmentation in selected corridors, commodity dependency, and infrastructure stress.",
+    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
+  }
+}

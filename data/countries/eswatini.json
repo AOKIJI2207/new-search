@@ -1,0 +1,40 @@
+{
+  "name": "Eswatini",
+  "continent": "Afrique",
+  "risk_global": 3,
+  "risk_barometer": {
+    "geopolitics": 3,
+    "politics": 1,
+    "socio_economic": 3,
+    "crime": 2,
+    "terrorism": 3,
+    "health_disasters": 4,
+    "transport": 3
+  },
+  "key_data": {
+    "capital": "Mbabane",
+    "population": "1,235,549",
+    "political_system": "National institutional system of Eswatini",
+    "head_of_state": "Current head of state of Eswatini",
+    "gdp": "$4,858,885,841",
+    "gdp_per_capita": "$3,910",
+    "growth": "-0.5%",
+    "inflation": "2.6%",
+    "public_debt": "35.7%",
+    "unemployment": "34.2%",
+    "hdi": "0.6",
+    "corruption_index": "68"
+  },
+  "analysis": {
+    "security": "Profil de risque modéré pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
+    "geopolitics": "Analyse basée sur signaux multi-sources.",
+    "politics": "Stabilité institutionnelle et calendrier politique suivis.",
+    "economy": "Tendances inflation/emploi/croissance intégrées.",
+    "crime": "Niveau de menace criminelle pour actifs et personnels.",
+    "terrorism": "Exposition terroriste évaluée par criticité locale.",
+    "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
+    "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
+    "regional_analysis": "African exposure is driven by uneven state capacity, security fragmentation in selected corridors, commodity dependency, and infrastructure stress.",
+    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
+  }
+}

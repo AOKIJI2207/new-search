@@ -1,0 +1,40 @@
+{
+  "name": "North Macedonia",
+  "continent": "Europe",
+  "risk_global": 3,
+  "risk_barometer": {
+    "geopolitics": 3,
+    "politics": 3,
+    "socio_economic": 2,
+    "crime": 4,
+    "terrorism": 5,
+    "health_disasters": 2,
+    "transport": 5
+  },
+  "key_data": {
+    "capital": "Skopje",
+    "population": "1,822,612",
+    "political_system": "National institutional system of North Macedonia",
+    "head_of_state": "Current head of state of North Macedonia",
+    "gdp": "$16,951,682,245",
+    "gdp_per_capita": "$9,292",
+    "growth": "4.2%",
+    "inflation": "3.5%",
+    "public_debt": "Data unavailable",
+    "unemployment": "12.3%",
+    "hdi": "0.72",
+    "corruption_index": "44"
+  },
+  "analysis": {
+    "security": "Profil de risque élevé pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
+    "geopolitics": "Analyse basée sur signaux multi-sources.",
+    "politics": "Stabilité institutionnelle et calendrier politique suivis.",
+    "economy": "Tendances inflation/emploi/croissance intégrées.",
+    "crime": "Niveau de menace criminelle pour actifs et personnels.",
+    "terrorism": "Exposition terroriste évaluée par criticité locale.",
+    "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
+    "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
+    "regional_analysis": "European exposure is shaped by regulatory stability, proximity to NATO and EU dynamics, and spillovers from the Russia-Ukraine war.",
+    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
+  }
+}

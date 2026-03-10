@@ -1,0 +1,40 @@
+{
+  "name": "Antigua and Barbuda",
+  "continent": "Amérique du Nord",
+  "risk_global": 3,
+  "risk_barometer": {
+    "geopolitics": 3,
+    "politics": 4,
+    "socio_economic": 3,
+    "crime": 5,
+    "terrorism": 1,
+    "health_disasters": 2,
+    "transport": 1
+  },
+  "key_data": {
+    "capital": "Saint John's",
+    "population": "103,603",
+    "political_system": "National institutional system of Antigua and Barbuda",
+    "head_of_state": "Current head of state of Antigua and Barbuda",
+    "gdp": "$2,207,622,874",
+    "gdp_per_capita": "$23,542",
+    "growth": "6.3%",
+    "inflation": "6.2%",
+    "public_debt": "Data unavailable",
+    "unemployment": "Data unavailable",
+    "hdi": "0.58",
+    "corruption_index": "34"
+  },
+  "analysis": {
+    "security": "Profil de risque élevé pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
+    "geopolitics": "Analyse basée sur signaux multi-sources.",
+    "politics": "Stabilité institutionnelle et calendrier politique suivis.",
+    "economy": "Tendances inflation/emploi/croissance intégrées.",
+    "crime": "Niveau de menace criminelle pour actifs et personnels.",
+    "terrorism": "Exposition terroriste évaluée par criticité locale.",
+    "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
+    "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
+    "regional_analysis": "North American exposure reflects cross-border logistics, hurricane and seismic risk pockets, organized crime routes, and US policy spillovers.",
+    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
+  }
+}

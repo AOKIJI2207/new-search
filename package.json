@@ -8,7 +8,9 @@
     "dev": "vercel dev",
     "start": "vercel dev",
     "check": "node --check api/search.js && node --check api/sources.js",
-    "test:countries-index": "node scripts/check-countries-index.mjs"
+    "test:countries-index": "node scripts/check-countries-index.mjs",
+    "generate:country-dataset": "node scripts/generate-country-profiles.mjs",
+    "validate:country-dataset": "node scripts/validate-country-dataset.mjs"
   },
   "dependencies": {
     "rss-parser": "^3.13.0"

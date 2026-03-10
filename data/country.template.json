@@ -1,0 +1,40 @@
+{
+  "name": "",
+  "continent": "",
+  "risk_global": 1,
+  "risk_barometer": {
+    "geopolitics": 1,
+    "politics": 1,
+    "socio_economic": 1,
+    "crime": 1,
+    "terrorism": 1,
+    "health_disasters": 1,
+    "transport": 1
+  },
+  "key_data": {
+    "capital": "",
+    "population": "",
+    "political_system": "",
+    "head_of_state": "",
+    "gdp": "",
+    "gdp_per_capita": "",
+    "growth": "",
+    "inflation": "",
+    "public_debt": "",
+    "unemployment": "",
+    "hdi": "",
+    "corruption_index": ""
+  },
+  "analysis": {
+    "security": "",
+    "geopolitics": "",
+    "politics": "",
+    "economy": "",
+    "crime": "",
+    "terrorism": "",
+    "health_disasters": "",
+    "transport": "",
+    "regional_analysis": "",
+    "summary": ""
+  }
+}

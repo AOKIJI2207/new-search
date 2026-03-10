@@ -1,0 +1,40 @@
+{
+  "name": "Tajikistan",
+  "continent": "Asie",
+  "risk_global": 3,
+  "risk_barometer": {
+    "geopolitics": 3,
+    "politics": 3,
+    "socio_economic": 3,
+    "crime": 4,
+    "terrorism": 5,
+    "health_disasters": 2,
+    "transport": 5
+  },
+  "key_data": {
+    "capital": "Dushanbe",
+    "population": "10,499,000",
+    "political_system": "National institutional system of Tajikistan",
+    "head_of_state": "Current head of state of Tajikistan",
+    "gdp": "$14,204,575,549",
+    "gdp_per_capita": "$1,341",
+    "growth": "3.2%",
+    "inflation": "6.0%",
+    "public_debt": "79.8%",
+    "unemployment": "6.9%",
+    "hdi": "0.62",
+    "corruption_index": "49"
+  },
+  "analysis": {
+    "security": "Profil de risque élevé pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
+    "geopolitics": "Analyse basée sur signaux multi-sources.",
+    "politics": "Stabilité institutionnelle et calendrier politique suivis.",
+    "economy": "Tendances inflation/emploi/croissance intégrées.",
+    "crime": "Niveau de menace criminelle pour actifs et personnels.",
+    "terrorism": "Exposition terroriste évaluée par criticité locale.",
+    "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
+    "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
+    "regional_analysis": "Asian exposure is influenced by great-power rivalry, maritime trade routes, domestic political concentration, and supply-chain sensitivity.",
+    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
+  }
+}

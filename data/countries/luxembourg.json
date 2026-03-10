@@ -1,0 +1,40 @@
+{
+  "name": "Luxembourg",
+  "continent": "Europe",
+  "risk_global": 3,
+  "risk_barometer": {
+    "geopolitics": 3,
+    "politics": 2,
+    "socio_economic": 2,
+    "crime": 3,
+    "terrorism": 4,
+    "health_disasters": 3,
+    "transport": 4
+  },
+  "key_data": {
+    "capital": "Luxembourg",
+    "population": "681,973",
+    "political_system": "National institutional system of Luxembourg",
+    "head_of_state": "Current head of state of Luxembourg",
+    "gdp": "$93,279,851,863",
+    "gdp_per_capita": "$137,782",
+    "growth": "5.6%",
+    "inflation": "2.1%",
+    "public_debt": "2.9%",
+    "unemployment": "6.3%",
+    "hdi": "0.86",
+    "corruption_index": "37"
+  },
+  "analysis": {
+    "security": "Profil de risque modéré pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
+    "geopolitics": "Analyse basée sur signaux multi-sources.",
+    "politics": "Stabilité institutionnelle et calendrier politique suivis.",
+    "economy": "Tendances inflation/emploi/croissance intégrées.",
+    "crime": "Niveau de menace criminelle pour actifs et personnels.",
+    "terrorism": "Exposition terroriste évaluée par criticité locale.",
+    "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
+    "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
+    "regional_analysis": "European exposure is shaped by regulatory stability, proximity to NATO and EU dynamics, and spillovers from the Russia-Ukraine war.",
+    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
+  }
+}

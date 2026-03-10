@@ -1,0 +1,40 @@
+{
+  "name": "Mozambique",
+  "continent": "Afrique",
+  "risk_global": 2,
+  "risk_barometer": {
+    "geopolitics": 3,
+    "politics": 1,
+    "socio_economic": 2,
+    "crime": 2,
+    "terrorism": 3,
+    "health_disasters": 4,
+    "transport": 3
+  },
+  "key_data": {
+    "capital": "Maputo",
+    "population": "34,090,466",
+    "political_system": "National institutional system of Mozambique",
+    "head_of_state": "Current head of state of Mozambique",
+    "gdp": "$22,745,341,305",
+    "gdp_per_capita": "$657",
+    "growth": "4.0%",
+    "inflation": "4.1%",
+    "public_debt": "71.8%",
+    "unemployment": "6.6%",
+    "hdi": "0.7",
+    "corruption_index": "45"
+  },
+  "analysis": {
+    "security": "Profil de risque modéré pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
+    "geopolitics": "Analyse basée sur signaux multi-sources.",
+    "politics": "Stabilité institutionnelle et calendrier politique suivis.",
+    "economy": "Tendances inflation/emploi/croissance intégrées.",
+    "crime": "Niveau de menace criminelle pour actifs et personnels.",
+    "terrorism": "Exposition terroriste évaluée par criticité locale.",
+    "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
+    "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
+    "regional_analysis": "African exposure is driven by uneven state capacity, security fragmentation in selected corridors, commodity dependency, and infrastructure stress.",
+    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
+  }
+}
