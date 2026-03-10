@@ -1,6 +1,67 @@
 {
+  "code": "MNE",
+  "slug": "montenegro",
   "name": "Montenegro",
   "continent": "Europe",
+  "region": "Europe & Central Asia",
+  "incomeGroup": "Upper middle income",
+  "currency": null,
+  "lastUpdated": "2025-12-31",
+  "metrics": {
+    "population": 623525,
+    "gdp": 8270016670.86774,
+    "gdpPerCapita": 13263.3281277699,
+    "growth": 3.16409886329913,
+    "inflation": 3.33675009282281,
+    "unemployment": 13.572,
+    "hdi": null
+  },
+  "risk": {
+    "global": null,
+    "political": null,
+    "economic": null,
+    "social": null,
+    "fiscal": null
+  },
+  "sources": [
+    {
+      "category": "Macroeconomy",
+      "label": "World Bank",
+      "referenceLabel": "World Development Indicators",
+      "url": "https://api.worldbank.org/v2/sources/2",
+      "updatedAt": "2025-12-31",
+      "fields": [
+        "unemployment"
+      ]
+    },
+    {
+      "category": "Macroeconomy",
+      "label": "World Bank",
+      "referenceLabel": "World Development Indicators",
+      "url": "https://api.worldbank.org/v2/sources/2",
+      "updatedAt": "2024-12-31",
+      "fields": [
+        "gdp",
+        "gdpPerCapita",
+        "growth",
+        "inflation",
+        "population"
+      ]
+    },
+    {
+      "category": "Country metadata",
+      "label": "World Bank",
+      "referenceLabel": "Country API metadata",
+      "url": "https://api.worldbank.org/v2/country",
+      "fields": [
+        "capital",
+        "incomeGroup",
+        "region"
+      ]
+    }
+  ],
+  "news": [],
+  "capital": "Podgorica",
   "risk_global": 3,
   "risk_barometer": {
     "geopolitics": 3,
@@ -10,20 +71,6 @@
     "terrorism": 2,
     "health_disasters": 4,
     "transport": 2
-  },
-  "key_data": {
-    "capital": "Podgorica",
-    "population": "623,525",
-    "political_system": "National institutional system of Montenegro",
-    "head_of_state": "Current head of state of Montenegro",
-    "gdp": "$8,270,016,671",
-    "gdp_per_capita": "$13,263",
-    "growth": "3.2%",
-    "inflation": "3.3%",
-    "public_debt": "Data unavailable",
-    "unemployment": "13.6%",
-    "hdi": "0.74",
-    "corruption_index": "46"
   },
   "analysis": {
     "security": "Profil de risque modéré pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
@@ -35,88 +82,6 @@
     "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
     "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
     "regional_analysis": "European exposure is shaped by regulatory stability, proximity to NATO and EU dynamics, and spillovers from the Russia-Ukraine war.",
-    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
-  },
-  "intelligence_indicators": {
-    "political_stability": {
-      "value": 69,
-      "display": "69/100",
-      "source": "Freedom House",
-      "year": "2025"
-    },
-    "conflict_risk": {
-      "value": 3,
-      "display": "3/5",
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "terrorism_risk": {
-      "value": 2,
-      "display": "2/5",
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "military_expenditure": {
-      "value": null,
-      "display": "",
-      "source": "",
-      "year": ""
-    }
-  },
-  "data_sources": {
-    "gdp": {
-      "source": "World Bank",
-      "year": "2024"
-    },
-    "gdp_per_capita": {
-      "source": "World Bank",
-      "year": "2024"
-    },
-    "growth": {
-      "source": "IMF",
-      "year": "2024"
-    },
-    "inflation": {
-      "source": "IMF",
-      "year": "2024"
-    },
-    "unemployment": {
-      "source": "World Bank",
-      "year": "2025"
-    },
-    "hdi": {
-      "source": "",
-      "year": ""
-    },
-    "corruption_index": {
-      "source": "Transparency International CPI",
-      "year": "2025"
-    },
-    "political_stability": {
-      "source": "Freedom House",
-      "year": "2025"
-    },
-    "conflict_risk": {
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "terrorism_risk": {
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "military_expenditure": {
-      "source": "",
-      "year": ""
-    },
-    "population": {
-      "source": "World Bank",
-      "year": "2024"
-    }
-  },
-  "risk_breakdown": {
-    "political": null,
-    "economic": null,
-    "social": null,
-    "fiscal": null
+    "summary": "Montenegro shows solid economic momentum with GDP growth at 3.2%. Inflation remains moderate at 3.3%. Unemployment stands at 13.6%. Overall signals for the short-term outlook are mixed."
   }
 }

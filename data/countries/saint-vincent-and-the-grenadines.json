@@ -1,6 +1,76 @@
 {
+  "code": "VCT",
+  "slug": "saint-vincent-and-the-grenadines",
   "name": "Saint Vincent and the Grenadines",
   "continent": "Amérique du Nord",
+  "region": "Latin America & Caribbean ",
+  "incomeGroup": "Upper middle income",
+  "currency": "East Caribbean dollar",
+  "lastUpdated": "2025-12-31",
+  "metrics": {
+    "population": 100616,
+    "gdp": 1157207407.40741,
+    "gdpPerCapita": 11501.2265187188,
+    "growth": 4.06183490050209,
+    "inflation": 3.62770736940927,
+    "unemployment": 18.003,
+    "hdi": null
+  },
+  "risk": {
+    "global": null,
+    "political": null,
+    "economic": null,
+    "social": null,
+    "fiscal": null
+  },
+  "sources": [
+    {
+      "category": "Macroeconomy",
+      "label": "World Bank",
+      "referenceLabel": "World Development Indicators",
+      "url": "https://api.worldbank.org/v2/sources/2",
+      "updatedAt": "2025-12-31",
+      "fields": [
+        "unemployment"
+      ]
+    },
+    {
+      "category": "Macroeconomy",
+      "label": "World Bank",
+      "referenceLabel": "World Development Indicators",
+      "url": "https://api.worldbank.org/v2/sources/2",
+      "updatedAt": "2024-12-31",
+      "fields": [
+        "gdp",
+        "gdpPerCapita",
+        "growth",
+        "inflation",
+        "population"
+      ]
+    },
+    {
+      "category": "Country metadata",
+      "label": "World Bank",
+      "referenceLabel": "Country API metadata",
+      "url": "https://api.worldbank.org/v2/country",
+      "fields": [
+        "capital",
+        "incomeGroup",
+        "region"
+      ]
+    },
+    {
+      "category": "Country metadata",
+      "label": "World Bank",
+      "referenceLabel": "WITS country metadata",
+      "url": "https://wits.worldbank.org/CountryProfile/Metadata/en/Country/All",
+      "fields": [
+        "currency"
+      ]
+    }
+  ],
+  "news": [],
+  "capital": "Kingstown",
   "risk_global": 3,
   "risk_barometer": {
     "geopolitics": 3,
@@ -10,20 +80,6 @@
     "terrorism": 1,
     "health_disasters": 2,
     "transport": 1
-  },
-  "key_data": {
-    "capital": "Kingstown",
-    "population": "100,616",
-    "political_system": "National institutional system of Saint Vincent and the Grenadines",
-    "head_of_state": "Current head of state of Saint Vincent and the Grenadines",
-    "gdp": "$1,157,207,407",
-    "gdp_per_capita": "$11,501",
-    "growth": "5.2%",
-    "inflation": "3.6%",
-    "public_debt": "53.7%",
-    "unemployment": "18.0%",
-    "hdi": "0.73",
-    "corruption_index": "63"
   },
   "analysis": {
     "security": "Profil de risque modéré pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
@@ -35,88 +91,6 @@
     "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
     "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
     "regional_analysis": "North American exposure reflects cross-border logistics, hurricane and seismic risk pockets, organized crime routes, and US policy spillovers.",
-    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
-  },
-  "intelligence_indicators": {
-    "political_stability": {
-      "value": null,
-      "display": "",
-      "source": "",
-      "year": ""
-    },
-    "conflict_risk": {
-      "value": 3,
-      "display": "3/5",
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "terrorism_risk": {
-      "value": 1,
-      "display": "1/5",
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "military_expenditure": {
-      "value": null,
-      "display": "",
-      "source": "",
-      "year": ""
-    }
-  },
-  "data_sources": {
-    "gdp": {
-      "source": "World Bank",
-      "year": "2024"
-    },
-    "gdp_per_capita": {
-      "source": "World Bank",
-      "year": "2024"
-    },
-    "growth": {
-      "source": "IMF",
-      "year": "2024"
-    },
-    "inflation": {
-      "source": "IMF",
-      "year": "2024"
-    },
-    "unemployment": {
-      "source": "World Bank",
-      "year": "2025"
-    },
-    "hdi": {
-      "source": "",
-      "year": ""
-    },
-    "corruption_index": {
-      "source": "Transparency International CPI",
-      "year": "2025"
-    },
-    "political_stability": {
-      "source": "",
-      "year": ""
-    },
-    "conflict_risk": {
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "terrorism_risk": {
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "military_expenditure": {
-      "source": "",
-      "year": ""
-    },
-    "population": {
-      "source": "World Bank",
-      "year": "2024"
-    }
-  },
-  "risk_breakdown": {
-    "political": null,
-    "economic": null,
-    "social": null,
-    "fiscal": null
+    "summary": "Saint Vincent and the Grenadines shows solid economic momentum with GDP growth at 4.1%. Inflation remains moderate at 3.6%. Unemployment stands at 18.0%. Overall signals for the short-term outlook are mixed."
   }
 }

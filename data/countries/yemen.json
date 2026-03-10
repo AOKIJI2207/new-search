@@ -1,6 +1,98 @@
 {
+  "code": "YEM",
+  "slug": "yemen",
   "name": "Yemen",
   "continent": "Asie",
+  "region": "Middle East, North Africa, Afghanistan & Pakistan",
+  "incomeGroup": "Low income",
+  "currency": "Yemeni rial",
+  "lastUpdated": "2025-12-31",
+  "metrics": {
+    "population": 40583164,
+    "gdp": null,
+    "gdpPerCapita": null,
+    "growth": -1.5,
+    "inflation": 20.4,
+    "unemployment": 17.322,
+    "hdi": null
+  },
+  "risk": {
+    "global": null,
+    "political": null,
+    "economic": null,
+    "social": null,
+    "fiscal": null
+  },
+  "sources": [
+    {
+      "category": "Macroeconomy",
+      "label": "IMF",
+      "referenceLabel": "DataMapper",
+      "url": "https://www.imf.org/external/datamapper",
+      "updatedAt": "2025-12-31",
+      "fields": [
+        "growth",
+        "inflation"
+      ]
+    },
+    {
+      "category": "Macroeconomy",
+      "label": "World Bank",
+      "referenceLabel": "World Development Indicators",
+      "url": "https://api.worldbank.org/v2/sources/2",
+      "updatedAt": "2025-12-31",
+      "fields": [
+        "unemployment"
+      ]
+    },
+    {
+      "category": "Macroeconomy",
+      "label": "World Bank",
+      "referenceLabel": "World Development Indicators",
+      "url": "https://api.worldbank.org/v2/sources/2",
+      "updatedAt": "2024-12-31",
+      "fields": [
+        "population"
+      ]
+    },
+    {
+      "category": "Country metadata",
+      "label": "World Bank",
+      "referenceLabel": "Country API metadata",
+      "url": "https://api.worldbank.org/v2/country",
+      "fields": [
+        "capital",
+        "incomeGroup",
+        "region"
+      ]
+    },
+    {
+      "category": "Country metadata",
+      "label": "World Bank",
+      "referenceLabel": "WITS country metadata",
+      "url": "https://wits.worldbank.org/CountryProfile/Metadata/en/Country/All",
+      "fields": [
+        "currency"
+      ]
+    }
+  ],
+  "news": [
+    {
+      "title": "WHO Yemen: WHO strengthens trauma and nutrition care in Yemen’s high-risk districts with support from ECHO",
+      "publisher": "United Nations",
+      "publishedAt": "2025-11-06",
+      "url": "https://yemen.un.org/en/305072-who-yemen-who-strengthens-trauma-and-nutrition-care-yemen%E2%80%99s-high-risk-districts-support-echo",
+      "summary": "WHO scaled trauma and nutrition services in high-risk districts as conflict and air strikes continued to strain Yemen’s health system."
+    },
+    {
+      "title": "As the crisis in Yemen deepens, aid agencies appeal for $2.5 billion for the humanitarian response in 2025",
+      "publisher": "United Nations",
+      "publishedAt": "2025-01-15",
+      "url": "https://yemen.un.org/en/287503-crisis-yemen-deepens-aid-agencies-appeal-25-billion-humanitarian-response-2025",
+      "summary": "The United Nations launched the 2025 Yemen Humanitarian Needs and Response Plan amid continued economic decline and food insecurity."
+    }
+  ],
+  "capital": "Sana'a",
   "risk_global": 3,
   "risk_barometer": {
     "geopolitics": 3,
@@ -10,20 +102,6 @@
     "terrorism": 3,
     "health_disasters": 4,
     "transport": 3
-  },
-  "key_data": {
-    "capital": "Sana'a",
-    "population": "40,583,164",
-    "political_system": "National institutional system of Yemen",
-    "head_of_state": "Current head of state of Yemen",
-    "gdp": "$21,606,160,663",
-    "gdp_per_capita": "$634",
-    "growth": "-1.5%",
-    "inflation": "33.9%",
-    "public_debt": "Data unavailable",
-    "unemployment": "17.3%",
-    "hdi": "0.65",
-    "corruption_index": "13"
   },
   "analysis": {
     "security": "Profil de risque modéré pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
@@ -35,88 +113,6 @@
     "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
     "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
     "regional_analysis": "Asian exposure is influenced by great-power rivalry, maritime trade routes, domestic political concentration, and supply-chain sensitivity.",
-    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
-  },
-  "intelligence_indicators": {
-    "political_stability": {
-      "value": 10,
-      "display": "10/100",
-      "source": "Freedom House",
-      "year": "2025"
-    },
-    "conflict_risk": {
-      "value": 3,
-      "display": "3/5",
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "terrorism_risk": {
-      "value": 3,
-      "display": "3/5",
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "military_expenditure": {
-      "value": null,
-      "display": "",
-      "source": "",
-      "year": ""
-    }
-  },
-  "data_sources": {
-    "gdp": {
-      "source": "World Bank",
-      "year": "2018"
-    },
-    "gdp_per_capita": {
-      "source": "World Bank",
-      "year": "2018"
-    },
-    "growth": {
-      "source": "IMF",
-      "year": "2024"
-    },
-    "inflation": {
-      "source": "IMF",
-      "year": "2024"
-    },
-    "unemployment": {
-      "source": "World Bank",
-      "year": "2025"
-    },
-    "hdi": {
-      "source": "",
-      "year": ""
-    },
-    "corruption_index": {
-      "source": "Transparency International CPI",
-      "year": "2025"
-    },
-    "political_stability": {
-      "source": "Freedom House",
-      "year": "2025"
-    },
-    "conflict_risk": {
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "terrorism_risk": {
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "military_expenditure": {
-      "source": "",
-      "year": ""
-    },
-    "population": {
-      "source": "World Bank",
-      "year": "2024"
-    }
-  },
-  "risk_breakdown": {
-    "political": null,
-    "economic": null,
-    "social": null,
-    "fiscal": null
+    "summary": "Yemen shows very weak economic momentum with GDP growth at -1.5%. Inflation remains elevated at 20.4%. Unemployment stands at 17.3%. Overall signals for the short-term outlook are mixed."
   }
 }

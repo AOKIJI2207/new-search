@@ -1,6 +1,76 @@
 {
+  "code": "BIH",
+  "slug": "bosnia-and-herzegovina",
   "name": "Bosnia and Herzegovina",
   "continent": "Europe",
+  "region": "Europe & Central Asia",
+  "incomeGroup": "Upper middle income",
+  "currency": "Bosnia and Herzegovina convertible mark",
+  "lastUpdated": "2025-12-31",
+  "metrics": {
+    "population": 3164253,
+    "gdp": 29613572022.8993,
+    "gdpPerCapita": 9358.78768951134,
+    "growth": 2.9715174617652,
+    "inflation": 1.69212733599724,
+    "unemployment": 11.037,
+    "hdi": null
+  },
+  "risk": {
+    "global": null,
+    "political": null,
+    "economic": null,
+    "social": null,
+    "fiscal": null
+  },
+  "sources": [
+    {
+      "category": "Macroeconomy",
+      "label": "World Bank",
+      "referenceLabel": "World Development Indicators",
+      "url": "https://api.worldbank.org/v2/sources/2",
+      "updatedAt": "2025-12-31",
+      "fields": [
+        "unemployment"
+      ]
+    },
+    {
+      "category": "Macroeconomy",
+      "label": "World Bank",
+      "referenceLabel": "World Development Indicators",
+      "url": "https://api.worldbank.org/v2/sources/2",
+      "updatedAt": "2024-12-31",
+      "fields": [
+        "gdp",
+        "gdpPerCapita",
+        "growth",
+        "inflation",
+        "population"
+      ]
+    },
+    {
+      "category": "Country metadata",
+      "label": "World Bank",
+      "referenceLabel": "Country API metadata",
+      "url": "https://api.worldbank.org/v2/country",
+      "fields": [
+        "capital",
+        "incomeGroup",
+        "region"
+      ]
+    },
+    {
+      "category": "Country metadata",
+      "label": "World Bank",
+      "referenceLabel": "WITS country metadata",
+      "url": "https://wits.worldbank.org/CountryProfile/Metadata/en/Country/All",
+      "fields": [
+        "currency"
+      ]
+    }
+  ],
+  "news": [],
+  "capital": "Sarajevo",
   "risk_global": 3,
   "risk_barometer": {
     "geopolitics": 3,
@@ -10,20 +80,6 @@
     "terrorism": 2,
     "health_disasters": 4,
     "transport": 2
-  },
-  "key_data": {
-    "capital": "Sarajevo",
-    "population": "3,164,253",
-    "political_system": "National institutional system of Bosnia and Herzegovina",
-    "head_of_state": "Current head of state of Bosnia and Herzegovina",
-    "gdp": "$29,613,572,023",
-    "gdp_per_capita": "$9,359",
-    "growth": "3.0%",
-    "inflation": "1.7%",
-    "public_debt": "39.9%",
-    "unemployment": "11.0%",
-    "hdi": "0.84",
-    "corruption_index": "34"
   },
   "analysis": {
     "security": "Profil de risque modéré pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
@@ -35,88 +91,6 @@
     "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
     "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
     "regional_analysis": "European exposure is shaped by regulatory stability, proximity to NATO and EU dynamics, and spillovers from the Russia-Ukraine war.",
-    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
-  },
-  "intelligence_indicators": {
-    "political_stability": {
-      "value": 52,
-      "display": "52/100",
-      "source": "Freedom House",
-      "year": "2025"
-    },
-    "conflict_risk": {
-      "value": 3,
-      "display": "3/5",
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "terrorism_risk": {
-      "value": 2,
-      "display": "2/5",
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "military_expenditure": {
-      "value": null,
-      "display": "",
-      "source": "",
-      "year": ""
-    }
-  },
-  "data_sources": {
-    "gdp": {
-      "source": "World Bank",
-      "year": "2024"
-    },
-    "gdp_per_capita": {
-      "source": "World Bank",
-      "year": "2024"
-    },
-    "growth": {
-      "source": "IMF",
-      "year": "2024"
-    },
-    "inflation": {
-      "source": "IMF",
-      "year": "2024"
-    },
-    "unemployment": {
-      "source": "World Bank",
-      "year": "2025"
-    },
-    "hdi": {
-      "source": "",
-      "year": ""
-    },
-    "corruption_index": {
-      "source": "Transparency International CPI",
-      "year": "2025"
-    },
-    "political_stability": {
-      "source": "Freedom House",
-      "year": "2025"
-    },
-    "conflict_risk": {
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "terrorism_risk": {
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "military_expenditure": {
-      "source": "",
-      "year": ""
-    },
-    "population": {
-      "source": "World Bank",
-      "year": "2024"
-    }
-  },
-  "risk_breakdown": {
-    "political": null,
-    "economic": null,
-    "social": null,
-    "fiscal": null
+    "summary": "Bosnia and Herzegovina shows solid economic momentum with GDP growth at 3.0%. Inflation remains contained at 1.7%. Unemployment stands at 11.0%. Overall signals for the short-term outlook are mixed."
   }
 }

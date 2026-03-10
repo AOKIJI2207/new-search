@@ -1,6 +1,76 @@
 {
+  "code": "ARE",
+  "slug": "united-arab-emirates",
   "name": "United Arab Emirates",
   "continent": "Asie",
+  "region": "Middle East, North Africa, Afghanistan & Pakistan",
+  "incomeGroup": "High income",
+  "currency": "U.A.E. dirham",
+  "lastUpdated": "2025-12-31",
+  "metrics": {
+    "population": 10986400,
+    "gdp": 552324846834.581,
+    "gdpPerCapita": 50273.5060469837,
+    "growth": 3.99180705485398,
+    "inflation": 1.66336510224894,
+    "unemployment": 2.174,
+    "hdi": null
+  },
+  "risk": {
+    "global": null,
+    "political": null,
+    "economic": null,
+    "social": null,
+    "fiscal": null
+  },
+  "sources": [
+    {
+      "category": "Macroeconomy",
+      "label": "World Bank",
+      "referenceLabel": "World Development Indicators",
+      "url": "https://api.worldbank.org/v2/sources/2",
+      "updatedAt": "2025-12-31",
+      "fields": [
+        "unemployment"
+      ]
+    },
+    {
+      "category": "Macroeconomy",
+      "label": "World Bank",
+      "referenceLabel": "World Development Indicators",
+      "url": "https://api.worldbank.org/v2/sources/2",
+      "updatedAt": "2024-12-31",
+      "fields": [
+        "gdp",
+        "gdpPerCapita",
+        "growth",
+        "inflation",
+        "population"
+      ]
+    },
+    {
+      "category": "Country metadata",
+      "label": "World Bank",
+      "referenceLabel": "Country API metadata",
+      "url": "https://api.worldbank.org/v2/country",
+      "fields": [
+        "capital",
+        "incomeGroup",
+        "region"
+      ]
+    },
+    {
+      "category": "Country metadata",
+      "label": "World Bank",
+      "referenceLabel": "WITS country metadata",
+      "url": "https://wits.worldbank.org/CountryProfile/Metadata/en/Country/All",
+      "fields": [
+        "currency"
+      ]
+    }
+  ],
+  "news": [],
+  "capital": "Abu Dhabi",
   "risk_global": 3,
   "risk_barometer": {
     "geopolitics": 3,
@@ -10,20 +80,6 @@
     "terrorism": 4,
     "health_disasters": 3,
     "transport": 4
-  },
-  "key_data": {
-    "capital": "Abu Dhabi",
-    "population": "10,986,400",
-    "political_system": "National institutional system of United Arab Emirates",
-    "head_of_state": "Current head of state of United Arab Emirates",
-    "gdp": "$552,324,846,835",
-    "gdp_per_capita": "$50,274",
-    "growth": "4.0%",
-    "inflation": "1.7%",
-    "public_debt": "1.8%",
-    "unemployment": "2.2%",
-    "hdi": "0.66",
-    "corruption_index": "69"
   },
   "analysis": {
     "security": "Profil de risque élevé pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
@@ -35,88 +91,6 @@
     "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
     "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
     "regional_analysis": "Asian exposure is influenced by great-power rivalry, maritime trade routes, domestic political concentration, and supply-chain sensitivity.",
-    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
-  },
-  "intelligence_indicators": {
-    "political_stability": {
-      "value": 18,
-      "display": "18/100",
-      "source": "Freedom House",
-      "year": "2025"
-    },
-    "conflict_risk": {
-      "value": 3,
-      "display": "3/5",
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "terrorism_risk": {
-      "value": 4,
-      "display": "4/5",
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "military_expenditure": {
-      "value": null,
-      "display": "",
-      "source": "",
-      "year": ""
-    }
-  },
-  "data_sources": {
-    "gdp": {
-      "source": "World Bank",
-      "year": "2024"
-    },
-    "gdp_per_capita": {
-      "source": "World Bank",
-      "year": "2024"
-    },
-    "growth": {
-      "source": "IMF",
-      "year": "2024"
-    },
-    "inflation": {
-      "source": "IMF",
-      "year": "2024"
-    },
-    "unemployment": {
-      "source": "World Bank",
-      "year": "2025"
-    },
-    "hdi": {
-      "source": "",
-      "year": ""
-    },
-    "corruption_index": {
-      "source": "Transparency International CPI",
-      "year": "2025"
-    },
-    "political_stability": {
-      "source": "Freedom House",
-      "year": "2025"
-    },
-    "conflict_risk": {
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "terrorism_risk": {
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "military_expenditure": {
-      "source": "",
-      "year": ""
-    },
-    "population": {
-      "source": "World Bank",
-      "year": "2024"
-    }
-  },
-  "risk_breakdown": {
-    "political": null,
-    "economic": null,
-    "social": null,
-    "fiscal": null
+    "summary": "United Arab Emirates shows solid economic momentum with GDP growth at 4.0%. Inflation remains contained at 1.7%. Unemployment stands at 2.2%. Overall signals for the short-term outlook are mixed."
   }
 }

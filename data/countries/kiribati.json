@@ -1,6 +1,66 @@
 {
+  "code": "KIR",
+  "slug": "kiribati",
   "name": "Kiribati",
   "continent": "Océanie",
+  "region": "East Asia & Pacific",
+  "incomeGroup": "Lower middle income",
+  "currency": "Australian dollar",
+  "lastUpdated": "2024-12-31",
+  "metrics": {
+    "population": 134518,
+    "gdp": 307862564.489711,
+    "gdpPerCapita": 2288.63471423684,
+    "growth": 5.26689747917099,
+    "inflation": 2.45545072159028,
+    "unemployment": null,
+    "hdi": null
+  },
+  "risk": {
+    "global": null,
+    "political": null,
+    "economic": null,
+    "social": null,
+    "fiscal": null
+  },
+  "sources": [
+    {
+      "category": "Macroeconomy",
+      "label": "World Bank",
+      "referenceLabel": "World Development Indicators",
+      "url": "https://api.worldbank.org/v2/sources/2",
+      "updatedAt": "2024-12-31",
+      "fields": [
+        "gdp",
+        "gdpPerCapita",
+        "growth",
+        "inflation",
+        "population"
+      ]
+    },
+    {
+      "category": "Country metadata",
+      "label": "World Bank",
+      "referenceLabel": "Country API metadata",
+      "url": "https://api.worldbank.org/v2/country",
+      "fields": [
+        "capital",
+        "incomeGroup",
+        "region"
+      ]
+    },
+    {
+      "category": "Country metadata",
+      "label": "World Bank",
+      "referenceLabel": "WITS country metadata",
+      "url": "https://wits.worldbank.org/CountryProfile/Metadata/en/Country/All",
+      "fields": [
+        "currency"
+      ]
+    }
+  ],
+  "news": [],
+  "capital": "Tarawa",
   "risk_global": 2,
   "risk_barometer": {
     "geopolitics": 3,
@@ -10,20 +70,6 @@
     "terrorism": 3,
     "health_disasters": 4,
     "transport": 3
-  },
-  "key_data": {
-    "capital": "South Tarawa",
-    "population": "134,518",
-    "political_system": "National institutional system of Kiribati",
-    "head_of_state": "Current head of state of Kiribati",
-    "gdp": "$307,862,564",
-    "gdp_per_capita": "$2,289",
-    "growth": "5.3%",
-    "inflation": "2.5%",
-    "public_debt": "Data unavailable",
-    "unemployment": "Data unavailable",
-    "hdi": "0.7",
-    "corruption_index": "63"
   },
   "analysis": {
     "security": "Profil de risque modéré pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
@@ -35,88 +81,6 @@
     "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
     "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
     "regional_analysis": "Oceania exposure is shaped by remoteness, climate hazards, maritime connectivity, and strong variance between advanced and small island states.",
-    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
-  },
-  "intelligence_indicators": {
-    "political_stability": {
-      "value": 89,
-      "display": "89/100",
-      "source": "Freedom House",
-      "year": "2025"
-    },
-    "conflict_risk": {
-      "value": 2,
-      "display": "2/5",
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "terrorism_risk": {
-      "value": 3,
-      "display": "3/5",
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "military_expenditure": {
-      "value": null,
-      "display": "",
-      "source": "",
-      "year": ""
-    }
-  },
-  "data_sources": {
-    "gdp": {
-      "source": "World Bank",
-      "year": "2024"
-    },
-    "gdp_per_capita": {
-      "source": "World Bank",
-      "year": "2024"
-    },
-    "growth": {
-      "source": "IMF",
-      "year": "2024"
-    },
-    "inflation": {
-      "source": "IMF",
-      "year": "2024"
-    },
-    "unemployment": {
-      "source": "",
-      "year": ""
-    },
-    "hdi": {
-      "source": "",
-      "year": ""
-    },
-    "corruption_index": {
-      "source": "",
-      "year": ""
-    },
-    "political_stability": {
-      "source": "Freedom House",
-      "year": "2025"
-    },
-    "conflict_risk": {
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "terrorism_risk": {
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "military_expenditure": {
-      "source": "",
-      "year": ""
-    },
-    "population": {
-      "source": "World Bank",
-      "year": "2024"
-    }
-  },
-  "risk_breakdown": {
-    "political": null,
-    "economic": null,
-    "social": null,
-    "fiscal": null
+    "summary": "Kiribati shows solid economic momentum with GDP growth at 5.3%. Inflation remains moderate at 2.5%. Unemployment stands at 0.0%. Overall signals for the short-term outlook are guarded."
   }
 }

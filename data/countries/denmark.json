@@ -1,6 +1,76 @@
 {
+  "code": "DNK",
+  "slug": "denmark",
   "name": "Denmark",
   "continent": "Europe",
+  "region": "Europe & Central Asia",
+  "incomeGroup": "High income",
+  "currency": "Danish krone",
+  "lastUpdated": "2025-12-31",
+  "metrics": {
+    "population": 5976992,
+    "gdp": 424524722037.047,
+    "gdpPerCapita": 71026.4832271897,
+    "growth": 3.47783593140312,
+    "inflation": 1.37220049768918,
+    "unemployment": 5.529,
+    "hdi": null
+  },
+  "risk": {
+    "global": null,
+    "political": null,
+    "economic": null,
+    "social": null,
+    "fiscal": null
+  },
+  "sources": [
+    {
+      "category": "Macroeconomy",
+      "label": "World Bank",
+      "referenceLabel": "World Development Indicators",
+      "url": "https://api.worldbank.org/v2/sources/2",
+      "updatedAt": "2025-12-31",
+      "fields": [
+        "unemployment"
+      ]
+    },
+    {
+      "category": "Macroeconomy",
+      "label": "World Bank",
+      "referenceLabel": "World Development Indicators",
+      "url": "https://api.worldbank.org/v2/sources/2",
+      "updatedAt": "2024-12-31",
+      "fields": [
+        "gdp",
+        "gdpPerCapita",
+        "growth",
+        "inflation",
+        "population"
+      ]
+    },
+    {
+      "category": "Country metadata",
+      "label": "World Bank",
+      "referenceLabel": "Country API metadata",
+      "url": "https://api.worldbank.org/v2/country",
+      "fields": [
+        "capital",
+        "incomeGroup",
+        "region"
+      ]
+    },
+    {
+      "category": "Country metadata",
+      "label": "World Bank",
+      "referenceLabel": "WITS country metadata",
+      "url": "https://wits.worldbank.org/CountryProfile/Metadata/en/Country/All",
+      "fields": [
+        "currency"
+      ]
+    }
+  ],
+  "news": [],
+  "capital": "Copenhagen",
   "risk_global": 3,
   "risk_barometer": {
     "geopolitics": 3,
@@ -10,20 +80,6 @@
     "terrorism": 4,
     "health_disasters": 3,
     "transport": 4
-  },
-  "key_data": {
-    "capital": "Copenhagen",
-    "population": "5,976,992",
-    "political_system": "National institutional system of Denmark",
-    "head_of_state": "Current head of state of Denmark",
-    "gdp": "$424,524,722,037",
-    "gdp_per_capita": "$71,026",
-    "growth": "3.5%",
-    "inflation": "1.3%",
-    "public_debt": "75.3%",
-    "unemployment": "5.5%",
-    "hdi": "0.61",
-    "corruption_index": "89"
   },
   "analysis": {
     "security": "Profil de risque élevé pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
@@ -35,88 +91,6 @@
     "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
     "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
     "regional_analysis": "European exposure is shaped by regulatory stability, proximity to NATO and EU dynamics, and spillovers from the Russia-Ukraine war.",
-    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
-  },
-  "intelligence_indicators": {
-    "political_stability": {
-      "value": 97,
-      "display": "97/100",
-      "source": "Freedom House",
-      "year": "2025"
-    },
-    "conflict_risk": {
-      "value": 3,
-      "display": "3/5",
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "terrorism_risk": {
-      "value": 4,
-      "display": "4/5",
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "military_expenditure": {
-      "value": null,
-      "display": "",
-      "source": "",
-      "year": ""
-    }
-  },
-  "data_sources": {
-    "gdp": {
-      "source": "World Bank",
-      "year": "2024"
-    },
-    "gdp_per_capita": {
-      "source": "World Bank",
-      "year": "2024"
-    },
-    "growth": {
-      "source": "IMF",
-      "year": "2024"
-    },
-    "inflation": {
-      "source": "IMF",
-      "year": "2024"
-    },
-    "unemployment": {
-      "source": "World Bank",
-      "year": "2025"
-    },
-    "hdi": {
-      "source": "",
-      "year": ""
-    },
-    "corruption_index": {
-      "source": "Transparency International CPI",
-      "year": "2025"
-    },
-    "political_stability": {
-      "source": "Freedom House",
-      "year": "2025"
-    },
-    "conflict_risk": {
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "terrorism_risk": {
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "military_expenditure": {
-      "source": "",
-      "year": ""
-    },
-    "population": {
-      "source": "World Bank",
-      "year": "2024"
-    }
-  },
-  "risk_breakdown": {
-    "political": null,
-    "economic": null,
-    "social": null,
-    "fiscal": null
+    "summary": "Denmark shows solid economic momentum with GDP growth at 3.5%. Inflation remains contained at 1.4%. Unemployment stands at 5.5%. Overall signals for the short-term outlook are mixed."
   }
 }

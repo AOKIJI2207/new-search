@@ -1,6 +1,30 @@
 {
+  "code": "VAT",
+  "slug": "vatican-city",
   "name": "Vatican City",
   "continent": "Europe",
+  "region": null,
+  "incomeGroup": null,
+  "currency": null,
+  "lastUpdated": "2026-03-10",
+  "metrics": {
+    "population": null,
+    "gdp": null,
+    "gdpPerCapita": null,
+    "growth": null,
+    "inflation": null,
+    "unemployment": null,
+    "hdi": null
+  },
+  "risk": {
+    "global": null,
+    "political": null,
+    "economic": null,
+    "social": null,
+    "fiscal": null
+  },
+  "sources": [],
+  "news": [],
   "risk_global": 3,
   "risk_barometer": {
     "geopolitics": 3,
@@ -10,20 +34,6 @@
     "terrorism": 3,
     "health_disasters": 4,
     "transport": 3
-  },
-  "key_data": {
-    "capital": "Vatican City",
-    "population": "882",
-    "political_system": "National institutional system of Vatican City",
-    "head_of_state": "Current head of state of Vatican City",
-    "gdp": "Data unavailable",
-    "gdp_per_capita": "Data unavailable",
-    "growth": "-0.5%",
-    "inflation": "Data unavailable",
-    "public_debt": "Data unavailable",
-    "unemployment": "Data unavailable",
-    "hdi": "0.6",
-    "corruption_index": "68"
   },
   "analysis": {
     "security": "Profil de risque modéré pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
@@ -35,88 +45,6 @@
     "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
     "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
     "regional_analysis": "European exposure is shaped by regulatory stability, proximity to NATO and EU dynamics, and spillovers from the Russia-Ukraine war.",
-    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
-  },
-  "intelligence_indicators": {
-    "political_stability": {
-      "value": null,
-      "display": "",
-      "source": "",
-      "year": ""
-    },
-    "conflict_risk": {
-      "value": 3,
-      "display": "3/5",
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "terrorism_risk": {
-      "value": 3,
-      "display": "3/5",
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "military_expenditure": {
-      "value": null,
-      "display": "",
-      "source": "",
-      "year": ""
-    }
-  },
-  "data_sources": {
-    "gdp": {
-      "source": "",
-      "year": ""
-    },
-    "gdp_per_capita": {
-      "source": "",
-      "year": ""
-    },
-    "growth": {
-      "source": "",
-      "year": ""
-    },
-    "inflation": {
-      "source": "",
-      "year": ""
-    },
-    "unemployment": {
-      "source": "",
-      "year": ""
-    },
-    "hdi": {
-      "source": "",
-      "year": ""
-    },
-    "corruption_index": {
-      "source": "",
-      "year": ""
-    },
-    "political_stability": {
-      "source": "",
-      "year": ""
-    },
-    "conflict_risk": {
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "terrorism_risk": {
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "military_expenditure": {
-      "source": "",
-      "year": ""
-    },
-    "population": {
-      "source": "",
-      "year": ""
-    }
-  },
-  "risk_breakdown": {
-    "political": null,
-    "economic": null,
-    "social": null,
-    "fiscal": null
+    "summary": "Vatican City shows very weak economic momentum with GDP growth at 0.0%. Inflation remains contained at 0.0%. Unemployment stands at 0.0%. Overall signals for the short-term outlook are mixed."
   }
 }

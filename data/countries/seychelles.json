@@ -1,6 +1,66 @@
 {
+  "code": "SYC",
+  "slug": "seychelles",
   "name": "Seychelles",
   "continent": "Afrique",
+  "region": "Sub-Saharan Africa ",
+  "incomeGroup": "High income",
+  "currency": "Seychelles rupee",
+  "lastUpdated": "2024-12-31",
+  "metrics": {
+    "population": 121354,
+    "gdp": 2167239562.46013,
+    "gdpPerCapita": 17858.8226383978,
+    "growth": 3.46568066415341,
+    "inflation": 0.311726050919668,
+    "unemployment": null,
+    "hdi": null
+  },
+  "risk": {
+    "global": null,
+    "political": null,
+    "economic": null,
+    "social": null,
+    "fiscal": null
+  },
+  "sources": [
+    {
+      "category": "Macroeconomy",
+      "label": "World Bank",
+      "referenceLabel": "World Development Indicators",
+      "url": "https://api.worldbank.org/v2/sources/2",
+      "updatedAt": "2024-12-31",
+      "fields": [
+        "gdp",
+        "gdpPerCapita",
+        "growth",
+        "inflation",
+        "population"
+      ]
+    },
+    {
+      "category": "Country metadata",
+      "label": "World Bank",
+      "referenceLabel": "Country API metadata",
+      "url": "https://api.worldbank.org/v2/country",
+      "fields": [
+        "capital",
+        "incomeGroup",
+        "region"
+      ]
+    },
+    {
+      "category": "Country metadata",
+      "label": "World Bank",
+      "referenceLabel": "WITS country metadata",
+      "url": "https://wits.worldbank.org/CountryProfile/Metadata/en/Country/All",
+      "fields": [
+        "currency"
+      ]
+    }
+  ],
+  "news": [],
+  "capital": "Victoria",
   "risk_global": 3,
   "risk_barometer": {
     "geopolitics": 3,
@@ -10,20 +70,6 @@
     "terrorism": 4,
     "health_disasters": 3,
     "transport": 4
-  },
-  "key_data": {
-    "capital": "Victoria",
-    "population": "121,354",
-    "political_system": "National institutional system of Seychelles",
-    "head_of_state": "Current head of state of Seychelles",
-    "gdp": "$2,167,239,562",
-    "gdp_per_capita": "$17,859",
-    "growth": "2.9%",
-    "inflation": "0.3%",
-    "public_debt": "174.7%",
-    "unemployment": "Data unavailable",
-    "hdi": "0.61",
-    "corruption_index": "68"
   },
   "analysis": {
     "security": "Profil de risque élevé pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
@@ -35,88 +81,6 @@
     "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
     "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
     "regional_analysis": "African exposure is driven by uneven state capacity, security fragmentation in selected corridors, commodity dependency, and infrastructure stress.",
-    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
-  },
-  "intelligence_indicators": {
-    "political_stability": {
-      "value": 80,
-      "display": "80/100",
-      "source": "Freedom House",
-      "year": "2025"
-    },
-    "conflict_risk": {
-      "value": 3,
-      "display": "3/5",
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "terrorism_risk": {
-      "value": 4,
-      "display": "4/5",
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "military_expenditure": {
-      "value": null,
-      "display": "",
-      "source": "",
-      "year": ""
-    }
-  },
-  "data_sources": {
-    "gdp": {
-      "source": "World Bank",
-      "year": "2024"
-    },
-    "gdp_per_capita": {
-      "source": "World Bank",
-      "year": "2024"
-    },
-    "growth": {
-      "source": "IMF",
-      "year": "2024"
-    },
-    "inflation": {
-      "source": "IMF",
-      "year": "2024"
-    },
-    "unemployment": {
-      "source": "",
-      "year": ""
-    },
-    "hdi": {
-      "source": "",
-      "year": ""
-    },
-    "corruption_index": {
-      "source": "Transparency International CPI",
-      "year": "2025"
-    },
-    "political_stability": {
-      "source": "Freedom House",
-      "year": "2025"
-    },
-    "conflict_risk": {
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "terrorism_risk": {
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "military_expenditure": {
-      "source": "",
-      "year": ""
-    },
-    "population": {
-      "source": "World Bank",
-      "year": "2024"
-    }
-  },
-  "risk_breakdown": {
-    "political": null,
-    "economic": null,
-    "social": null,
-    "fiscal": null
+    "summary": "Seychelles shows solid economic momentum with GDP growth at 3.5%. Inflation remains contained at 0.3%. Unemployment stands at 0.0%. Overall signals for the short-term outlook are mixed."
   }
 }

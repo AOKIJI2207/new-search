@@ -1,139 +1,116 @@
 [
   {
-    "date": "2026-03-04",
-    "title": "Red Sea disruption persists across key trade lanes",
+    "title": "For Somalia, Building Climate Resilience Is Key to Unlocking Long-Term Growth and Jobs",
+    "publisher": "World Bank",
+    "publishedAt": "2026-03-05",
+    "url": "https://www.worldbank.org/en/news/press-release/2026/03/05/for-somalia-building-climate-resilience-is-key-to-unlocking-long-term-growth-and-jobs",
+    "summary": "A new World Bank report argues that climate resilience investments could materially improve Somalia’s jobs outlook and reduce projected economic losses.",
     "countries": [
-      "Egypt",
-      "Saudi Arabia",
-      "Yemen"
+      "Somalia"
     ],
-    "region": "Asie",
-    "risk_category": "transport",
-    "summary": "Commercial traffic remains under pressure from maritime security incidents and rerouting costs."
+    "countrySlugs": [
+      "somalia"
+    ],
+    "region": "Afrique"
   },
   {
-    "date": "2026-02-18",
-    "title": "Sudan conflict keeps regional displacement pressure elevated",
-    "countries": [
-      "Sudan",
-      "South Sudan",
-      "Egypt",
-      "Chad"
-    ],
-    "region": "Afrique",
-    "risk_category": "security",
-    "summary": "Cross-border humanitarian movements continue to affect security and logistical planning."
-  },
-  {
-    "date": "2026-01-29",
-    "title": "Taiwan Strait tensions trigger renewed contingency planning",
-    "countries": [
-      "China"
-    ],
-    "region": "Asie",
-    "risk_category": "geopolitics",
-    "summary": "Military signaling and supply-chain exposure remain central concerns for regional operators."
-  },
-  {
-    "date": "2025-12-11",
-    "title": "Sahel security environment remains highly fragmented",
-    "countries": [
-      "Mali",
-      "Burkina Faso",
-      "Niger"
-    ],
-    "region": "Afrique",
-    "risk_category": "terrorism",
-    "summary": "Insurgent activity and weak state control continue to reshape access and operating conditions."
-  },
-  {
-    "date": "2025-11-07",
-    "title": "Haiti crisis intensifies international stabilization debate",
+    "title": "US extends ban on commercial flights to Haiti's capital due to gang violence",
+    "publisher": "AP News",
+    "publishedAt": "2026-03-04",
+    "url": "https://apnews.com/article/0f4d06828861de8509e53b2d2e42d3ed",
+    "summary": "AP reported that the FAA extended restrictions on flights to Port-au-Prince because of persistent security threats and gang violence.",
     "countries": [
       "Haiti"
     ],
-    "region": "Amérique du Nord",
-    "risk_category": "crime",
-    "summary": "Gang violence and governance paralysis keep the country under sustained crisis monitoring."
+    "countrySlugs": [
+      "haiti"
+    ],
+    "region": "Amérique du Nord"
   },
   {
-    "date": "2025-10-16",
-    "title": "Horn of Africa drought stress compounds socio-economic fragility",
+    "title": "WHO Yemen: WHO strengthens trauma and nutrition care in Yemen’s high-risk districts with support from ECHO",
+    "publisher": "United Nations",
+    "publishedAt": "2025-11-06",
+    "url": "https://yemen.un.org/en/305072-who-yemen-who-strengthens-trauma-and-nutrition-care-yemen%E2%80%99s-high-risk-districts-support-echo",
+    "summary": "WHO scaled trauma and nutrition services in high-risk districts as conflict and air strikes continued to strain Yemen’s health system.",
     "countries": [
-      "Ethiopia",
-      "Somalia",
-      "Kenya"
+      "Yemen"
     ],
-    "region": "Afrique",
-    "risk_category": "health_disasters",
-    "summary": "Climate stress continues to interact with food security and mobility risks."
+    "countrySlugs": [
+      "yemen"
+    ],
+    "region": "Asie"
   },
   {
-    "date": "2025-09-02",
-    "title": "South China Sea incidents increase pressure on regional navies",
+    "title": "Multi-Agency Durable Solutions Initiative Launched for Sudan’s Displaced Communities",
+    "publisher": "United Nations",
+    "publishedAt": "2025-08-25",
+    "url": "https://sudan.un.org/en/300426-multi-agency-durable-solutions-initiative-launched-sudan%E2%80%99s-displaced-communities",
+    "summary": "UN agencies and partners launched a new initiative aimed at linking urgent support with longer-term recovery for displaced communities in Sudan.",
     "countries": [
-      "Philippines",
-      "Vietnam",
-      "China"
+      "South Sudan",
+      "Sudan"
     ],
-    "region": "Asie",
-    "risk_category": "geopolitics",
-    "summary": "Repeated incidents reinforce military alert postures and energy corridor sensitivities."
+    "countrySlugs": [
+      "south-sudan",
+      "sudan"
+    ],
+    "region": "Afrique"
   },
   {
-    "date": "2025-08-21",
-    "title": "Ukraine front line volatility keeps Europe on elevated alert",
+    "title": "IMF Executive Board Approves 48-month US$20 billion Extended Arrangement for Argentina",
+    "publisher": "IMF",
+    "publishedAt": "2025-04-12",
+    "url": "https://www.imf.org/en/News/Articles/2025/04/12/pr25101-argentina-imf-executive-board-approves-48-month-usd20-billion-extended-arrangement",
+    "summary": "The IMF approved a new Extended Fund Facility for Argentina, setting out macroeconomic policy priorities and disbursement terms.",
     "countries": [
-      "Ukraine",
-      "Russia",
-      "Poland"
+      "Argentina"
     ],
-    "region": "Europe",
-    "risk_category": "security",
-    "summary": "Missile threats, logistics risks, and alliance planning remain dominant regional drivers."
+    "countrySlugs": [
+      "argentina"
+    ],
+    "region": "Amérique du Sud"
   },
   {
-    "date": "2025-06-13",
-    "title": "Venezuela election tensions deepen regional diplomatic strain",
+    "title": "World Bank Announces New Strategy for Haiti",
+    "publisher": "World Bank",
+    "publishedAt": "2025-03-04",
+    "url": "https://www.worldbank.org/en/news/press-release/2025/03/04/world-bank-announces-new-strategy-for-haiti",
+    "summary": "The World Bank endorsed a new 2025-2029 strategic partnership for Haiti focused on resilience, governance, and employment.",
     "countries": [
-      "Venezuela",
-      "Colombia",
-      "Brazil"
+      "Haiti"
     ],
-    "region": "Amérique du Sud",
-    "risk_category": "politics",
-    "summary": "Political polarization and migration spillovers continue to shape cross-border risk monitoring."
+    "countrySlugs": [
+      "haiti"
+    ],
+    "region": "Amérique du Nord"
   },
   {
-    "date": "2024-11-18",
-    "title": "Russia-Ukraine escalation reshapes European security planning",
+    "title": "Updated Ukraine Recovery and Reconstruction Needs Assessment Released",
+    "publisher": "World Bank",
+    "publishedAt": "2025-02-25",
+    "url": "https://www.worldbank.org/en/news/press-release/2025/02/25/updated-ukraine-recovery-and-reconstruction-needs-assessment-released",
+    "summary": "The World Bank, the European Commission, the United Nations, and the Government of Ukraine updated the country’s recovery and reconstruction needs estimate.",
     "countries": [
-      "Ukraine",
-      "Russia"
+      "Ukraine"
     ],
-    "region": "Europe",
-    "risk_category": "geopolitics",
-    "summary": "Escalatory signaling and allied support decisions remain decisive for continental risk posture."
+    "countrySlugs": [
+      "ukraine"
+    ],
+    "region": "Europe"
   },
   {
-    "date": "2023-04-20",
-    "title": "Sudan civil war redraws humanitarian and security priorities",
+    "title": "As the crisis in Yemen deepens, aid agencies appeal for $2.5 billion for the humanitarian response in 2025",
+    "publisher": "United Nations",
+    "publishedAt": "2025-01-15",
+    "url": "https://yemen.un.org/en/287503-crisis-yemen-deepens-aid-agencies-appeal-25-billion-humanitarian-response-2025",
+    "summary": "The United Nations launched the 2025 Yemen Humanitarian Needs and Response Plan amid continued economic decline and food insecurity.",
     "countries": [
-      "Sudan",
-      "South Sudan"
+      "Yemen"
     ],
-    "region": "Afrique",
-    "risk_category": "security",
-    "summary": "Urban fighting and humanitarian disruption created lasting instability across the region."
-  },
-  {
-    "date": "2022-08-03",
-    "title": "Taiwan tensions reframe Indo-Pacific deterrence posture",
-    "countries": [
-      "China"
+    "countrySlugs": [
+      "yemen"
     ],
-    "region": "Asie",
-    "risk_category": "geopolitics",
-    "summary": "Strategic rivalry and military signaling triggered a durable step-up in regional contingency planning."
+    "region": "Asie"
   }
 ]

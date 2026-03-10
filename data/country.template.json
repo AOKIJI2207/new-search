@@ -1,6 +1,30 @@
 {
+  "code": "",
+  "slug": "",
   "name": "",
   "continent": "",
+  "region": null,
+  "incomeGroup": null,
+  "currency": null,
+  "lastUpdated": null,
+  "metrics": {
+    "population": null,
+    "gdp": null,
+    "gdpPerCapita": null,
+    "growth": null,
+    "inflation": null,
+    "unemployment": null,
+    "hdi": null
+  },
+  "risk": {
+    "global": null,
+    "political": null,
+    "economic": null,
+    "social": null,
+    "fiscal": null
+  },
+  "sources": [],
+  "news": [],
   "risk_global": 1,
   "risk_barometer": {
     "geopolitics": 1,
@@ -10,66 +34,6 @@
     "terrorism": 1,
     "health_disasters": 1,
     "transport": 1
-  },
-  "key_data": {
-    "capital": "",
-    "population": "",
-    "political_system": "",
-    "head_of_state": "",
-    "gdp": "",
-    "gdp_per_capita": "",
-    "growth": "",
-    "inflation": "",
-    "public_debt": "",
-    "unemployment": "",
-    "hdi": "",
-    "corruption_index": ""
-  },
-  "intelligence_indicators": {
-    "political_stability": {
-      "value": null,
-      "display": "",
-      "source": "",
-      "year": ""
-    },
-    "conflict_risk": {
-      "value": null,
-      "display": "",
-      "source": "",
-      "year": ""
-    },
-    "terrorism_risk": {
-      "value": null,
-      "display": "",
-      "source": "",
-      "year": ""
-    },
-    "military_expenditure": {
-      "value": null,
-      "display": "",
-      "source": "",
-      "year": ""
-    }
-  },
-  "risk_breakdown": {
-    "political": null,
-    "economic": null,
-    "social": null,
-    "fiscal": null
-  },
-  "data_sources": {
-    "population": { "source": "", "year": "" },
-    "gdp": { "source": "", "year": "" },
-    "gdp_per_capita": { "source": "", "year": "" },
-    "growth": { "source": "", "year": "" },
-    "inflation": { "source": "", "year": "" },
-    "unemployment": { "source": "", "year": "" },
-    "hdi": { "source": "", "year": "" },
-    "corruption_index": { "source": "", "year": "" },
-    "political_stability": { "source": "", "year": "" },
-    "conflict_risk": { "source": "", "year": "" },
-    "terrorism_risk": { "source": "", "year": "" },
-    "military_expenditure": { "source": "", "year": "" }
   },
   "analysis": {
     "security": "",

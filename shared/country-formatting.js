@@ -1,17 +1,17 @@
+import { DATA_UNAVAILABLE, parseCountryMetric } from "./country-profile.js";
+
 function parseNumericValue(value) {
   if (typeof value === "number" && Number.isFinite(value)) {
     return value;
   }
 
-  const cleaned = String(value ?? "").replace(/[^0-9.-]/g, "");
-  const parsed = Number(cleaned);
-  return Number.isFinite(parsed) ? parsed : null;
+  return parseCountryMetric(value);
 }
 
 export function formatCurrencyCompact(value) {
   const amount = parseNumericValue(value);
   if (amount === null) {
-    return "n/a";
+    return DATA_UNAVAILABLE;
   }
 
   const absolute = Math.abs(amount);
@@ -28,10 +28,10 @@ export function formatCurrencyCompact(value) {
   return `$${Math.round(amount).toLocaleString("en-US")}`;
 }
 
-export function formatCurrency(value, { maximumFractionDigits = 0 } = {}) {
+export function formatCurrencyStandard(value, { maximumFractionDigits = 0 } = {}) {
   const amount = parseNumericValue(value);
   if (amount === null) {
-    return "n/a";
+    return DATA_UNAVAILABLE;
   }
 
   return `$${amount.toLocaleString("en-US", {
@@ -43,7 +43,7 @@ export function formatCurrency(value, { maximumFractionDigits = 0 } = {}) {
 export function formatPercent(value, digits = 1) {
   const amount = parseNumericValue(value);
   if (amount === null) {
-    return "n/a";
+    return DATA_UNAVAILABLE;
   }
 
   return `${amount.toFixed(digits)}%`;
@@ -52,7 +52,7 @@ export function formatPercent(value, digits = 1) {
 export function formatDecimal(value, digits = 2) {
   const amount = parseNumericValue(value);
   if (amount === null) {
-    return "n/a";
+    return DATA_UNAVAILABLE;
   }
 
   return amount.toFixed(digits);
@@ -61,7 +61,7 @@ export function formatDecimal(value, digits = 2) {
 export function formatScore(value, max = 5) {
   const amount = parseNumericValue(value);
   if (amount === null) {
-    return "n/a";
+    return DATA_UNAVAILABLE;
   }
 
   return `${amount}/${max}`;
@@ -114,14 +114,35 @@ function inflationLabel(value) {
 }
 
 export function generateCountrySummary(profile) {
-  if (!profile?.name || !profile?.key_data) {
-    return "Short-term economic signals are currently unavailable.";
+  const metrics = profile?.metrics || profile?.key_data;
+  if (!profile?.name || !metrics) {
+    return "Reliable macroeconomic indicators are currently unavailable.";
   }
 
-  const growth = parseNumericValue(profile.key_data.growth);
-  const inflation = parseNumericValue(profile.key_data.inflation);
-  const unemployment = parseNumericValue(profile.key_data.unemployment);
-  const risk = riskScoreLabel(profile.risk_global);
+  const growth = parseNumericValue(metrics.growth);
+  const inflation = parseNumericValue(metrics.inflation);
+  const unemployment = parseNumericValue(metrics.unemployment);
+  const risk = riskScoreLabel(profile?.risk?.global ?? profile?.risk_global);
+
+  if ([growth, inflation, unemployment].every((value) => value === null)) {
+    return `${profile.name} has no fully sourced short-term macro snapshot available at the moment.`;
+  }
+
+  if ([growth, inflation, unemployment].some((value) => value === null)) {
+    const partial = [];
+    if (growth !== null) {
+      partial.push(`GDP growth is ${formatPercent(growth)}`);
+    }
+    if (inflation !== null) {
+      partial.push(`inflation is ${formatPercent(inflation)}`);
+    }
+    if (unemployment !== null) {
+      partial.push(`unemployment is ${formatPercent(unemployment)}`);
+    }
+    return `${profile.name} has a partial sourced macro snapshot: ${partial.join(", ")}.`;
+  }
 
   return `${profile.name} shows ${growthLabel(growth)} economic momentum with GDP growth at ${formatPercent(growth)}. Inflation remains ${inflationLabel(inflation)} at ${formatPercent(inflation)}. Unemployment stands at ${formatPercent(unemployment)}. Overall signals for the short-term outlook are ${risk}.`;
 }
+
+export const formatCurrency = formatCurrencyStandard;

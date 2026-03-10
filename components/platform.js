@@ -1,4 +1,4 @@
-import { renderBarChart, renderComparisonChart, renderRadarChart } from "./charts.js";
+import { renderBarChart, renderComparisonChart } from "./charts.js";
 import {
   renderCountryDetailLayout,
   renderCountryHeatmap,
@@ -72,14 +72,6 @@ function selectCountry(slug) {
 
 function selectedCountrySummary() {
   return state.dashboard.countries.find((country) => country.slug === state.selectedSlug) || null;
-}
-
-function countryTimeline(countryName, continent) {
-  return state.timeline.filter((event) => event.countries.includes(countryName) || event.region === continent);
-}
-
-function countryAlerts(countryName) {
-  return state.alerts.filter((alert) => alert.country === countryName).slice(0, 4);
 }
 
 function bindHomeInteractions() {
@@ -159,9 +151,9 @@ function renderDashboardPage() {
     .filter(Boolean)
     .map((country) => ({
       ...country,
-      gdp_per_capita: country.key_data.gdp_per_capita,
-      hdi: country.key_data.hdi,
-      unemployment: country.key_data.unemployment
+      gdp_per_capita: country.metrics.gdpPerCapita,
+      hdi: country.metrics.hdi,
+      unemployment: country.metrics.unemployment
     }));
 
   document.querySelector("#app").innerHTML = renderDashboardLayout({
@@ -192,15 +184,11 @@ async function renderCountryPage() {
   const slug = window.location.pathname.split("/").filter(Boolean).pop();
   const profile = await fetchJson(`/api/country/${slug}`);
   const summary = state.dashboard.countries.find((country) => country.slug === slug);
-  const timeline = countryTimeline(profile.name, profile.continent);
-  const alerts = countryAlerts(profile.name);
 
   document.querySelector("#app").innerHTML = renderCountryDetailLayout({
     profile,
     summary,
-    radarChart: renderRadarChart(profile.risk_barometer),
-    timeline: renderTimeline(timeline),
-    alerts: renderAlertsPanel(alerts),
+    news: profile.news || [],
     comparePeers: state.dashboard.countries
       .filter((country) => country.continent === profile.continent && country.slug !== slug)
       .slice(0, 3)

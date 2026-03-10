@@ -1,6 +1,66 @@
 {
+  "code": "DMA",
+  "slug": "dominica",
   "name": "Dominica",
   "continent": "Amérique du Nord",
+  "region": "Latin America & Caribbean ",
+  "incomeGroup": "Upper middle income",
+  "currency": "East Caribbean dollar",
+  "lastUpdated": "2024-12-31",
+  "metrics": {
+    "population": 66205,
+    "gdp": 688881481.481481,
+    "gdpPerCapita": 10405.2787777582,
+    "growth": 2.052738472526,
+    "inflation": 2.56921890367726,
+    "unemployment": null,
+    "hdi": null
+  },
+  "risk": {
+    "global": null,
+    "political": null,
+    "economic": null,
+    "social": null,
+    "fiscal": null
+  },
+  "sources": [
+    {
+      "category": "Macroeconomy",
+      "label": "World Bank",
+      "referenceLabel": "World Development Indicators",
+      "url": "https://api.worldbank.org/v2/sources/2",
+      "updatedAt": "2024-12-31",
+      "fields": [
+        "gdp",
+        "gdpPerCapita",
+        "growth",
+        "inflation",
+        "population"
+      ]
+    },
+    {
+      "category": "Country metadata",
+      "label": "World Bank",
+      "referenceLabel": "Country API metadata",
+      "url": "https://api.worldbank.org/v2/country",
+      "fields": [
+        "capital",
+        "incomeGroup",
+        "region"
+      ]
+    },
+    {
+      "category": "Country metadata",
+      "label": "World Bank",
+      "referenceLabel": "WITS country metadata",
+      "url": "https://wits.worldbank.org/CountryProfile/Metadata/en/Country/All",
+      "fields": [
+        "currency"
+      ]
+    }
+  ],
+  "news": [],
+  "capital": "Roseau",
   "risk_global": 3,
   "risk_barometer": {
     "geopolitics": 3,
@@ -10,20 +70,6 @@
     "terrorism": 2,
     "health_disasters": 4,
     "transport": 2
-  },
-  "key_data": {
-    "capital": "Roseau",
-    "population": "66,205",
-    "political_system": "National institutional system of Dominica",
-    "head_of_state": "Current head of state of Dominica",
-    "gdp": "$688,881,481",
-    "gdp_per_capita": "$10,405",
-    "growth": "3.5%",
-    "inflation": "3.1%",
-    "public_debt": "Data unavailable",
-    "unemployment": "Data unavailable",
-    "hdi": "0.59",
-    "corruption_index": "60"
   },
   "analysis": {
     "security": "Profil de risque modéré pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
@@ -35,88 +81,6 @@
     "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
     "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
     "regional_analysis": "North American exposure reflects cross-border logistics, hurricane and seismic risk pockets, organized crime routes, and US policy spillovers.",
-    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
-  },
-  "intelligence_indicators": {
-    "political_stability": {
-      "value": 92,
-      "display": "92/100",
-      "source": "Freedom House",
-      "year": "2025"
-    },
-    "conflict_risk": {
-      "value": 3,
-      "display": "3/5",
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "terrorism_risk": {
-      "value": 2,
-      "display": "2/5",
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "military_expenditure": {
-      "value": null,
-      "display": "",
-      "source": "",
-      "year": ""
-    }
-  },
-  "data_sources": {
-    "gdp": {
-      "source": "World Bank",
-      "year": "2024"
-    },
-    "gdp_per_capita": {
-      "source": "World Bank",
-      "year": "2024"
-    },
-    "growth": {
-      "source": "IMF",
-      "year": "2024"
-    },
-    "inflation": {
-      "source": "IMF",
-      "year": "2024"
-    },
-    "unemployment": {
-      "source": "",
-      "year": ""
-    },
-    "hdi": {
-      "source": "",
-      "year": ""
-    },
-    "corruption_index": {
-      "source": "Transparency International CPI",
-      "year": "2025"
-    },
-    "political_stability": {
-      "source": "Freedom House",
-      "year": "2025"
-    },
-    "conflict_risk": {
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "terrorism_risk": {
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "military_expenditure": {
-      "source": "",
-      "year": ""
-    },
-    "population": {
-      "source": "World Bank",
-      "year": "2024"
-    }
-  },
-  "risk_breakdown": {
-    "political": null,
-    "economic": null,
-    "social": null,
-    "fiscal": null
+    "summary": "Dominica shows solid economic momentum with GDP growth at 2.1%. Inflation remains moderate at 2.6%. Unemployment stands at 0.0%. Overall signals for the short-term outlook are mixed."
   }
 }

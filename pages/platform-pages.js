@@ -1,60 +1,82 @@
 import {
-  formatCurrency,
   formatCurrencyCompact,
+  formatCurrencyStandard,
   formatDecimal,
-  formatPercent,
-  formatScore,
-  generateCountrySummary
+  formatPercent
 } from "../shared/country-formatting.js";
+import { DATA_UNAVAILABLE } from "../shared/country-profile.js";
 
-const INDICATOR_EXPLANATIONS = {
-  "Global Risk": "Composite score based on political stability, economic volatility, social tensions, and fiscal sustainability.",
-  "Synthetic Index": "Aggregate macroeconomic index combining growth, inflation stability, employment, and fiscal indicators."
-};
-
-function riskBadge(score, color) {
-  return `
-    <span class="risk-badge" style="--badge-color:${color}">
-      Risk ${score}/5
-    </span>
-  `;
-}
-
-function indicatorLabel(label, explanation) {
-  if (!explanation) {
-    return label;
+function formatDate(value) {
+  if (!value) {
+    return DATA_UNAVAILABLE;
   }
 
-  return `
-    <span class="indicator-heading">
-      <span>${label}</span>
-      <span class="info-chip" tabindex="0" aria-label="${label}: ${explanation}" data-tooltip="${explanation}">i</span>
-    </span>
-  `;
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) {
+    return value;
+  }
+
+  return parsed.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric"
+  });
 }
 
-function renderIndicatorCard(label, value, explanation = "") {
+function indicatorValue(value, formatter) {
+  return value === null || value === undefined ? DATA_UNAVAILABLE : formatter(value);
+}
+
+function renderMetricCard(label, value) {
   return `
     <article class="fact-card indicator-card">
-      <h3>${indicatorLabel(label, explanation)}</h3>
+      <h3>${label}</h3>
       <p class="indicator-value">${value}</p>
     </article>
   `;
 }
 
-function renderRiskBreakdown(profile) {
-  const scores = profile.risk_breakdown || {};
-  const items = [
-    ["Political risk", scores.political],
-    ["Economic risk", scores.economic],
-    ["Social risk", scores.social],
-    ["Fiscal risk", scores.fiscal]
-  ];
+function renderNewsList(items, emptyCopy = "No verified article links are currently available.") {
+  if (!items.length) {
+    return `<div class="empty-state small-empty">${emptyCopy}</div>`;
+  }
 
   return `
-    <div class="facts-grid compact">
+    <div class="alerts-list">
       ${items
-        .map(([label, value]) => renderIndicatorCard(label, formatScore(value)))
+        .map(
+          (item) => `
+            <article class="alert-card news-card">
+              <span class="alert-meta">${item.publisher || "Verified source"}${item.publishedAt ? ` • ${formatDate(item.publishedAt)}` : ""}</span>
+              <a class="news-link" href="${item.url}" target="_blank" rel="noopener noreferrer">${item.title}</a>
+              ${item.summary ? `<p>${item.summary}</p>` : ""}
+            </article>
+          `
+        )
+        .join("")}
+    </div>
+  `;
+}
+
+function renderSourcesList(sources) {
+  if (!sources.length) {
+    return `<div class="empty-state small-empty">Source metadata is not available for this country.</div>`;
+  }
+
+  return `
+    <div class="source-list">
+      ${sources
+        .map(
+          (source) => `
+            <article class="fact-card source-card">
+              <span class="source-category">${source.category}</span>
+              <h3><a class="news-link" href="${source.url}" target="_blank" rel="noopener noreferrer">${source.label}</a></h3>
+              <p>${source.referenceLabel}</p>
+              <small>Fields: ${source.fields.join(", ")}</small>
+              <small>Updated: ${formatDate(source.updatedAt)}</small>
+            </article>
+          `
+        )
         .join("")}
     </div>
   `;
@@ -92,7 +114,7 @@ export function renderCountryHeatmap(countries, colors) {
                         type="button"
                         class="atlas-country"
                         data-open-country="${country.slug}"
-                        title="${country.name} • ${country.risk_global}/5 • ${country.summary}"
+                        title="${country.name} • ${country.synthetic_index.toFixed(2)} • ${country.summary}"
                         style="--risk:${colors[country.risk_global]}"
                       >
                         <span>${country.name}</span>
@@ -118,12 +140,12 @@ export function renderCountryPreview(country, color) {
           <h2>${country.name}</h2>
           <p>${country.summary}</p>
         </div>
-        ${riskBadge(country.risk_global, color)}
+        <span class="risk-badge" style="--badge-color:${color}">Index ${country.synthetic_index.toFixed(2)}</span>
       </div>
       <div class="mini-metrics">
-        <div><span>${indicatorLabel("Synthetic index", INDICATOR_EXPLANATIONS["Synthetic Index"])}</span><strong>${country.synthetic_index.toFixed(2)}</strong></div>
-        <div><span>GDP per capita</span><strong>${country.key_data.gdp_per_capita_display || "n/a"}</strong></div>
-        <div><span>HDI</span><strong>${country.key_data.hdi_display || "n/a"}</strong></div>
+        <div><span>GDP per capita</span><strong>${indicatorValue(country.metrics.gdpPerCapita, formatCurrencyStandard)}</strong></div>
+        <div><span>HDI</span><strong>${indicatorValue(country.metrics.hdi, (value) => formatDecimal(value, 3))}</strong></div>
+        <div><span>Last updated</span><strong>${formatDate(country.lastUpdated)}</strong></div>
       </div>
       <button class="cta-button" type="button" data-open-country="${country.slug}">Open full intelligence page</button>
     </article>
@@ -131,25 +153,12 @@ export function renderCountryPreview(country, color) {
 }
 
 export function renderAlertsPanel(alerts) {
-  return `
-    <div class="alerts-list">
-      ${alerts
-        .map(
-          (alert) => `
-            <article class="alert-card">
-              <span class="alert-meta">${alert.country} • ${alert.category} • ${new Date(alert.timestamp).toLocaleString("en-GB")}</span>
-              <strong>${alert.headline}</strong>
-            </article>
-          `
-        )
-        .join("")}
-    </div>
-  `;
+  return renderNewsList(alerts, "No verified coverage is currently available.");
 }
 
 export function renderTimeline(events) {
   if (!events.length) {
-    return `<div class="empty-state small-empty">No curated events available for this filter.</div>`;
+    return `<div class="empty-state small-empty">No verified timeline entries are currently available.</div>`;
   }
 
   return `
@@ -158,10 +167,10 @@ export function renderTimeline(events) {
         .map(
           (event) => `
             <article class="timeline-item">
-              <span>${new Date(event.date).toLocaleDateString("en-GB")}</span>
-              <strong>${event.title}</strong>
-              <p>${event.summary}</p>
-              <small>${event.region} • ${event.risk_category}</small>
+              <span>${formatDate(event.publishedAt)}</span>
+              <a class="news-link" href="${event.url}" target="_blank" rel="noopener noreferrer">${event.title}</a>
+              ${event.summary ? `<p>${event.summary}</p>` : ""}
+              <small>${event.publisher || "Verified source"}${event.countries?.length ? ` • ${event.countries.join(", ")}` : ""}</small>
             </article>
           `
         )
@@ -176,10 +185,9 @@ export function renderHomeShell({ totalCountries, activeContinent, filters, coun
       <section class="hero intelligence-hero">
         <article class="hero-card">
           <span class="eyebrow">AGORAFLUX Intelligence</span>
-          <h1>Interactive geopolitical intelligence dashboard.</h1>
+          <h1>Verified country intelligence, sourced end to end.</h1>
           <p class="hero-copy">
-            Explore a global risk heatmap, open dedicated country intelligence pages, and monitor the
-            latest curated alerts without changing the underlying API architecture.
+            Explore country profiles built from documented macroeconomic sources and verified article links.
           </p>
           <div class="hero-meta">
             <div class="hero-stat"><strong>${totalCountries}</strong><span>UN countries</span></div>
@@ -191,7 +199,7 @@ export function renderHomeShell({ totalCountries, activeContinent, filters, coun
           </div>
         </article>
         <aside class="panel alerts-panel">
-          <h2>Recent geopolitical alerts</h2>
+          <h2>Verified coverage</h2>
           ${alerts}
         </aside>
       </section>
@@ -221,7 +229,7 @@ export function renderHomeShell({ totalCountries, activeContinent, filters, coun
                 <span class="eyebrow">Global risk heatmap</span>
                 <h2>World risk atlas</h2>
               </div>
-              <p>Hover any country for its global score and click to open the full intelligence page.</p>
+              <p>Open any country to access its sourced macroeconomic profile and verified links.</p>
             </div>
             ${heatmap}
           </article>
@@ -238,19 +246,19 @@ export function renderDashboardLayout({ totalCountries, topRiskChart, topStableC
       <section class="hero intelligence-hero">
         <article class="hero-card">
           <span class="eyebrow">Global dashboard</span>
-          <h1>Planet-scale geopolitical risk analytics.</h1>
-          <p class="hero-copy">Benchmark risk exposure, compare countries, and monitor structural hotspots with static analytics built from the live dataset.</p>
+          <h1>Country profiles backed by documented data and verified coverage.</h1>
+          <p class="hero-copy">Benchmark country exposure, compare sourced macro indicators, and review recent verified coverage.</p>
           <div class="hero-meta">
             <div class="hero-stat"><strong>${totalCountries}</strong><span>Countries indexed</span></div>
-            <div class="hero-stat"><strong>Top 10</strong><span>High risk and stable lists</span></div>
-            <div class="hero-stat"><strong>Static</strong><span>Dashboard data delivery</span></div>
+            <div class="hero-stat"><strong>Static</strong><span>Versioned country data</span></div>
+            <div class="hero-stat"><strong>Verified</strong><span>Clickable source links</span></div>
           </div>
           <div class="hero-actions">
             <a class="cta-button" href="/">Back to atlas</a>
           </div>
         </article>
         <aside class="panel alerts-panel">
-          <h2>Alert panel</h2>
+          <h2>Latest verified coverage</h2>
           ${alerts}
         </aside>
       </section>
@@ -303,7 +311,7 @@ export function renderDashboardLayout({ totalCountries, topRiskChart, topStableC
         </article>
 
         <article class="panel">
-          <div class="panel-heading"><h2>Global crisis timeline</h2></div>
+          <div class="panel-heading"><h2>Coverage timeline</h2></div>
           ${timeline}
         </article>
       </section>
@@ -312,7 +320,7 @@ export function renderDashboardLayout({ totalCountries, topRiskChart, topStableC
         <div class="panel-heading">
           <div>
             <span class="eyebrow">Country comparison tool</span>
-            <h2>Compare multiple countries</h2>
+            <h2>Compare sourced macro indicators</h2>
           </div>
         </div>
         <select id="compareCountries" class="compare-select" multiple size="8">
@@ -324,27 +332,47 @@ export function renderDashboardLayout({ totalCountries, topRiskChart, topStableC
   `;
 }
 
-export function renderCountryDetailLayout({ profile, summary, radarChart, timeline, alerts, comparePeers }) {
-  const countrySummary = generateCountrySummary(profile);
+export function renderCountryDetailLayout({ profile, summary, news, comparePeers }) {
   const economicCards = [
-    ["GDP", formatCurrencyCompact(profile.key_data.gdp)],
-    ["GDP per capita", formatCurrency(profile.key_data.gdp_per_capita)],
-    ["Growth", formatPercent(profile.key_data.growth)],
-    ["Inflation", formatPercent(profile.key_data.inflation)],
-    ["Unemployment", formatPercent(profile.key_data.unemployment)]
+    ["GDP", indicatorValue(profile.metrics.gdp, formatCurrencyCompact)],
+    ["GDP per capita", indicatorValue(profile.metrics.gdpPerCapita, formatCurrencyStandard)],
+    ["Growth", indicatorValue(profile.metrics.growth, formatPercent)],
+    ["Inflation", indicatorValue(profile.metrics.inflation, formatPercent)],
+    ["Unemployment", indicatorValue(profile.metrics.unemployment, formatPercent)]
   ];
+
+  const metadataCards = [
+    ["Population", indicatorValue(profile.metrics.population, (value) => Math.round(value).toLocaleString("en-US"))],
+    ["Currency", profile.currency || DATA_UNAVAILABLE],
+    ["Income group", profile.incomeGroup || DATA_UNAVAILABLE],
+    ["Region", profile.region || DATA_UNAVAILABLE]
+  ];
+  const heroStats = [
+    ["GDP growth", indicatorValue(profile.metrics.growth, formatPercent)],
+    ["Inflation", indicatorValue(profile.metrics.inflation, formatPercent)],
+    ["Unemployment", indicatorValue(profile.metrics.unemployment, formatPercent)],
+    ["Last updated", formatDate(profile.lastUpdated)]
+  ];
+
+  if (profile.metrics.hdi !== null && profile.metrics.hdi !== undefined) {
+    heroStats.splice(3, 0, ["HDI", formatDecimal(profile.metrics.hdi, 3)]);
+  }
 
   return `
     <main class="app-shell intelligence-shell">
       <section class="hero intelligence-hero">
         <article class="hero-card">
-          <span class="eyebrow">${profile.continent}</span>
+          <span class="eyebrow">${profile.continent}${profile.region ? ` • ${profile.region}` : ""}</span>
           <h1>${profile.name}</h1>
-          <p class="hero-copy">${countrySummary}</p>
+          <p class="hero-copy">${profile.analysis?.summary || summary?.summary || ""}</p>
           <div class="hero-meta">
-            <div class="hero-stat"><strong>${formatScore(profile.risk_global)}</strong><span>${indicatorLabel("Global Risk", INDICATOR_EXPLANATIONS["Global Risk"])}</span></div>
-            <div class="hero-stat"><strong>${summary?.synthetic_index?.toFixed(2) || "n/a"}</strong><span>${indicatorLabel("Synthetic Index", INDICATOR_EXPLANATIONS["Synthetic Index"])}</span></div>
-            <div class="hero-stat"><strong>${formatDecimal(profile.key_data.hdi)}</strong><span>HDI</span></div>
+            ${heroStats
+              .map(
+                ([label, value]) => `
+                  <div class="hero-stat"><strong>${value}</strong><span>${label}</span></div>
+                `
+              )
+              .join("")}
           </div>
           <div class="hero-actions">
             <a class="cta-button" href="/dashboard">Open global dashboard</a>
@@ -352,8 +380,10 @@ export function renderCountryDetailLayout({ profile, summary, radarChart, timeli
           </div>
         </article>
         <aside class="panel">
-          <div class="panel-heading"><h2>Risk radar</h2></div>
-          ${radarChart}
+          <div class="panel-heading"><h2>Country snapshot</h2></div>
+          <div class="facts-grid compact">
+            ${metadataCards.map(([label, value]) => renderMetricCard(label, value)).join("")}
+          </div>
         </aside>
       </section>
 
@@ -361,63 +391,36 @@ export function renderCountryDetailLayout({ profile, summary, radarChart, timeli
         <article class="panel">
           <div class="panel-heading"><h2>Economic indicators</h2></div>
           <div class="facts-grid compact">
-            ${economicCards.map(([label, value]) => renderIndicatorCard(label, value)).join("")}
+            ${economicCards.map(([label, value]) => renderMetricCard(label, value)).join("")}
           </div>
         </article>
 
         <article class="panel">
-          <div class="panel-heading"><h2>Risk breakdown</h2></div>
-          ${renderRiskBreakdown(profile)}
+          <div class="panel-heading"><h2>Methodology & sources</h2></div>
+          ${renderSourcesList(profile.sources || [])}
         </article>
       </section>
 
       <section class="analytics-grid secondary-grid">
         <article class="panel">
-          <div class="panel-heading"><h2>Real-time alert panel</h2></div>
-          ${alerts}
+          <div class="panel-heading"><h2>Verified news coverage</h2></div>
+          ${renderNewsList(news)}
         </article>
 
         <article class="panel">
-          <div class="panel-heading"><h2>Geopolitical analysis</h2></div>
-          <div class="analysis-grid">
-            <article class="analysis-card"><h3>Geopolitics</h3><p>${profile.analysis.geopolitics}</p></article>
-            <article class="analysis-card"><h3>Politics</h3><p>${profile.analysis.politics}</p></article>
-            <article class="analysis-card"><h3>Economy</h3><p>${profile.analysis.economy}</p></article>
-            <article class="analysis-card"><h3>Regional analysis</h3><p>${profile.analysis.regional_analysis}</p></article>
+          <div class="panel-heading"><h2>Compare with peers</h2></div>
+          <div class="hotspot-chips">
+            ${comparePeers
+              .map(
+                (country) => `
+                  <button type="button" class="chip soft" data-open-country="${country.slug}">
+                    ${country.name} · ${country.synthetic_index.toFixed(2)}
+                  </button>
+                `
+              )
+              .join("")}
           </div>
         </article>
-      </section>
-
-      <section class="analytics-grid secondary-grid">
-        <article class="panel">
-          <div class="panel-heading"><h2>Security analysis</h2></div>
-          <div class="analysis-grid">
-            <article class="analysis-card"><h3>Security</h3><p>${profile.analysis.security}</p></article>
-            <article class="analysis-card"><h3>Crime</h3><p>${profile.analysis.crime}</p></article>
-            <article class="analysis-card"><h3>Terrorism</h3><p>${profile.analysis.terrorism}</p></article>
-            <article class="analysis-card"><h3>Health & disasters</h3><p>${profile.analysis.health_disasters}</p></article>
-          </div>
-        </article>
-
-        <article class="panel">
-          <div class="panel-heading"><h2>Recent events timeline</h2></div>
-          ${timeline}
-        </article>
-      </section>
-
-      <section class="panel">
-        <div class="panel-heading"><h2>Compare with peers</h2></div>
-        <div class="hotspot-chips">
-          ${comparePeers
-            .map(
-              (country) => `
-                <button type="button" class="chip soft" data-open-country="${country.slug}">
-                  ${country.name} · ${country.synthetic_index.toFixed(2)}
-                </button>
-              `
-            )
-            .join("")}
-        </div>
       </section>
     </main>
   `;

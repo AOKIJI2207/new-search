@@ -6,19 +6,27 @@ import {
   loadCountryProfileBySlug,
   writeCountryProfileBySlug
 } from "../server/country-store.js";
+import {
+  buildCountryLastUpdated,
+  createEmptyCountryProfile,
+  normalizeCountryNews,
+  normalizeCountrySources,
+  validateCountryMetric
+} from "../shared/country-profile.js";
+import { generateCountrySummary } from "../shared/country-formatting.js";
 
 const ROOT = process.cwd();
 const LOGS_DIR = path.join(ROOT, "logs");
 const REPORT_PATH = path.join(LOGS_DIR, "update-country-data-report.json");
-const REQUEST_TIMEOUT_MS = 6000;
+const REQUEST_TIMEOUT_MS = 8000;
 const REFERENCE_DIR = path.join(ROOT, "data", "reference");
 const CURRENT_YEAR = new Date().getUTCFullYear();
-const MAX_CONFIRMED_IMF_YEAR = CURRENT_YEAR - 2;
+const MAX_CONFIRMED_IMF_YEAR = CURRENT_YEAR - 1;
 
 const WORLD_BANK_INDICATORS = {
   population: "SP.POP.TOTL",
   gdp: "NY.GDP.MKTP.CD",
-  gdp_per_capita: "NY.GDP.PCAP.CD",
+  gdpPerCapita: "NY.GDP.PCAP.CD",
   growth: "NY.GDP.MKTP.KD.ZG",
   inflation: "FP.CPI.TOTL.ZG",
   unemployment: "SL.UEM.TOTL.ZS"
@@ -31,42 +39,10 @@ const IMF_SERIES = {
 
 const REFERENCE_FILES = {
   hdi: "undp-hdi.json",
-  corruption_index: "transparency-cpi.json",
-  political_stability: "freedom-house.json",
-  conflict_risk: "acled-conflict-index.json",
-  terrorism_risk: "global-terrorism-index.json",
-  military_expenditure: "sipri-military-expenditure.json",
-  peace_index: "global-peace-index.json"
+  news: "country-news.json"
 };
 
 const REFERENCE_CACHE = new Map();
-let freedomHouseScoresCache = null;
-const TRANSPARENCY_SLUG_OVERRIDES = {
-  "Czechia": "czech-republic",
-  "DR Congo": "democratic-republic-of-the-congo",
-  "Republic of the Congo": "republic-of-the-congo",
-  "Ivory Coast": "cote-divoire",
-  "Türkiye": "turkiye",
-  "Vatican City": "holy-see"
-};
-
-const FREEDOM_HOUSE_NAME_ALIASES = {
-  "cabo verde": "cape verde",
-  "czechia": "czech republic",
-  "dr congo": "congo kinshasa",
-  "ivory coast": "cote d ivoire",
-  "laos": "lao pdr",
-  "micronesia": "micronesia federated states of",
-  "north korea": "korea north",
-  "north macedonia": "macedonia",
-  "palestine": "west bank",
-  "republic of the congo": "congo brazzaville",
-  "south korea": "korea south",
-  "timor-leste": "east timor",
-  "turkiye": "turkey",
-  "united states": "united states of america",
-  "vatican city": "holy see"
-};
 
 function withTimeout(timeoutMs) {
   return AbortSignal.timeout(timeoutMs);
@@ -74,9 +50,7 @@ function withTimeout(timeoutMs) {
 
 async function fetchJson(url) {
   const response = await fetch(url, {
-    headers: {
-      Accept: "application/json"
-    },
+    headers: { Accept: "application/json" },
     signal: withTimeout(REQUEST_TIMEOUT_MS)
   });
 
@@ -87,92 +61,98 @@ async function fetchJson(url) {
   return response.json();
 }
 
+async function fetchText(url) {
+  const response = await fetch(url, {
+    signal: withTimeout(REQUEST_TIMEOUT_MS)
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status} for ${url}`);
+  }
+
+  return response.text();
+}
+
 async function readReferenceDataset(fileName) {
   if (REFERENCE_CACHE.has(fileName)) {
     return REFERENCE_CACHE.get(fileName);
   }
 
-  try {
-    const payload = JSON.parse(await fs.readFile(path.join(REFERENCE_DIR, fileName), "utf-8"));
-    REFERENCE_CACHE.set(fileName, payload);
-    return payload;
-  } catch (_error) {
-    REFERENCE_CACHE.set(fileName, {});
-    return {};
-  }
+  const payload = JSON.parse(await fs.readFile(path.join(REFERENCE_DIR, fileName), "utf-8"));
+  REFERENCE_CACHE.set(fileName, payload);
+  return payload;
 }
 
-async function lookupReference(field, iso3) {
-  const fileName = REFERENCE_FILES[field];
-  if (!fileName || !iso3) return null;
-  const dataset = await readReferenceDataset(fileName);
-  return dataset[iso3] || null;
+function stripTags(value = "") {
+  return String(value).replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim();
 }
 
-function normalizeSlug(value = "") {
-  return value
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "")
-    .replace(/[^a-z0-9\s-]/g, " ")
-    .replace(/\s+/g, "-")
-    .trim();
+function toIsoDate(value = "") {
+  const raw = String(value || "").trim();
+  if (!raw) return "";
+  if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
+  if (/^\d{4}$/.test(raw)) return `${raw}-12-31`;
+  const parsed = new Date(raw);
+  if (Number.isNaN(parsed.getTime())) return "";
+  return parsed.toISOString().slice(0, 10);
 }
 
-function normalizeCountryKey(value = "") {
-  return normalizeSlug(value)
-    .replace(/-/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
+function pickLatestByCountry(records = []) {
+  const latest = new Map();
 
-function ensureSupplementalObjects(profile) {
-  const next = structuredClone(profile);
-  next.intelligence_indicators ||= {};
-  next.risk_breakdown ||= {};
-  next.data_sources ||= {};
+  for (const item of records) {
+    if (!item?.countryiso3code || item.countryiso3code === "WLD") {
+      continue;
+    }
+    if (item.value === null || item.value === undefined || item.value === "") {
+      continue;
+    }
 
-  for (const key of ["political_stability", "conflict_risk", "terrorism_risk", "military_expenditure"]) {
-    next.intelligence_indicators[key] ||= {
-      value: null,
-      display: "",
-      source: "",
-      year: ""
-    };
-  }
-
-  for (const key of ["political", "economic", "social", "fiscal"]) {
-    if (!(key in next.risk_breakdown)) {
-      next.risk_breakdown[key] = null;
+    const iso3 = item.countryiso3code;
+    const year = Number(item.date || 0);
+    const current = latest.get(iso3);
+    if (!current || year > current.year) {
+      latest.set(iso3, {
+        value: Number(item.value),
+        year: String(item.date || "")
+      });
     }
   }
 
-  for (const key of ["population", "gdp", "gdp_per_capita", "growth", "inflation", "unemployment", "hdi", "corruption_index", "political_stability", "conflict_risk", "terrorism_risk", "military_expenditure"]) {
-    next.data_sources[key] ||= {
-      source: "",
-      year: ""
-    };
+  return latest;
+}
+
+async function fetchWorldBankIndicatorMaps() {
+  const entries = await Promise.all(
+    Object.entries(WORLD_BANK_INDICATORS).map(async ([field, indicator]) => {
+      const url = `https://api.worldbank.org/v2/country/all/indicator/${indicator}?format=json&per_page=20000&mrv=5`;
+      const payload = await fetchJson(url);
+      return [field, pickLatestByCountry(payload?.[1] || [])];
+    })
+  );
+
+  return Object.fromEntries(entries);
+}
+
+async function fetchWorldBankCountryMetadataMap() {
+  const payload = await fetchJson("https://api.worldbank.org/v2/country?format=json&per_page=400");
+  const countries = payload?.[1] || [];
+  const map = new Map();
+
+  for (const country of countries) {
+    if (!country?.id || !country?.iso2Code) {
+      continue;
+    }
+
+    map.set(country.id, {
+      iso2: country.iso2Code,
+      capital: country.capitalCity || null,
+      region: country.region?.value || null,
+      incomeGroup: country.incomeLevel?.value || null
+    });
   }
 
-  return next;
-}
-
-function pickLatestValue(records = []) {
-  if (!Array.isArray(records)) return null;
-  const match = records.find((item) => item && item.value !== null && item.value !== undefined);
-  if (!match) return null;
-  return {
-    value: Number(match.value),
-    year: String(match.date || "")
-  };
-}
-
-async function fetchWorldBankValue(iso2, indicator) {
-  if (!iso2) return null;
-  const url = `https://api.worldbank.org/v2/country/${encodeURIComponent(iso2)}/indicator/${indicator}?format=json&per_page=10&mrv=5`;
-  const payload = await fetchJson(url);
-  const hit = pickLatestValue(payload?.[1]);
-  return hit ? { ...hit, source: "World Bank" } : null;
+  return map;
 }
 
 async function fetchImfValue(iso3, series) {
@@ -181,362 +161,291 @@ async function fetchImfValue(iso3, series) {
   const payload = await fetchJson(url);
   const seriesNode = payload?.values?.[series]?.[iso3];
   if (!seriesNode || typeof seriesNode !== "object") return null;
-  const years = Object.keys(seriesNode).sort((a, b) => Number(b) - Number(a));
+  const years = Object.keys(seriesNode).sort((left, right) => Number(right) - Number(left));
+
   for (const year of years) {
     if (Number(year) > MAX_CONFIRMED_IMF_YEAR) {
       continue;
     }
     const value = Number(seriesNode[year]);
     if (Number.isFinite(value)) {
-      return { value, year, source: "IMF" };
+      return { value, updatedAt: `${year}-12-31`, sourceId: "imf" };
     }
   }
+
   return null;
 }
 
-async function fetchUnDataHdi(iso3) {
-  const local = await lookupReference("hdi", iso3);
-  if (local) {
-    return {
-      value: Number(local.value),
-      year: String(local.year || ""),
-      source: local.source || "UNDP Human Development Reports"
-    };
-  }
-  return null;
-}
+async function fetchHdiMap() {
+  const dataset = await readReferenceDataset(REFERENCE_FILES.hdi);
+  const map = new Map();
 
-async function fetchTransparencyCpi(entry) {
-  const local = await lookupReference("corruption_index", entry.iso3);
-  if (local) {
-    return {
-      value: Number(local.value),
-      year: String(local.year || ""),
-      source: local.source || "Transparency International CPI"
-    };
-  }
-
-  const countrySlug = TRANSPARENCY_SLUG_OVERRIDES[entry.name] || normalizeSlug(entry.name);
-  const html = await fetch(`https://www.transparency.org/en/countries/${countrySlug}`, {
-    signal: withTimeout(REQUEST_TIMEOUT_MS)
-  }).then((response) => {
-    if (!response.ok) throw new Error(`Transparency HTTP ${response.status}`);
-    return response.text();
-  });
-
-  const scoreMatch = html.match(/Score\s*<\/[^>]+>\s*([0-9]{1,3})\/100/i) || html.match(/has a score of\s+([0-9]{1,3})/i);
-  if (!scoreMatch) return null;
-  return {
-    value: Number(scoreMatch[1]),
-    year: "2025",
-    source: "Transparency International CPI"
-  };
-}
-
-async function fetchFreedomHouseScore(entry) {
-  const local = await lookupReference("political_stability", entry.iso3);
-  if (local) {
-    return {
-      value: Number(local.value),
-      year: String(local.year || ""),
-      source: local.source || "Freedom House"
-    };
-  }
-
-  if (!freedomHouseScoresCache) {
-    const html = await fetch("https://freedomhouse.org/country/scores", {
-      signal: withTimeout(REQUEST_TIMEOUT_MS)
-    }).then((response) => {
-      if (!response.ok) throw new Error(`Freedom House HTTP ${response.status}`);
-      return response.text();
+  for (const [iso3, value] of Object.entries(dataset || {})) {
+    map.set(iso3, {
+      value: Number(value?.value),
+      updatedAt: toIsoDate(value?.year || ""),
+      sourceId: "undp"
     });
+  }
 
-    const scores = new Map();
-    const rowPattern = /<td data-group="country_name"[^>]*>\s*<a [^>]*>([^<]+)<\/a>\s*<\/td>\s*<td data-group="fiw"[^>]*>[\s\S]*?<span class="score">([0-9]{1,3})<\/span>/gi;
-    for (const match of html.matchAll(rowPattern)) {
-      const sourceName = normalizeCountryKey(match[1]);
-      const score = Number(match[2]);
-      if (sourceName && Number.isFinite(score)) {
-        scores.set(sourceName, score);
+  return map;
+}
+
+async function fetchCurrencyMap() {
+  const html = await fetchText("https://wits.worldbank.org/CountryProfile/Metadata/en/Country/All");
+  const rows = [...html.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi)];
+  const map = new Map();
+
+  for (const [, rowHtml] of rows) {
+    const cells = [...rowHtml.matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi)].map((match) => stripTags(match[1]));
+    if (cells.length < 8) {
+      continue;
+    }
+
+    const [countryName, iso3, _numericCode, _formalName, _incomeGroup, _lendingCategory, _region, currency] = cells;
+    if (!iso3 || iso3.length !== 3 || iso3 === "ISO3") {
+      continue;
+    }
+
+    const normalizedCurrency = currency && currency !== "-" ? currency : null;
+    map.set(iso3.toUpperCase(), {
+      countryName,
+      currency: normalizedCurrency,
+      sourceId: "worldBankWits"
+    });
+  }
+
+  return map;
+}
+
+async function fetchNewsByCountry() {
+  const dataset = await readReferenceDataset(REFERENCE_FILES.news);
+  const byCountry = new Map();
+
+  for (const article of dataset || []) {
+    const countries = Array.isArray(article.countries) ? article.countries : [];
+    for (const slug of countries) {
+      if (!byCountry.has(slug)) {
+        byCountry.set(slug, []);
       }
-    }
-    freedomHouseScoresCache = scores;
-  }
-
-  const normalizedName = normalizeCountryKey(entry.name);
-  const aliases = [
-    normalizedName,
-    normalizeCountryKey(FREEDOM_HOUSE_NAME_ALIASES[normalizedName] || ""),
-    normalizeCountryKey(FREEDOM_HOUSE_NAME_ALIASES[normalizeSlug(entry.name)] || "")
-  ].filter(Boolean);
-
-  for (const candidate of aliases) {
-    const score = freedomHouseScoresCache.get(candidate);
-    if (Number.isFinite(score)) {
-      return {
-        value: score,
-        year: "2025",
-        source: "Freedom House"
-      };
+      byCountry.get(slug).push(article);
     }
   }
 
-  return null;
+  for (const [slug, articles] of byCountry.entries()) {
+    byCountry.set(slug, normalizeCountryNews(articles));
+  }
+
+  return byCountry;
 }
 
-async function fetchReferenceMetric(field, iso3, fallbackSourceLabel) {
-  const local = await lookupReference(field, iso3);
-  if (!local) return null;
-  return {
-    value: Number(local.value),
-    year: String(local.year || ""),
-    source: local.source || fallbackSourceLabel
+function normalizeMetric(countryName, field, value) {
+  return validateCountryMetric(field, value, { countryName, warn: true });
+}
+
+function buildProfile({ entry, existingProfile, worldBankIndicators, worldBankCountries, hdiByIso3, currencyByIso3, newsByCountry }) {
+  const next = createEmptyCountryProfile({
+    code: entry.iso3,
+    slug: entry.slug,
+    name: entry.name,
+    continent: entry.continent
+  });
+  const sourceEntries = [];
+
+  const worldBankCountry = worldBankCountries.get(entry.iso3) || {};
+  if (worldBankCountry.region) {
+    next.region = worldBankCountry.region;
+    sourceEntries.push({ sourceId: "worldBankCountry", fields: ["region"] });
+  }
+  if (worldBankCountry.incomeGroup) {
+    next.incomeGroup = worldBankCountry.incomeGroup;
+    sourceEntries.push({ sourceId: "worldBankCountry", fields: ["incomeGroup"] });
+  }
+  if (worldBankCountry.capital) {
+    next.capital = worldBankCountry.capital;
+    sourceEntries.push({ sourceId: "worldBankCountry", fields: ["capital"] });
+  }
+
+  const currency = currencyByIso3.get(entry.iso3)?.currency || null;
+  if (currency) {
+    next.currency = currency;
+    sourceEntries.push({ sourceId: "worldBankWits", fields: ["currency"] });
+  }
+
+  for (const field of Object.keys(WORLD_BANK_INDICATORS)) {
+    const indicator = worldBankIndicators[field]?.get(entry.iso3);
+    if (!indicator) {
+      continue;
+    }
+
+    const value = normalizeMetric(entry.name, field, indicator.value);
+    if (value === null) {
+      continue;
+    }
+
+    next.metrics[field] = value;
+    sourceEntries.push({
+      sourceId: "worldBank",
+      fields: [field],
+      updatedAt: toIsoDate(indicator.year)
+    });
+  }
+
+  const hdi = hdiByIso3.get(entry.iso3);
+  if (hdi) {
+    const value = normalizeMetric(entry.name, "hdi", hdi.value);
+    if (value !== null) {
+      next.metrics.hdi = value;
+      sourceEntries.push({
+        sourceId: "undp",
+        fields: ["hdi"],
+        updatedAt: hdi.updatedAt
+      });
+    }
+  }
+
+  next.sources = normalizeCountrySources(sourceEntries);
+  next.sourceEntries = sourceEntries;
+  next.news = newsByCountry.get(entry.slug) || [];
+  next.lastUpdated = buildCountryLastUpdated(next.sources, new Date().toISOString().slice(0, 10));
+
+  next.risk_global = existingProfile?.risk_global ?? 3;
+  next.risk_barometer = existingProfile?.risk_barometer || {
+    geopolitics: 3,
+    politics: 3,
+    socio_economic: 3,
+    crime: 3,
+    terrorism: 3,
+    health_disasters: 3,
+    transport: 3
   };
-}
+  next.analysis = existingProfile?.analysis || {
+    security: "",
+    geopolitics: "",
+    politics: "",
+    economy: "",
+    crime: "",
+    terrorism: "",
+    health_disasters: "",
+    transport: "",
+    regional_analysis: "",
+    summary: ""
+  };
+  next.analysis.summary = generateCountrySummary(next);
 
-function formatInteger(value) {
-  return new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(Math.round(value));
-}
-
-function formatCurrency(value) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0
-  }).format(value);
-}
-
-function formatPercent(value) {
-  return `${value.toFixed(1)}%`;
-}
-
-function formatHdi(value) {
-  return value.toFixed(3);
-}
-
-function keepExisting(existing, fallback = "Data unavailable") {
-  if (existing !== null && existing !== undefined && String(existing).trim() !== "") {
-    return String(existing);
-  }
-  return fallback;
-}
-
-function formatRiskBand(value) {
-  return `${value}/5`;
-}
-
-function applyIndicator(profile, field, indicator) {
-  if (!indicator || !Number.isFinite(indicator.value)) {
-    return profile;
-  }
-
-  const next = ensureSupplementalObjects(profile);
-  switch (field) {
-    case "population":
-      next.key_data.population = formatInteger(indicator.value);
-      next.data_sources.population = { source: indicator.source, year: indicator.year };
-      break;
-    case "gdp":
-      next.key_data.gdp = formatCurrency(indicator.value);
-      next.data_sources.gdp = { source: indicator.source, year: indicator.year };
-      break;
-    case "gdp_per_capita":
-      next.key_data.gdp_per_capita = formatCurrency(indicator.value);
-      next.data_sources.gdp_per_capita = { source: indicator.source, year: indicator.year };
-      break;
-    case "growth":
-      next.key_data.growth = formatPercent(indicator.value);
-      next.data_sources.growth = { source: indicator.source, year: indicator.year };
-      break;
-    case "inflation":
-      next.key_data.inflation = formatPercent(indicator.value);
-      next.data_sources.inflation = { source: indicator.source, year: indicator.year };
-      break;
-    case "unemployment":
-      next.key_data.unemployment = formatPercent(indicator.value);
-      next.data_sources.unemployment = { source: indicator.source, year: indicator.year };
-      break;
-    case "hdi":
-      next.key_data.hdi = formatHdi(indicator.value);
-      next.data_sources.hdi = { source: indicator.source, year: indicator.year };
-      break;
-    case "corruption_index":
-      next.key_data.corruption_index = String(Math.round(indicator.value));
-      next.data_sources.corruption_index = { source: indicator.source, year: indicator.year };
-      break;
-    case "political_stability":
-      next.intelligence_indicators.political_stability = {
-        value: Number(indicator.value),
-        display: `${Math.round(indicator.value)}/100`,
-        source: indicator.source,
-        year: indicator.year
-      };
-      next.data_sources.political_stability = { source: indicator.source, year: indicator.year };
-      break;
-    case "conflict_risk":
-      next.intelligence_indicators.conflict_risk = {
-        value: Number(indicator.value),
-        display: formatRiskBand(indicator.value),
-        source: indicator.source,
-        year: indicator.year
-      };
-      next.data_sources.conflict_risk = { source: indicator.source, year: indicator.year };
-      break;
-    case "terrorism_risk":
-      next.intelligence_indicators.terrorism_risk = {
-        value: Number(indicator.value),
-        display: formatRiskBand(indicator.value),
-        source: indicator.source,
-        year: indicator.year
-      };
-      next.data_sources.terrorism_risk = { source: indicator.source, year: indicator.year };
-      break;
-    case "military_expenditure":
-      next.intelligence_indicators.military_expenditure = {
-        value: Number(indicator.value),
-        display: formatCurrency(indicator.value * 1_000_000),
-        source: indicator.source,
-        year: indicator.year
-      };
-      next.data_sources.military_expenditure = { source: indicator.source, year: indicator.year };
-      break;
-    default:
-      break;
-  }
   return next;
 }
 
-async function updateCountry(entry) {
-  const profile = loadCountryProfileBySlug(entry.slug);
-  if (!profile) {
-    return { country: entry.name, slug: entry.slug, status: "missing_profile", updates: [], warnings: ["missing_profile"] };
-  }
-
-  let next = ensureSupplementalObjects(profile);
-  next.key_data.population = keepExisting(next.key_data.population);
-  next.key_data.gdp = keepExisting(next.key_data.gdp);
-  next.key_data.gdp_per_capita = keepExisting(next.key_data.gdp_per_capita);
-  next.key_data.growth = keepExisting(next.key_data.growth);
-  next.key_data.inflation = keepExisting(next.key_data.inflation);
-  next.key_data.unemployment = keepExisting(next.key_data.unemployment);
-  next.key_data.hdi = keepExisting(next.key_data.hdi);
-
-  const warnings = [];
-  const updates = [];
-
-  const worldBankResults = await Promise.allSettled(
-    Object.entries(WORLD_BANK_INDICATORS).map(async ([field, indicator]) => {
-      const value = await fetchWorldBankValue(entry.iso2, indicator);
-      return { field, value };
-    })
-  );
-
-  for (const result of worldBankResults) {
-    if (result.status === "fulfilled" && result.value.value) {
-      next = applyIndicator(next, result.value.field, result.value.value);
-      updates.push({ field: result.value.field, source: result.value.value.source, year: result.value.value.year });
-    } else if (result.status === "rejected") {
-      warnings.push(String(result.reason?.message || result.reason));
+async function backfillImfFallbacks(profile, entry, updates, warnings) {
+  for (const [field, series] of Object.entries(IMF_SERIES)) {
+    if (profile.metrics[field] !== null) {
+      continue;
     }
-  }
 
-  const imfResults = await Promise.allSettled(
-    Object.entries(IMF_SERIES).map(async ([field, series]) => {
-      const value = await fetchImfValue(entry.iso3, series);
-      return { field, value };
-    })
-  );
-
-  for (const result of imfResults) {
-    if (result.status === "fulfilled" && result.value.value) {
-      next = applyIndicator(next, result.value.field, result.value.value);
-      updates.push({ field: result.value.field, source: result.value.value.source, year: result.value.value.year });
-    } else if (result.status === "rejected") {
-      warnings.push(String(result.reason?.message || result.reason));
-    }
-  }
-
-  try {
-    const hdi = await fetchUnDataHdi(entry.iso3);
-    if (hdi) {
-      next = applyIndicator(next, "hdi", hdi);
-      updates.push({ field: "hdi", source: hdi.source, year: hdi.year });
-    }
-  } catch (error) {
-    warnings.push(String(error?.message || error));
-  }
-
-  try {
-    const corruption = await fetchTransparencyCpi(entry);
-    if (corruption) {
-      next = applyIndicator(next, "corruption_index", corruption);
-      updates.push({ field: "corruption_index", source: corruption.source, year: corruption.year });
-    }
-  } catch (error) {
-    warnings.push(String(error?.message || error));
-  }
-
-  try {
-    const political = await fetchFreedomHouseScore(entry);
-    if (political) {
-      next = applyIndicator(next, "political_stability", political);
-      updates.push({ field: "political_stability", source: political.source, year: political.year });
-    }
-  } catch (error) {
-    warnings.push(String(error?.message || error));
-  }
-
-  for (const [field, sourceLabel] of [
-    ["conflict_risk", "ACLED Conflict Index"],
-    ["terrorism_risk", "Global Terrorism Database / Global Terrorism Index"],
-    ["military_expenditure", "SIPRI Military Expenditure Database"]
-  ]) {
     try {
-      const indicator = await fetchReferenceMetric(field, entry.iso3, sourceLabel);
-      if (indicator) {
-        next = applyIndicator(next, field, indicator);
-        updates.push({ field, source: indicator.source, year: indicator.year });
+      const fallback = await fetchImfValue(entry.iso3, series);
+      if (!fallback) {
+        continue;
       }
+
+      const value = normalizeMetric(entry.name, field, fallback.value);
+      if (value === null) {
+        continue;
+      }
+
+      profile.metrics[field] = value;
+      profile.sourceEntries.push({ sourceId: "imf", fields: [field], updatedAt: fallback.updatedAt });
+      profile.sources = normalizeCountrySources(profile.sourceEntries);
+      updates.push({ field, source: "IMF", updatedAt: fallback.updatedAt });
     } catch (error) {
       warnings.push(String(error?.message || error));
     }
   }
 
-  if (!next.intelligence_indicators.conflict_risk.display) {
-    next = applyIndicator(next, "conflict_risk", {
-      value: next.risk_global,
-      year: "",
-      source: "Derived fallback from AGORAFLUX baseline"
+  profile.lastUpdated = buildCountryLastUpdated(profile.sources, profile.lastUpdated);
+  profile.analysis.summary = generateCountrySummary(profile);
+}
+
+async function updateCountry(entry, context) {
+  const existingProfile = loadCountryProfileBySlug(entry.slug);
+  const warnings = [];
+  const updates = [];
+
+  try {
+    const next = buildProfile({
+      entry,
+      existingProfile,
+      worldBankIndicators: context.worldBankIndicators,
+      worldBankCountries: context.worldBankCountries,
+      hdiByIso3: context.hdiByIso3,
+      currencyByIso3: context.currencyByIso3,
+      newsByCountry: context.newsByCountry
     });
+
+    await backfillImfFallbacks(next, entry, updates, warnings);
+    delete next.sourceEntries;
+    writeCountryProfileBySlug(entry.slug, next);
+
+    for (const source of next.sources) {
+      for (const field of source.fields) {
+        updates.push({ field, source: source.label, updatedAt: source.updatedAt || "" });
+      }
+    }
+
+    return {
+      country: entry.name,
+      slug: entry.slug,
+      status: "updated",
+      updates,
+      warnings: [...new Set(warnings)]
+    };
+  } catch (error) {
+    return {
+      country: entry.name,
+      slug: entry.slug,
+      status: "failed",
+      updates,
+      warnings: [String(error?.message || error)]
+    };
   }
-
-  if (!next.intelligence_indicators.terrorism_risk.display) {
-    next = applyIndicator(next, "terrorism_risk", {
-      value: next.risk_barometer.terrorism,
-      year: "",
-      source: "Derived fallback from AGORAFLUX baseline"
-    });
-  }
-
-  writeCountryProfileBySlug(entry.slug, next);
-
-  return {
-    country: entry.name,
-    slug: entry.slug,
-    status: "updated",
-    updates,
-    warnings: [...new Set(warnings)]
-  };
 }
 
 async function main() {
   const countries = flattenCountries();
+  const [
+    worldBankIndicatorsResult,
+    worldBankCountriesResult,
+    hdiByIso3Result,
+    currencyByIso3Result,
+    newsByCountryResult
+  ] = await Promise.allSettled([
+    fetchWorldBankIndicatorMaps(),
+    fetchWorldBankCountryMetadataMap(),
+    fetchHdiMap(),
+    fetchCurrencyMap(),
+    fetchNewsByCountry()
+  ]);
+
+  const worldBankIndicators = worldBankIndicatorsResult.status === "fulfilled" ? worldBankIndicatorsResult.value : {};
+  const worldBankCountries = worldBankCountriesResult.status === "fulfilled" ? worldBankCountriesResult.value : new Map();
+  const hdiByIso3 = hdiByIso3Result.status === "fulfilled" ? hdiByIso3Result.value : new Map();
+  const currencyByIso3 = currencyByIso3Result.status === "fulfilled" ? currencyByIso3Result.value : new Map();
+  const newsByCountry = newsByCountryResult.status === "fulfilled" ? newsByCountryResult.value : new Map();
+
+  const context = {
+    worldBankIndicators,
+    worldBankCountries,
+    hdiByIso3,
+    currencyByIso3,
+    newsByCountry
+  };
+
   const results = [];
-  const batchSize = 8;
+  const batchSize = 12;
 
   for (let index = 0; index < countries.length; index += batchSize) {
     const batch = countries.slice(index, index + batchSize);
-    const batchResults = await Promise.all(batch.map((entry) => updateCountry(entry)));
+    const batchResults = await Promise.all(batch.map((entry) => updateCountry(entry, context)));
     results.push(...batchResults);
   }
 
@@ -544,39 +453,34 @@ async function main() {
     generatedAt: new Date().toISOString(),
     totalCountries: countries.length,
     updatedCountries: results.filter((item) => item.status === "updated").length,
+    failedCountries: results.filter((item) => item.status === "failed").length,
     countriesWithWarnings: results.filter((item) => item.warnings.length > 0).length,
     results
   };
 
   await fs.mkdir(LOGS_DIR, { recursive: true });
   await fs.writeFile(REPORT_PATH, `${JSON.stringify(report, null, 2)}\n`, "utf-8");
+
   const buildStep = spawnSync("node", ["scripts/build-platform-data.js"], {
     cwd: ROOT,
     stdio: "inherit",
     env: process.env
   });
+
   if (buildStep.status !== 0) {
     throw new Error("Failed to rebuild dashboard static data after country update.");
   }
+
   console.log(JSON.stringify({
     generatedAt: report.generatedAt,
     totalCountries: report.totalCountries,
     updatedCountries: report.updatedCountries,
+    failedCountries: report.failedCountries,
     countriesWithWarnings: report.countriesWithWarnings
   }, null, 2));
 }
 
-main().catch(async (error) => {
-  await fs.mkdir(LOGS_DIR, { recursive: true });
-  await fs.writeFile(
-    REPORT_PATH,
-    `${JSON.stringify({
-      generatedAt: new Date().toISOString(),
-      status: "failed",
-      error: String(error?.message || error)
-    }, null, 2)}\n`,
-    "utf-8"
-  );
+main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });

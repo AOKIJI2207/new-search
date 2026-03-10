@@ -427,6 +427,16 @@ h1 {
   line-height: 1.5;
 }
 
+.news-link {
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.news-link:hover {
+  color: var(--accent);
+}
+
 .indicator-card {
   display: grid;
   gap: 8px;
@@ -533,6 +543,11 @@ h1 {
   padding: 16px;
 }
 
+.news-card p,
+.source-card p {
+  margin: 10px 0 0;
+}
+
 .alert-meta,
 .timeline-item span,
 .timeline-item small {
@@ -607,6 +622,33 @@ h1 {
 .comparison-table {
   display: grid;
   gap: 8px;
+}
+
+.source-list {
+  display: grid;
+  gap: 12px;
+}
+
+.source-card {
+  display: grid;
+  gap: 8px;
+}
+
+.source-card small {
+  color: var(--muted);
+}
+
+.source-category {
+  display: inline-flex;
+  width: fit-content;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .comparison-header,

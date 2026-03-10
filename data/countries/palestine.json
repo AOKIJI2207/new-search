@@ -1,6 +1,65 @@
 {
+  "code": "PSE",
+  "slug": "palestine",
   "name": "Palestine",
   "continent": "Asie",
+  "region": "Middle East, North Africa, Afghanistan & Pakistan",
+  "incomeGroup": "Lower middle income",
+  "currency": null,
+  "lastUpdated": "2024-12-31",
+  "metrics": {
+    "population": 5289152,
+    "gdp": 13711100000,
+    "gdpPerCapita": 2592.30591217647,
+    "growth": -26.5575264529877,
+    "inflation": 53.6691458303782,
+    "unemployment": 24.42,
+    "hdi": null
+  },
+  "risk": {
+    "global": null,
+    "political": null,
+    "economic": null,
+    "social": null,
+    "fiscal": null
+  },
+  "sources": [
+    {
+      "category": "Macroeconomy",
+      "label": "World Bank",
+      "referenceLabel": "World Development Indicators",
+      "url": "https://api.worldbank.org/v2/sources/2",
+      "updatedAt": "2024-12-31",
+      "fields": [
+        "gdp",
+        "gdpPerCapita",
+        "growth",
+        "inflation",
+        "population"
+      ]
+    },
+    {
+      "category": "Macroeconomy",
+      "label": "World Bank",
+      "referenceLabel": "World Development Indicators",
+      "url": "https://api.worldbank.org/v2/sources/2",
+      "updatedAt": "2022-12-31",
+      "fields": [
+        "unemployment"
+      ]
+    },
+    {
+      "category": "Country metadata",
+      "label": "World Bank",
+      "referenceLabel": "Country API metadata",
+      "url": "https://api.worldbank.org/v2/country",
+      "fields": [
+        "incomeGroup",
+        "region"
+      ]
+    }
+  ],
+  "news": [],
   "risk_global": 3,
   "risk_barometer": {
     "geopolitics": 3,
@@ -10,20 +69,6 @@
     "terrorism": 3,
     "health_disasters": 4,
     "transport": 3
-  },
-  "key_data": {
-    "capital": "Ramallah",
-    "population": "5,289,152",
-    "political_system": "National institutional system of Palestine",
-    "head_of_state": "Mahmoud Abbas",
-    "gdp": "$13,711,100,000",
-    "gdp_per_capita": "$2,592",
-    "growth": "-26.6%",
-    "inflation": "53.7%",
-    "public_debt": "Data unavailable",
-    "unemployment": "24.4%",
-    "hdi": "0.6",
-    "corruption_index": "68"
   },
   "analysis": {
     "security": "Profil de risque modéré pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
@@ -35,88 +80,6 @@
     "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
     "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
     "regional_analysis": "Asian exposure is influenced by great-power rivalry, maritime trade routes, domestic political concentration, and supply-chain sensitivity.",
-    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
-  },
-  "intelligence_indicators": {
-    "political_stability": {
-      "value": 83,
-      "display": "83/100",
-      "source": "Freedom House",
-      "year": "2025"
-    },
-    "conflict_risk": {
-      "value": 3,
-      "display": "3/5",
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "terrorism_risk": {
-      "value": 3,
-      "display": "3/5",
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "military_expenditure": {
-      "value": null,
-      "display": "",
-      "source": "",
-      "year": ""
-    }
-  },
-  "data_sources": {
-    "gdp": {
-      "source": "World Bank",
-      "year": "2024"
-    },
-    "gdp_per_capita": {
-      "source": "World Bank",
-      "year": "2024"
-    },
-    "growth": {
-      "source": "World Bank",
-      "year": "2024"
-    },
-    "inflation": {
-      "source": "World Bank",
-      "year": "2024"
-    },
-    "unemployment": {
-      "source": "World Bank",
-      "year": "2022"
-    },
-    "hdi": {
-      "source": "",
-      "year": ""
-    },
-    "corruption_index": {
-      "source": "",
-      "year": ""
-    },
-    "political_stability": {
-      "source": "Freedom House",
-      "year": "2025"
-    },
-    "conflict_risk": {
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "terrorism_risk": {
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "military_expenditure": {
-      "source": "",
-      "year": ""
-    },
-    "population": {
-      "source": "World Bank",
-      "year": "2024"
-    }
-  },
-  "risk_breakdown": {
-    "political": null,
-    "economic": null,
-    "social": null,
-    "fiscal": null
+    "summary": "Palestine shows very weak economic momentum with GDP growth at -26.6%. Inflation remains elevated at 53.7%. Unemployment stands at 24.4%. Overall signals for the short-term outlook are mixed."
   }
 }

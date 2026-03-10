@@ -1,6 +1,91 @@
 {
+  "code": "HTI",
+  "slug": "haiti",
   "name": "Haiti",
   "continent": "Amérique du Nord",
+  "region": "Latin America & Caribbean ",
+  "incomeGroup": "Lower middle income",
+  "currency": "Haitian gourde",
+  "lastUpdated": "2025-12-31",
+  "metrics": {
+    "population": 11772557,
+    "gdp": 25224154990.7946,
+    "gdpPerCapita": 2142.62330526788,
+    "growth": -4.16963395808132,
+    "inflation": 26.9490564091987,
+    "unemployment": 14.944,
+    "hdi": null
+  },
+  "risk": {
+    "global": null,
+    "political": null,
+    "economic": null,
+    "social": null,
+    "fiscal": null
+  },
+  "sources": [
+    {
+      "category": "Macroeconomy",
+      "label": "World Bank",
+      "referenceLabel": "World Development Indicators",
+      "url": "https://api.worldbank.org/v2/sources/2",
+      "updatedAt": "2025-12-31",
+      "fields": [
+        "unemployment"
+      ]
+    },
+    {
+      "category": "Macroeconomy",
+      "label": "World Bank",
+      "referenceLabel": "World Development Indicators",
+      "url": "https://api.worldbank.org/v2/sources/2",
+      "updatedAt": "2024-12-31",
+      "fields": [
+        "gdp",
+        "gdpPerCapita",
+        "growth",
+        "inflation",
+        "population"
+      ]
+    },
+    {
+      "category": "Country metadata",
+      "label": "World Bank",
+      "referenceLabel": "Country API metadata",
+      "url": "https://api.worldbank.org/v2/country",
+      "fields": [
+        "capital",
+        "incomeGroup",
+        "region"
+      ]
+    },
+    {
+      "category": "Country metadata",
+      "label": "World Bank",
+      "referenceLabel": "WITS country metadata",
+      "url": "https://wits.worldbank.org/CountryProfile/Metadata/en/Country/All",
+      "fields": [
+        "currency"
+      ]
+    }
+  ],
+  "news": [
+    {
+      "title": "US extends ban on commercial flights to Haiti's capital due to gang violence",
+      "publisher": "AP News",
+      "publishedAt": "2026-03-04",
+      "url": "https://apnews.com/article/0f4d06828861de8509e53b2d2e42d3ed",
+      "summary": "AP reported that the FAA extended restrictions on flights to Port-au-Prince because of persistent security threats and gang violence."
+    },
+    {
+      "title": "World Bank Announces New Strategy for Haiti",
+      "publisher": "World Bank",
+      "publishedAt": "2025-03-04",
+      "url": "https://www.worldbank.org/en/news/press-release/2025/03/04/world-bank-announces-new-strategy-for-haiti",
+      "summary": "The World Bank endorsed a new 2025-2029 strategic partnership for Haiti focused on resilience, governance, and employment."
+    }
+  ],
+  "capital": "Port-au-Prince",
   "risk_global": 3,
   "risk_barometer": {
     "geopolitics": 4,
@@ -10,20 +95,6 @@
     "terrorism": 3,
     "health_disasters": 4,
     "transport": 3
-  },
-  "key_data": {
-    "capital": "Port-au-Prince",
-    "population": "11,772,557",
-    "political_system": "National institutional system of Haiti",
-    "head_of_state": "Current head of state of Haiti",
-    "gdp": "$25,224,154,991",
-    "gdp_per_capita": "$2,143",
-    "growth": "-4.2%",
-    "inflation": "25.8%",
-    "public_debt": "Data unavailable",
-    "unemployment": "14.9%",
-    "hdi": "0.8",
-    "corruption_index": "16"
   },
   "analysis": {
     "security": "Profil de risque modéré pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
@@ -35,88 +106,6 @@
     "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
     "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
     "regional_analysis": "North American exposure reflects cross-border logistics, hurricane and seismic risk pockets, organized crime routes, and US policy spillovers.",
-    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
-  },
-  "intelligence_indicators": {
-    "political_stability": {
-      "value": 24,
-      "display": "24/100",
-      "source": "Freedom House",
-      "year": "2025"
-    },
-    "conflict_risk": {
-      "value": 3,
-      "display": "3/5",
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "terrorism_risk": {
-      "value": 3,
-      "display": "3/5",
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "military_expenditure": {
-      "value": null,
-      "display": "",
-      "source": "",
-      "year": ""
-    }
-  },
-  "data_sources": {
-    "gdp": {
-      "source": "World Bank",
-      "year": "2024"
-    },
-    "gdp_per_capita": {
-      "source": "World Bank",
-      "year": "2024"
-    },
-    "growth": {
-      "source": "IMF",
-      "year": "2024"
-    },
-    "inflation": {
-      "source": "IMF",
-      "year": "2024"
-    },
-    "unemployment": {
-      "source": "World Bank",
-      "year": "2025"
-    },
-    "hdi": {
-      "source": "",
-      "year": ""
-    },
-    "corruption_index": {
-      "source": "Transparency International CPI",
-      "year": "2025"
-    },
-    "political_stability": {
-      "source": "Freedom House",
-      "year": "2025"
-    },
-    "conflict_risk": {
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "terrorism_risk": {
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "military_expenditure": {
-      "source": "",
-      "year": ""
-    },
-    "population": {
-      "source": "World Bank",
-      "year": "2024"
-    }
-  },
-  "risk_breakdown": {
-    "political": null,
-    "economic": null,
-    "social": null,
-    "fiscal": null
+    "summary": "Haiti shows very weak economic momentum with GDP growth at -4.2%. Inflation remains elevated at 26.9%. Unemployment stands at 14.9%. Overall signals for the short-term outlook are mixed."
   }
 }

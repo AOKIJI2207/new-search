@@ -1,6 +1,94 @@
 {
+  "code": "SYR",
+  "slug": "syria",
   "name": "Syria",
   "continent": "Asie",
+  "region": "Middle East, North Africa, Afghanistan & Pakistan",
+  "incomeGroup": "Low income",
+  "currency": "Syrian pound",
+  "lastUpdated": "2025-12-31",
+  "metrics": {
+    "population": 24672760,
+    "gdp": 23622827079.5047,
+    "gdpPerCapita": 1051.67149587463,
+    "growth": 0.732781301861365,
+    "inflation": 4.4,
+    "unemployment": 13.569,
+    "hdi": null
+  },
+  "risk": {
+    "global": null,
+    "political": null,
+    "economic": null,
+    "social": null,
+    "fiscal": null
+  },
+  "sources": [
+    {
+      "category": "Macroeconomy",
+      "label": "World Bank",
+      "referenceLabel": "World Development Indicators",
+      "url": "https://api.worldbank.org/v2/sources/2",
+      "updatedAt": "2025-12-31",
+      "fields": [
+        "unemployment"
+      ]
+    },
+    {
+      "category": "Macroeconomy",
+      "label": "World Bank",
+      "referenceLabel": "World Development Indicators",
+      "url": "https://api.worldbank.org/v2/sources/2",
+      "updatedAt": "2024-12-31",
+      "fields": [
+        "population"
+      ]
+    },
+    {
+      "category": "Macroeconomy",
+      "label": "World Bank",
+      "referenceLabel": "World Development Indicators",
+      "url": "https://api.worldbank.org/v2/sources/2",
+      "updatedAt": "2022-12-31",
+      "fields": [
+        "gdp",
+        "gdpPerCapita",
+        "growth"
+      ]
+    },
+    {
+      "category": "Macroeconomy",
+      "label": "IMF",
+      "referenceLabel": "DataMapper",
+      "url": "https://www.imf.org/external/datamapper",
+      "updatedAt": "2010-12-31",
+      "fields": [
+        "inflation"
+      ]
+    },
+    {
+      "category": "Country metadata",
+      "label": "World Bank",
+      "referenceLabel": "Country API metadata",
+      "url": "https://api.worldbank.org/v2/country",
+      "fields": [
+        "capital",
+        "incomeGroup",
+        "region"
+      ]
+    },
+    {
+      "category": "Country metadata",
+      "label": "World Bank",
+      "referenceLabel": "WITS country metadata",
+      "url": "https://wits.worldbank.org/CountryProfile/Metadata/en/Country/All",
+      "fields": [
+        "currency"
+      ]
+    }
+  ],
+  "news": [],
+  "capital": "Damascus",
   "risk_global": 3,
   "risk_barometer": {
     "geopolitics": 3,
@@ -10,20 +98,6 @@
     "terrorism": 3,
     "health_disasters": 4,
     "transport": 3
-  },
-  "key_data": {
-    "capital": "Damascus",
-    "population": "24,672,760",
-    "political_system": "National institutional system of Syria",
-    "head_of_state": "Current head of state of Syria",
-    "gdp": "$23,622,827,080",
-    "gdp_per_capita": "$1,052",
-    "growth": "3.4%",
-    "inflation": "4.4%",
-    "public_debt": "Data unavailable",
-    "unemployment": "13.6%",
-    "hdi": "0.6",
-    "corruption_index": "15"
   },
   "analysis": {
     "security": "Profil de risque modéré pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
@@ -35,88 +109,6 @@
     "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
     "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
     "regional_analysis": "Asian exposure is influenced by great-power rivalry, maritime trade routes, domestic political concentration, and supply-chain sensitivity.",
-    "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
-  },
-  "intelligence_indicators": {
-    "political_stability": {
-      "value": 5,
-      "display": "5/100",
-      "source": "Freedom House",
-      "year": "2025"
-    },
-    "conflict_risk": {
-      "value": 3,
-      "display": "3/5",
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "terrorism_risk": {
-      "value": 3,
-      "display": "3/5",
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "military_expenditure": {
-      "value": null,
-      "display": "",
-      "source": "",
-      "year": ""
-    }
-  },
-  "data_sources": {
-    "gdp": {
-      "source": "World Bank",
-      "year": "2022"
-    },
-    "gdp_per_capita": {
-      "source": "World Bank",
-      "year": "2022"
-    },
-    "growth": {
-      "source": "IMF",
-      "year": "2010"
-    },
-    "inflation": {
-      "source": "IMF",
-      "year": "2010"
-    },
-    "unemployment": {
-      "source": "World Bank",
-      "year": "2025"
-    },
-    "hdi": {
-      "source": "",
-      "year": ""
-    },
-    "corruption_index": {
-      "source": "Transparency International CPI",
-      "year": "2025"
-    },
-    "political_stability": {
-      "source": "Freedom House",
-      "year": "2025"
-    },
-    "conflict_risk": {
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "terrorism_risk": {
-      "source": "Derived fallback from AGORAFLUX baseline",
-      "year": ""
-    },
-    "military_expenditure": {
-      "source": "",
-      "year": ""
-    },
-    "population": {
-      "source": "World Bank",
-      "year": "2024"
-    }
-  },
-  "risk_breakdown": {
-    "political": null,
-    "economic": null,
-    "social": null,
-    "fiscal": null
+    "summary": "Syria shows moderate economic momentum with GDP growth at 0.7%. Inflation remains elevated at 4.4%. Unemployment stands at 13.6%. Overall signals for the short-term outlook are mixed."
   }
 }
