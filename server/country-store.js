@@ -5,8 +5,8 @@ const ROOT = process.cwd();
 const DATA_DIR = path.join(ROOT, "data");
 const CONTINENTS_PATH = path.join(DATA_DIR, "continents.json");
 const COUNTRIES_PATH = path.join(DATA_DIR, "countries.json");
+const COUNTRY_CODES_PATH = path.join(DATA_DIR, "country-codes.json");
 const PROFILES_DIR = path.join(DATA_DIR, "countries");
-const SOURCE_CATALOG_PATH = path.join(ROOT, "country_profiles", "data", "catalog", "countries.json");
 
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, "utf-8"));
@@ -40,13 +40,13 @@ export function loadCountriesByContinent() {
   return grouped;
 }
 
-export function loadSourceCatalog() {
-  return readJson(SOURCE_CATALOG_PATH);
+export function loadCountryCodes() {
+  return readJson(COUNTRY_CODES_PATH);
 }
 
 export function flattenCountries() {
   const grouped = loadCountriesByContinent();
-  const sourceByName = new Map(loadSourceCatalog().map((country) => [country.english_name, country]));
+  const sourceByName = new Map(loadCountryCodes().map((country) => [country.name, country]));
   const entries = [];
 
   for (const continent of loadContinents()) {

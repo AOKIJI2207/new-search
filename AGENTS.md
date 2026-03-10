@@ -1,58 +1,45 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-This repository is a small Vercel app with a static frontend and serverless API routes.
+- `data/countries.json` is the canonical continent index.
+- `data/countries/*.json` stores one country profile per file.
+- `api/country/[country].ts` is the only serverless endpoint.
+- `components/` contains frontend modules and styles.
+- `pages/` contains page-level rendering helpers.
+- `scripts/update-country-data.js` and `scripts/validate-dataset.js` handle maintenance.
 
-- `index.html`: single-page UI for search and local chat-style summarization.
-- `api/search.js`: fetches RSS feeds, filters results, sorts, and deduplicates items.
-- `api/sources.js`: exposes the list of selectable RSS sources.
-- `assets/`: static images used by the frontend.
-- `package.json`: minimal Node metadata and runtime dependency list.
-
-Keep new backend endpoints under `api/` and static files under `assets/`. Avoid adding framework-specific structure unless the project is intentionally migrated.
+Do not reintroduce multi-endpoint backend logic. Keep country data static and versioned in Git.
 
 ## Build, Test, and Development Commands
-Install dependencies with:
-
-```sh
-npm install
-```
-
-Run the project locally with Vercel dev mode:
-
-```sh
-vercel dev
-```
-
-This serves `index.html` and maps `api/*.js` as local serverless functions. There is no dedicated build script in `package.json` yet. If you add one, keep it consistent with Vercel deployment behavior.
+- `npm run check` validates script and store syntax.
+- `npm run validate-data` checks dataset completeness and schema integrity.
+- `npm run update-data` refreshes economic indicators from public sources.
+- `npm run build` runs syntax checks plus dataset validation.
+- `vercel dev` starts the local Vercel-compatible app.
 
 ## Coding Style & Naming Conventions
-Use ES modules and keep the codebase dependency-light. Match the existing style:
-
-- 2-space indentation in HTML, CSS, and JavaScript.
-- `camelCase` for variables and functions (`loadSources`, `renderArticles`).
-- Short, descriptive file names in lowercase.
-- Prefer small helper functions over deeply nested inline logic.
-
-No formatter or linter is configured today. If you introduce one, document the command here and keep rules minimal.
+- Use ES modules.
+- Use 2-space indentation.
+- Prefer lowercase file names and `camelCase` identifiers.
+- Keep frontend modules small and data-first.
+- Country files must stay slugified: `united-states.json`, `south-korea.json`.
 
 ## Testing Guidelines
-There is no automated test suite yet. For changes, verify manually with `vercel dev`:
-
-- search with and without keywords
-- source selection toggles
-- API error handling for RSS failures
-- chat responses based only on loaded items
-
-If you add tests, place them in a dedicated `tests/` directory and use names like `search.test.js`.
+- Run `npm run check` and `npm run validate-data` before committing.
+- If country data logic changes, also run `npm run update-data`.
+- Manually verify:
+  - continent filters
+  - country search
+  - `/api/country/france`
+  - 404 behavior on unknown countries
 
 ## Commit & Pull Request Guidelines
-Recent history uses short imperative commit messages such as `Update world-map.png` and `Delete vercel.json`. Follow that pattern:
+- Use short imperative commit messages, for example:
+  - `Rebuild AGORAFLUX architecture from scratch`
+  - `Improve dataset validation`
+- PRs should describe dataset, API, and frontend impact clearly.
 
-- `Add source validation`
-- `Fix RSS deduplication`
-
-Pull requests should include a short summary, note any API or UI behavior changes, and attach screenshots when `index.html` is affected. Link the related issue or task when available.
-
-## Deployment & Configuration Notes
-This repo is intended for Vercel. Keep API routes compatible with Vercel serverless execution, and do not commit secrets. If configuration is needed later, prefer Vercel project environment variables over hardcoded values.
+## Deployment Notes
+- Vercel Hobby compatibility is mandatory.
+- Keep the total number of serverless functions below 12; target is 1.
+- Avoid runtime writes in API handlers.
