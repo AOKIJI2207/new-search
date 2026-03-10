@@ -1,0 +1,9 @@
+{
+  "dataset": "agoraflux-country-profiles",
+  "version": 1,
+  "generated_at": "2026-03-10",
+  "scope": "193 États membres de l’ONU + Palestine + Saint-Siège",
+  "country_count": 195,
+  "profile_count": 195,
+  "schema_version": 1
+}

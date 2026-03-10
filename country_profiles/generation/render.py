@@ -14,14 +14,12 @@ def profile_to_markdown(profile: dict, template_path: str) -> str:
     template = Path(template_path).read_text(encoding="utf-8")
     payload = {
         **profile,
-        "main_risks": _list(profile["main_risks"]),
-        "key_data": _dict_lines(profile["key_data"]),
-        "risk_zones": _list(profile["risk_zones"]),
-        "next_milestones": _list(profile["next_milestones"]),
-        "category_analysis": _dict_lines(profile["category_analysis"]),
-        "best_practices": _dict_lines(profile["best_practices"]),
-        "important_dates": _list(profile["important_dates"]),
-        "zone_analysis": _dict_lines(profile["zone_analysis"]),
+        "barometre_risques": _dict_lines(profile["barometre_risques"]),
+        "donnees_cles": _dict_lines(profile["donnees_cles"]),
+        "analyse_par_zones": _list(
+            f"{item['zone']} (niveau {item['niveau_risque']}/5): {item['analyse']}"
+            for item in profile["analyse_par_zones"]
+        ),
     }
     # tiny placeholder renderer
     for k, v in payload.items():

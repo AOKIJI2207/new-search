@@ -1,0 +1,60 @@
+{
+  "country_id": "GBR",
+  "nom_pays": "Royaume-Uni",
+  "english_name": "United Kingdom",
+  "continent": "Europe",
+  "niveau_risque_global": 3,
+  "barometre_risques": {
+    "geopolitique": 3,
+    "politique": 3,
+    "socio_economique": 2,
+    "criminalite": 4,
+    "terrorisme": 5,
+    "sanitaire_catastrophes": 2,
+    "deplacements": 5
+  },
+  "donnees_cles": {
+    "population": 19100000,
+    "indice_corruption": 39,
+    "facilite_affaires": 67,
+    "indice_developpement_humain": 0.82,
+    "croissance_pib": 5.2
+  },
+  "situation_securitaire": "Profil de risque élevé pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
+  "geopolitique": "Analyse basée sur signaux multi-sources.",
+  "politique": "Stabilité institutionnelle et calendrier politique suivis.",
+  "socio_economique": "Tendances inflation/emploi/croissance intégrées.",
+  "criminalite": "Niveau de menace criminelle pour actifs et personnels.",
+  "terrorisme": "Exposition terroriste évaluée par criticité locale.",
+  "sanitaire_catastrophes": "Risque sanitaire et aléas naturels agrégés.",
+  "deplacements": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
+  "analyse_par_zones": [
+    {
+      "zone": "capitale",
+      "niveau_risque": 3,
+      "analyse": "N/A"
+    },
+    {
+      "zone": "grandes villes",
+      "niveau_risque": 3,
+      "analyse": "Prioriser cartographie des risques urbains."
+    },
+    {
+      "zone": "régions sensibles",
+      "niveau_risque": 3,
+      "analyse": "Actualiser selon événements sécurité."
+    },
+    {
+      "zone": "zones frontalières",
+      "niveau_risque": 3,
+      "analyse": "Contrôles renforcés et variabilité locale."
+    }
+  ],
+  "synthese": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique.",
+  "metadata": {
+    "version": 1,
+    "source_profile": "migrated-from-legacy",
+    "last_updated": "2026-03-09T13:05:35Z",
+    "review_status": "validated"
+  }
+}

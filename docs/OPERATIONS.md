@@ -1,8 +1,9 @@
 # Documentation d'exploitation
 
 ## 1. Fonctionnement
-- Le moteur maintient un référentiel standardisé de fiches pays.
-- Chaque fiche suit le format 14 sections imposé (risque global, baromètre, analyses, zones, bonnes pratiques).
+- Le moteur maintient un référentiel canonique de 195 États dans `country_profiles/data/`.
+- Le catalogue officiel est `country_profiles/data/catalog/countries.json`.
+- Chaque fiche canonique est stockée dans `country_profiles/data/profiles/<ISO3>.json`.
 
 ## 2. Mise à jour automatique
 Exécuter périodiquement (cron / scheduler CI) :
@@ -10,6 +11,7 @@ Exécuter périodiquement (cron / scheduler CI) :
 ```bash
 python3 scripts/country_profiles_cli.py update_all_countries
 python3 scripts/country_profiles_cli.py regenerate_modified_profiles
+python3 scripts/country_profiles_cli.py validate_dataset
 ```
 
 Exemple cron hebdomadaire :
@@ -18,7 +20,7 @@ Exemple cron hebdomadaire :
 ```
 
 ## 3. Historisation
-- À chaque modification d’un pays, la version précédente est sauvegardée dans `country_profiles/history/<country>/`.
+- À chaque modification d’un pays, la version précédente est sauvegardée dans `country_profiles/history/<ISO3>/`.
 - Le diff principal est accessible via `diff_country_profile`.
 
 ## 4. Ajouter une source
@@ -34,8 +36,8 @@ Exemple cron hebdomadaire :
 
 ## 6. Résilience / robustesse
 - Validation de schéma via `data/schema.py`.
-- Champs manquants tolérés avec fallback.
-- Génération maintenue même en données partielles.
+- Le dataset doit contenir exactement 195 profils et 195 entrées catalogue.
+- Les incohérences `country_id/iso3`, continents ou notes hors `1..5` bloquent la validation.
 - Logs et rapports dans `country_profiles/logs/`.
 
 ## 7. Déploiement
