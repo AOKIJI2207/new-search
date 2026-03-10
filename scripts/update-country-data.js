@@ -129,6 +129,7 @@ function normalizeCountryKey(value = "") {
 function ensureSupplementalObjects(profile) {
   const next = structuredClone(profile);
   next.intelligence_indicators ||= {};
+  next.risk_breakdown ||= {};
   next.data_sources ||= {};
 
   for (const key of ["political_stability", "conflict_risk", "terrorism_risk", "military_expenditure"]) {
@@ -138,6 +139,12 @@ function ensureSupplementalObjects(profile) {
       source: "",
       year: ""
     };
+  }
+
+  for (const key of ["political", "economic", "social", "fiscal"]) {
+    if (!(key in next.risk_breakdown)) {
+      next.risk_breakdown[key] = null;
+    }
   }
 
   for (const key of ["population", "gdp", "gdp_per_capita", "growth", "inflation", "unemployment", "hdi", "corruption_index", "political_stability", "conflict_risk", "terrorism_risk", "military_expenditure"]) {

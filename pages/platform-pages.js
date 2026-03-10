@@ -1,8 +1,62 @@
+import {
+  formatCurrency,
+  formatCurrencyCompact,
+  formatDecimal,
+  formatPercent,
+  formatScore,
+  generateCountrySummary
+} from "../shared/country-formatting.js";
+
+const INDICATOR_EXPLANATIONS = {
+  "Global Risk": "Composite score based on political stability, economic volatility, social tensions, and fiscal sustainability.",
+  "Synthetic Index": "Aggregate macroeconomic index combining growth, inflation stability, employment, and fiscal indicators."
+};
+
 function riskBadge(score, color) {
   return `
     <span class="risk-badge" style="--badge-color:${color}">
       Risk ${score}/5
     </span>
+  `;
+}
+
+function indicatorLabel(label, explanation) {
+  if (!explanation) {
+    return label;
+  }
+
+  return `
+    <span class="indicator-heading">
+      <span>${label}</span>
+      <span class="info-chip" tabindex="0" aria-label="${label}: ${explanation}" data-tooltip="${explanation}">i</span>
+    </span>
+  `;
+}
+
+function renderIndicatorCard(label, value, explanation = "") {
+  return `
+    <article class="fact-card indicator-card">
+      <h3>${indicatorLabel(label, explanation)}</h3>
+      <p class="indicator-value">${value}</p>
+    </article>
+  `;
+}
+
+function renderRiskBreakdown(profile) {
+  const scores = profile.risk_breakdown || {};
+  const items = [
+    ["Political risk", scores.political],
+    ["Economic risk", scores.economic],
+    ["Social risk", scores.social],
+    ["Fiscal risk", scores.fiscal]
+  ];
+
+  return `
+    <div class="facts-grid compact">
+      ${items
+        .map(([label, value]) => renderIndicatorCard(label, formatScore(value)))
+        .join("")}
+    </div>
   `;
 }
 
@@ -67,7 +121,7 @@ export function renderCountryPreview(country, color) {
         ${riskBadge(country.risk_global, color)}
       </div>
       <div class="mini-metrics">
-        <div><span>Synthetic index</span><strong>${country.synthetic_index.toFixed(2)}</strong></div>
+        <div><span>${indicatorLabel("Synthetic index", INDICATOR_EXPLANATIONS["Synthetic Index"])}</span><strong>${country.synthetic_index.toFixed(2)}</strong></div>
         <div><span>GDP per capita</span><strong>${country.key_data.gdp_per_capita_display || "n/a"}</strong></div>
         <div><span>HDI</span><strong>${country.key_data.hdi_display || "n/a"}</strong></div>
       </div>
@@ -271,17 +325,26 @@ export function renderDashboardLayout({ totalCountries, topRiskChart, topStableC
 }
 
 export function renderCountryDetailLayout({ profile, summary, radarChart, timeline, alerts, comparePeers }) {
+  const countrySummary = generateCountrySummary(profile);
+  const economicCards = [
+    ["GDP", formatCurrencyCompact(profile.key_data.gdp)],
+    ["GDP per capita", formatCurrency(profile.key_data.gdp_per_capita)],
+    ["Growth", formatPercent(profile.key_data.growth)],
+    ["Inflation", formatPercent(profile.key_data.inflation)],
+    ["Unemployment", formatPercent(profile.key_data.unemployment)]
+  ];
+
   return `
     <main class="app-shell intelligence-shell">
       <section class="hero intelligence-hero">
         <article class="hero-card">
           <span class="eyebrow">${profile.continent}</span>
           <h1>${profile.name}</h1>
-          <p class="hero-copy">${profile.analysis.summary}</p>
+          <p class="hero-copy">${countrySummary}</p>
           <div class="hero-meta">
-            <div class="hero-stat"><strong>${profile.risk_global}/5</strong><span>Global risk</span></div>
-            <div class="hero-stat"><strong>${summary?.synthetic_index?.toFixed(2) || "n/a"}</strong><span>Synthetic index</span></div>
-            <div class="hero-stat"><strong>${profile.key_data.hdi}</strong><span>HDI</span></div>
+            <div class="hero-stat"><strong>${formatScore(profile.risk_global)}</strong><span>${indicatorLabel("Global Risk", INDICATOR_EXPLANATIONS["Global Risk"])}</span></div>
+            <div class="hero-stat"><strong>${summary?.synthetic_index?.toFixed(2) || "n/a"}</strong><span>${indicatorLabel("Synthetic Index", INDICATOR_EXPLANATIONS["Synthetic Index"])}</span></div>
+            <div class="hero-stat"><strong>${formatDecimal(profile.key_data.hdi)}</strong><span>HDI</span></div>
           </div>
           <div class="hero-actions">
             <a class="cta-button" href="/dashboard">Open global dashboard</a>
@@ -298,22 +361,22 @@ export function renderCountryDetailLayout({ profile, summary, radarChart, timeli
         <article class="panel">
           <div class="panel-heading"><h2>Economic indicators</h2></div>
           <div class="facts-grid compact">
-            <article class="fact-card"><h3>GDP</h3><p>${profile.key_data.gdp}</p></article>
-            <article class="fact-card"><h3>GDP per capita</h3><p>${profile.key_data.gdp_per_capita}</p></article>
-            <article class="fact-card"><h3>Growth</h3><p>${profile.key_data.growth}</p></article>
-            <article class="fact-card"><h3>Inflation</h3><p>${profile.key_data.inflation}</p></article>
-            <article class="fact-card"><h3>Unemployment</h3><p>${profile.key_data.unemployment}</p></article>
-            <article class="fact-card"><h3>HDI</h3><p>${profile.key_data.hdi}</p></article>
+            ${economicCards.map(([label, value]) => renderIndicatorCard(label, value)).join("")}
           </div>
         </article>
 
         <article class="panel">
-          <div class="panel-heading"><h2>Real-time alert panel</h2></div>
-          ${alerts}
+          <div class="panel-heading"><h2>Risk breakdown</h2></div>
+          ${renderRiskBreakdown(profile)}
         </article>
       </section>
 
       <section class="analytics-grid secondary-grid">
+        <article class="panel">
+          <div class="panel-heading"><h2>Real-time alert panel</h2></div>
+          ${alerts}
+        </article>
+
         <article class="panel">
           <div class="panel-heading"><h2>Geopolitical analysis</h2></div>
           <div class="analysis-grid">
@@ -323,7 +386,9 @@ export function renderCountryDetailLayout({ profile, summary, radarChart, timeli
             <article class="analysis-card"><h3>Regional analysis</h3><p>${profile.analysis.regional_analysis}</p></article>
           </div>
         </article>
+      </section>
 
+      <section class="analytics-grid secondary-grid">
         <article class="panel">
           <div class="panel-heading"><h2>Security analysis</h2></div>
           <div class="analysis-grid">
@@ -333,27 +398,26 @@ export function renderCountryDetailLayout({ profile, summary, radarChart, timeli
             <article class="analysis-card"><h3>Health & disasters</h3><p>${profile.analysis.health_disasters}</p></article>
           </div>
         </article>
-      </section>
 
-      <section class="analytics-grid secondary-grid">
         <article class="panel">
           <div class="panel-heading"><h2>Recent events timeline</h2></div>
           ${timeline}
         </article>
-        <article class="panel">
-          <div class="panel-heading"><h2>Compare with peers</h2></div>
-          <div class="hotspot-chips">
-            ${comparePeers
-              .map(
-                (country) => `
-                  <button type="button" class="chip soft" data-open-country="${country.slug}">
-                    ${country.name} · ${country.synthetic_index.toFixed(2)}
-                  </button>
-                `
-              )
-              .join("")}
-          </div>
-        </article>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading"><h2>Compare with peers</h2></div>
+        <div class="hotspot-chips">
+          ${comparePeers
+            .map(
+              (country) => `
+                <button type="button" class="chip soft" data-open-country="${country.slug}">
+                  ${country.name} · ${country.synthetic_index.toFixed(2)}
+                </button>
+              `
+            )
+            .join("")}
+        </div>
       </section>
     </main>
   `;

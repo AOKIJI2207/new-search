@@ -1,3 +1,5 @@
+import { formatCurrency, formatDecimal, formatPercent, formatScore } from "../shared/country-formatting.js";
+
 function polarToCartesian(cx, cy, radius, angleInDegrees) {
   const angle = ((angleInDegrees - 90) * Math.PI) / 180.0;
   return {
@@ -77,10 +79,10 @@ export function renderBarChart(items, valueKey, labelKey, modifier = "") {
 export function renderComparisonChart(countries) {
   const rows = [
     { label: "Risk Index", key: "synthetic_index", format: (v) => v.toFixed(2) },
-    { label: "Global Risk", key: "risk_global", format: (v) => `${v}/5` },
-    { label: "GDP per capita", key: "gdp_per_capita", format: (v) => v ? `$${Math.round(v).toLocaleString("en-US")}` : "n/a" },
-    { label: "HDI", key: "hdi", format: (v) => v ? v.toFixed(3) : "n/a" },
-    { label: "Unemployment", key: "unemployment", format: (v) => v ? `${v.toFixed(1)}%` : "n/a" }
+    { label: "Global Risk", key: "risk_global", format: (v) => formatScore(v) },
+    { label: "GDP per capita", key: "gdp_per_capita", format: (v) => formatCurrency(v) },
+    { label: "HDI", key: "hdi", format: (v) => formatDecimal(v, 3) },
+    { label: "Unemployment", key: "unemployment", format: (v) => formatPercent(v) }
   ];
 
   return `

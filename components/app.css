@@ -107,6 +107,12 @@ h1 {
   font-size: 20px;
 }
 
+.hero-stat span,
+.mini-metrics span,
+.fact-card h3 {
+  position: relative;
+}
+
 .map-card {
   padding: 20px;
   display: grid;
@@ -302,6 +308,54 @@ h1 {
   margin-bottom: 6px;
 }
 
+.indicator-heading {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.info-chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 118, 110, 0.2);
+  background: rgba(15, 118, 110, 0.08);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: help;
+}
+
+.info-chip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  transform: translateX(-50%);
+  width: min(240px, 70vw);
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: #12312e;
+  color: #f8f3ea;
+  font-size: 12px;
+  line-height: 1.4;
+  box-shadow: 0 18px 32px rgba(18, 49, 46, 0.24);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.16s ease, transform 0.16s ease;
+  z-index: 20;
+}
+
+.info-chip:hover::after,
+.info-chip:focus-visible::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-2px);
+}
+
 .details-header p {
   margin: 8px 0 0;
   color: var(--muted);
@@ -371,6 +425,18 @@ h1 {
   margin: 0;
   color: var(--muted);
   line-height: 1.5;
+}
+
+.indicator-card {
+  display: grid;
+  gap: 8px;
+}
+
+.indicator-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.02em;
 }
 
 .empty-state {

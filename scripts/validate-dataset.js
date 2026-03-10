@@ -12,11 +12,12 @@ function isBlank(value) {
 
 function validateProfileShape(profile, expectedName, expectedContinent) {
   const errors = [];
-  const requiredRoot = ["name", "continent", "risk_global", "risk_barometer", "key_data", "analysis"];
+  const requiredRoot = ["name", "continent", "risk_global", "risk_barometer", "key_data", "analysis", "risk_breakdown"];
   const requiredBarometer = ["geopolitics", "politics", "socio_economic", "crime", "terrorism", "health_disasters", "transport"];
   const requiredKeyData = ["capital", "population", "political_system", "head_of_state", "gdp", "gdp_per_capita", "growth", "inflation", "public_debt", "unemployment", "hdi", "corruption_index"];
   const requiredAnalysis = ["security", "geopolitics", "politics", "economy", "crime", "terrorism", "health_disasters", "transport", "regional_analysis", "summary"];
   const requiredSupplemental = ["political_stability", "conflict_risk", "terrorism_risk", "military_expenditure"];
+  const requiredRiskBreakdown = ["political", "economic", "social", "fiscal"];
 
   for (const key of requiredRoot) {
     if (!(key in profile)) errors.push(`missing:${key}`);
@@ -52,6 +53,14 @@ function validateProfileShape(profile, expectedName, expectedContinent) {
     for (const key of requiredSupplemental) {
       if (!(key in profile.intelligence_indicators)) {
         errors.push(`missing:intelligence_indicators.${key}`);
+      }
+    }
+  }
+
+  if ("risk_breakdown" in profile) {
+    for (const key of requiredRiskBreakdown) {
+      if (!(key in profile.risk_breakdown)) {
+        errors.push(`missing:risk_breakdown.${key}`);
       }
     }
   }

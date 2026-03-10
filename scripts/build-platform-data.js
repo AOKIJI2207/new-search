@@ -1,6 +1,13 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { flattenCountries, loadCountryProfileBySlug } from "../server/country-store.js";
+import {
+  formatCurrency,
+  formatCurrencyCompact,
+  formatDecimal,
+  formatPercent,
+  generateCountrySummary
+} from "../shared/country-formatting.js";
 
 const ROOT = process.cwd();
 const DATA_DIR = path.join(ROOT, "data");
@@ -214,17 +221,21 @@ function buildCountrySummary(entry, profile) {
     continent: entry.continent,
     risk_global: profile.risk_global,
     synthetic_index: syntheticIndex,
-    summary: profile.analysis.summary,
+    summary: generateCountrySummary(profile),
     risk_barometer: profile.risk_barometer,
     key_data: {
       gdp: parseCurrency(profile.key_data.gdp),
-      gdp_display: profile.key_data.gdp,
+      gdp_display: formatCurrencyCompact(profile.key_data.gdp),
       gdp_per_capita: parseCurrency(profile.key_data.gdp_per_capita),
-      gdp_per_capita_display: profile.key_data.gdp_per_capita,
+      gdp_per_capita_display: formatCurrency(profile.key_data.gdp_per_capita),
+      growth: parsePercent(profile.key_data.growth),
+      growth_display: formatPercent(profile.key_data.growth),
+      inflation: parsePercent(profile.key_data.inflation),
+      inflation_display: formatPercent(profile.key_data.inflation),
       hdi: parseDecimal(profile.key_data.hdi),
-      hdi_display: profile.key_data.hdi,
+      hdi_display: formatDecimal(profile.key_data.hdi),
       unemployment: parsePercent(profile.key_data.unemployment),
-      unemployment_display: profile.key_data.unemployment,
+      unemployment_display: formatPercent(profile.key_data.unemployment),
       political_system: profile.key_data.political_system
     }
   };

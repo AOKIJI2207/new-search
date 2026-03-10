@@ -51,6 +51,12 @@
       "year": ""
     }
   },
+  "risk_breakdown": {
+    "political": null,
+    "economic": null,
+    "social": null,
+    "fiscal": null
+  },
   "data_sources": {
     "population": { "source": "", "year": "" },
     "gdp": { "source": "", "year": "" },

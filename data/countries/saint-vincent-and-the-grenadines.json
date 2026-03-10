@@ -112,5 +112,11 @@
       "source": "World Bank",
       "year": "2024"
     }
+  },
+  "risk_breakdown": {
+    "political": null,
+    "economic": null,
+    "social": null,
+    "fiscal": null
   }
 }
