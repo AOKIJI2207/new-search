@@ -8,7 +8,6 @@ export const ALLOWED_CATEGORIES = [
   { key: "actualites_politiques", label: "Actualités politiques" }
 ];
 
-
 const CONTINENT_BY_COUNTRY = {
   Nigeria: "Afrique","South Africa": "Afrique",Kenya: "Afrique",Egypt: "Afrique",Morocco: "Afrique",Ghana: "Afrique",Senegal: "Afrique",
   "United States": "Amérique du Nord",Canada: "Amérique du Nord",Mexico: "Amérique du Nord",

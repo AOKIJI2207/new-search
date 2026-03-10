@@ -1,0 +1,28 @@
+{
+  "generatedAt": "2026-03-10T09:46:59.386Z",
+  "status": "success",
+  "summary": "Dataset remained valid, but regeneration reported an external-source warning.",
+  "steps": [
+    {
+      "command": "node scripts/validate-country-dataset.mjs",
+      "startedAt": "2026-03-10T09:46:58.756Z",
+      "finishedAt": "2026-03-10T09:46:58.937Z",
+      "status": "ok",
+      "exitCode": 0
+    },
+    {
+      "command": "node scripts/generate-country-profiles.mjs",
+      "startedAt": "2026-03-10T09:46:58.937Z",
+      "finishedAt": "2026-03-10T09:46:59.215Z",
+      "status": "failed",
+      "exitCode": 1
+    },
+    {
+      "command": "node scripts/validate-country-dataset.mjs",
+      "startedAt": "2026-03-10T09:46:59.215Z",
+      "finishedAt": "2026-03-10T09:46:59.385Z",
+      "status": "ok",
+      "exitCode": 0
+    }
+  ]
+}
