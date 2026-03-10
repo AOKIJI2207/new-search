@@ -1,13 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const DATA_DIR = path.join(process.cwd(), "data");
+const ROOT = process.cwd();
+const DATA_DIR = path.join(ROOT, "data");
 const CONTINENTS_PATH = path.join(DATA_DIR, "continents.json");
 const COUNTRIES_PATH = path.join(DATA_DIR, "countries.json");
 const PROFILES_DIR = path.join(DATA_DIR, "countries");
-const ALLOWED_CONTINENTS = JSON.parse(fs.readFileSync(CONTINENTS_PATH, "utf-8"));
-
-let payloadCache = null;
+const SOURCE_CATALOG_PATH = path.join(ROOT, "country_profiles", "data", "catalog", "countries.json");
 
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, "utf-8"));
@@ -28,12 +27,12 @@ export function slugify(value = "") {
 }
 
 export function loadContinents() {
-  return ALLOWED_CONTINENTS.slice();
+  return readJson(CONTINENTS_PATH);
 }
 
 export function loadCountriesByContinent() {
   const grouped = readJson(COUNTRIES_PATH);
-  for (const continent of ALLOWED_CONTINENTS) {
+  for (const continent of loadContinents()) {
     if (!Array.isArray(grouped[continent])) {
       throw new Error(`Missing continent key in countries.json: ${continent}`);
     }
@@ -41,13 +40,26 @@ export function loadCountriesByContinent() {
   return grouped;
 }
 
+export function loadSourceCatalog() {
+  return readJson(SOURCE_CATALOG_PATH);
+}
+
 export function flattenCountries() {
   const grouped = loadCountriesByContinent();
+  const sourceByName = new Map(loadSourceCatalog().map((country) => [country.english_name, country]));
   const entries = [];
 
-  for (const continent of ALLOWED_CONTINENTS) {
+  for (const continent of loadContinents()) {
     for (const name of grouped[continent]) {
-      entries.push({ name, continent, slug: slugify(name) });
+      const source = sourceByName.get(name);
+      entries.push({
+        name,
+        continent,
+        slug: slugify(name),
+        iso2: source?.iso2 || null,
+        iso3: source?.iso3 || null,
+        country_id: source?.country_id || null
+      });
     }
   }
 
@@ -62,123 +74,35 @@ export function flattenCountries() {
   return entries;
 }
 
-export function loadCountryProfileBySlug(slug) {
-  const safeSlug = slugify(slug);
-  const filePath = path.join(PROFILES_DIR, `${safeSlug}.json`);
-
-  if (!fs.existsSync(filePath)) {
-    return null;
-  }
-
-  return readJson(filePath);
-}
-
 export function findCountryEntry(query) {
   const target = normalize(query);
   if (!target) return null;
 
   return (
     flattenCountries().find((entry) => {
-      return normalize(entry.name) === target || entry.slug === target.replace(/\s+/g, "-");
+      return [
+        entry.name,
+        entry.slug,
+        entry.iso2,
+        entry.iso3,
+        entry.country_id
+      ].some((value) => normalize(value || "") === target || String(value || "").toLowerCase() === target);
     }) || null
   );
 }
 
-function buildLegacyProfile(entry, profile) {
-  return {
-    country: profile.name,
-    displayName: profile.name,
-    countryId: entry.slug,
-    iso2: null,
-    iso3: null,
-    continent: profile.continent,
-    headOfState: profile.key_data.head_of_state,
-    rulingParty: profile.key_data.political_system,
-    primeMinister: null,
-    governor: null,
-    nextElection: null,
-    isDemocracy: null,
-    rsfRank: profile.key_data.corruption_index || "Non publié",
-    rsfScore: null,
-    gdpPerCapita: profile.key_data.gdp_per_capita,
-    ratings: {
-      security: profile.risk_barometer.crime,
-      business: profile.risk_barometer.socio_economic,
-      health: profile.risk_barometer.health_disasters,
-      expat: profile.risk_barometer.transport,
-      overall: profile.risk_global
-    },
-    summary: profile.analysis.summary,
-    canonical: profile
-  };
+export function getCountryFilePath(slug) {
+  return path.join(PROFILES_DIR, `${slugify(slug)}.json`);
 }
 
-function getLatestUpdatedAt() {
-  const files = fs.readdirSync(PROFILES_DIR).filter((file) => file.endsWith(".json"));
-  const latestMs = files.reduce((current, file) => {
-    const stat = fs.statSync(path.join(PROFILES_DIR, file));
-    return Math.max(current, stat.mtimeMs);
-  }, fs.statSync(COUNTRIES_PATH).mtimeMs);
-  return new Date(latestMs).toISOString();
-}
-
-function buildPayload() {
-  const entries = flattenCountries();
-  const profiles = {};
-  const canonicalProfiles = {};
-
-  for (const entry of entries) {
-    const profile = loadCountryProfileBySlug(entry.slug);
-    if (!profile) {
-      throw new Error(`Missing country profile file for ${entry.name}`);
-    }
-    if (profile.name !== entry.name) {
-      throw new Error(`Profile name mismatch for ${entry.slug}`);
-    }
-    if (profile.continent !== entry.continent) {
-      throw new Error(`Profile continent mismatch for ${entry.slug}`);
-    }
-    profiles[entry.name] = buildLegacyProfile(entry, profile);
-    canonicalProfiles[entry.slug] = profile;
+export function loadCountryProfileBySlug(slug) {
+  const filePath = getCountryFilePath(slug);
+  if (!fs.existsSync(filePath)) {
+    return null;
   }
-
-  return {
-    updatedAt: getLatestUpdatedAt(),
-    manifest: {
-      source: "data",
-      totalCountries: entries.length,
-      continents: loadContinents()
-    },
-    catalog: entries,
-    profiles,
-    canonicalProfiles
-  };
+  return readJson(filePath);
 }
 
-export function getCountryProfilesPayload({ forceRefresh = false } = {}) {
-  if (!payloadCache || forceRefresh) {
-    payloadCache = buildPayload();
-  }
-  return payloadCache;
-}
-
-export function refreshCountryProfilesPayload() {
-  payloadCache = buildPayload();
-  return payloadCache;
-}
-
-export function getCountrySearchIndex() {
-  const payload = getCountryProfilesPayload();
-  return {
-    updatedAt: payload.updatedAt,
-    countries: payload.catalog.map((entry) => ({
-      name: entry.name,
-      slug: entry.slug,
-      continent: entry.continent
-    })),
-    continents: loadContinents().map((name) => ({
-      name,
-      slug: slugify(name)
-    }))
-  };
+export function writeCountryProfileBySlug(slug, payload) {
+  fs.writeFileSync(getCountryFilePath(slug), `${JSON.stringify(payload, null, 2)}\n`, "utf-8");
 }

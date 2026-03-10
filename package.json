@@ -7,11 +7,12 @@
   "scripts": {
     "dev": "vercel dev",
     "start": "vercel dev",
-    "check": "node --check server/article-pipeline.js && node --check server/api-router.js && node --check server/country-store.js && node --check server/sources-data.js && node --check server/translation-service.js && node --check scripts/update-country-data.js",
+    "check": "node --check server/country-store.js && node --check scripts/update-country-data.js && node --check scripts/validate-dataset.js",
     "test:countries-index": "node scripts/check-countries-index.mjs",
     "generate:country-dataset": "node scripts/generate-country-profiles.mjs",
     "validate:country-dataset": "node scripts/validate-country-dataset.mjs",
-    "update-data": "node scripts/update-country-data.js"
+    "update-data": "node scripts/update-country-data.js",
+    "validate-data": "node scripts/validate-dataset.js"
   },
   "dependencies": {
     "rss-parser": "^3.13.0"

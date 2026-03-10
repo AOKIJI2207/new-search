@@ -1,28 +1,1763 @@
 {
-  "generatedAt": "2026-03-10T09:46:59.386Z",
-  "status": "success",
-  "summary": "Dataset remained valid, but regeneration reported an external-source warning.",
-  "steps": [
+  "generatedAt": "2026-03-10T10:05:47.678Z",
+  "totalCountries": 195,
+  "updatedCountries": 195,
+  "countriesWithWarnings": 195,
+  "results": [
     {
-      "command": "node scripts/validate-country-dataset.mjs",
-      "startedAt": "2026-03-10T09:46:58.756Z",
-      "finishedAt": "2026-03-10T09:46:58.937Z",
-      "status": "ok",
-      "exitCode": 0
+      "country": "Algeria",
+      "slug": "algeria",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
     },
     {
-      "command": "node scripts/generate-country-profiles.mjs",
-      "startedAt": "2026-03-10T09:46:58.937Z",
-      "finishedAt": "2026-03-10T09:46:59.215Z",
-      "status": "failed",
-      "exitCode": 1
+      "country": "Angola",
+      "slug": "angola",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
     },
     {
-      "command": "node scripts/validate-country-dataset.mjs",
-      "startedAt": "2026-03-10T09:46:59.215Z",
-      "finishedAt": "2026-03-10T09:46:59.385Z",
-      "status": "ok",
-      "exitCode": 0
+      "country": "Benin",
+      "slug": "benin",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Botswana",
+      "slug": "botswana",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Burkina Faso",
+      "slug": "burkina-faso",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Burundi",
+      "slug": "burundi",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Cameroon",
+      "slug": "cameroon",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Cape Verde",
+      "slug": "cape-verde",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Central African Republic",
+      "slug": "central-african-republic",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Chad",
+      "slug": "chad",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Comoros",
+      "slug": "comoros",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Djibouti",
+      "slug": "djibouti",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "DR Congo",
+      "slug": "dr-congo",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Egypt",
+      "slug": "egypt",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Equatorial Guinea",
+      "slug": "equatorial-guinea",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Eritrea",
+      "slug": "eritrea",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Eswatini",
+      "slug": "eswatini",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Ethiopia",
+      "slug": "ethiopia",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Gabon",
+      "slug": "gabon",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Gambia",
+      "slug": "gambia",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Ghana",
+      "slug": "ghana",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Guinea",
+      "slug": "guinea",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Guinea-Bissau",
+      "slug": "guinea-bissau",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Ivory Coast",
+      "slug": "ivory-coast",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Kenya",
+      "slug": "kenya",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Lesotho",
+      "slug": "lesotho",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Liberia",
+      "slug": "liberia",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Libya",
+      "slug": "libya",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Madagascar",
+      "slug": "madagascar",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Malawi",
+      "slug": "malawi",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Mali",
+      "slug": "mali",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Mauritania",
+      "slug": "mauritania",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Mauritius",
+      "slug": "mauritius",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Morocco",
+      "slug": "morocco",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Mozambique",
+      "slug": "mozambique",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Namibia",
+      "slug": "namibia",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Niger",
+      "slug": "niger",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Nigeria",
+      "slug": "nigeria",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Republic of the Congo",
+      "slug": "republic-of-the-congo",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Rwanda",
+      "slug": "rwanda",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "São Tomé and Príncipe",
+      "slug": "sao-tome-and-principe",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Senegal",
+      "slug": "senegal",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Seychelles",
+      "slug": "seychelles",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Sierra Leone",
+      "slug": "sierra-leone",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Somalia",
+      "slug": "somalia",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "South Africa",
+      "slug": "south-africa",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "South Sudan",
+      "slug": "south-sudan",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Sudan",
+      "slug": "sudan",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Tanzania",
+      "slug": "tanzania",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Togo",
+      "slug": "togo",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Tunisia",
+      "slug": "tunisia",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Uganda",
+      "slug": "uganda",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Zambia",
+      "slug": "zambia",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Zimbabwe",
+      "slug": "zimbabwe",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Antigua and Barbuda",
+      "slug": "antigua-and-barbuda",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Bahamas",
+      "slug": "bahamas",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Barbados",
+      "slug": "barbados",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Belize",
+      "slug": "belize",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Canada",
+      "slug": "canada",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Costa Rica",
+      "slug": "costa-rica",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Cuba",
+      "slug": "cuba",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Dominica",
+      "slug": "dominica",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Dominican Republic",
+      "slug": "dominican-republic",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "El Salvador",
+      "slug": "el-salvador",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Grenada",
+      "slug": "grenada",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Guatemala",
+      "slug": "guatemala",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Haiti",
+      "slug": "haiti",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Honduras",
+      "slug": "honduras",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Jamaica",
+      "slug": "jamaica",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Mexico",
+      "slug": "mexico",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Nicaragua",
+      "slug": "nicaragua",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Panama",
+      "slug": "panama",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Saint Kitts and Nevis",
+      "slug": "saint-kitts-and-nevis",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Saint Lucia",
+      "slug": "saint-lucia",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Saint Vincent and the Grenadines",
+      "slug": "saint-vincent-and-the-grenadines",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Trinidad and Tobago",
+      "slug": "trinidad-and-tobago",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "United States",
+      "slug": "united-states",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Argentina",
+      "slug": "argentina",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Bolivia",
+      "slug": "bolivia",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Brazil",
+      "slug": "brazil",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Chile",
+      "slug": "chile",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Colombia",
+      "slug": "colombia",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Ecuador",
+      "slug": "ecuador",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Guyana",
+      "slug": "guyana",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Paraguay",
+      "slug": "paraguay",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Peru",
+      "slug": "peru",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Suriname",
+      "slug": "suriname",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Uruguay",
+      "slug": "uruguay",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Venezuela",
+      "slug": "venezuela",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Afghanistan",
+      "slug": "afghanistan",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Armenia",
+      "slug": "armenia",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Azerbaijan",
+      "slug": "azerbaijan",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Bahrain",
+      "slug": "bahrain",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Bangladesh",
+      "slug": "bangladesh",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Bhutan",
+      "slug": "bhutan",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Brunei",
+      "slug": "brunei",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Cambodia",
+      "slug": "cambodia",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "China",
+      "slug": "china",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Georgia",
+      "slug": "georgia",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "India",
+      "slug": "india",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Indonesia",
+      "slug": "indonesia",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Iran",
+      "slug": "iran",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Iraq",
+      "slug": "iraq",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Israel",
+      "slug": "israel",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Japan",
+      "slug": "japan",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Jordan",
+      "slug": "jordan",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Kazakhstan",
+      "slug": "kazakhstan",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Kuwait",
+      "slug": "kuwait",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Kyrgyzstan",
+      "slug": "kyrgyzstan",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Laos",
+      "slug": "laos",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Lebanon",
+      "slug": "lebanon",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Malaysia",
+      "slug": "malaysia",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Maldives",
+      "slug": "maldives",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Mongolia",
+      "slug": "mongolia",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Myanmar",
+      "slug": "myanmar",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Nepal",
+      "slug": "nepal",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "North Korea",
+      "slug": "north-korea",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Oman",
+      "slug": "oman",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Pakistan",
+      "slug": "pakistan",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Palestine",
+      "slug": "palestine",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Philippines",
+      "slug": "philippines",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Qatar",
+      "slug": "qatar",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Saudi Arabia",
+      "slug": "saudi-arabia",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Singapore",
+      "slug": "singapore",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "South Korea",
+      "slug": "south-korea",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Sri Lanka",
+      "slug": "sri-lanka",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Syria",
+      "slug": "syria",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Tajikistan",
+      "slug": "tajikistan",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Thailand",
+      "slug": "thailand",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Timor-Leste",
+      "slug": "timor-leste",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Türkiye",
+      "slug": "turkiye",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Turkmenistan",
+      "slug": "turkmenistan",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "United Arab Emirates",
+      "slug": "united-arab-emirates",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Uzbekistan",
+      "slug": "uzbekistan",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Vietnam",
+      "slug": "vietnam",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Yemen",
+      "slug": "yemen",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Albania",
+      "slug": "albania",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Andorra",
+      "slug": "andorra",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Austria",
+      "slug": "austria",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Belarus",
+      "slug": "belarus",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Belgium",
+      "slug": "belgium",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Bosnia and Herzegovina",
+      "slug": "bosnia-and-herzegovina",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Bulgaria",
+      "slug": "bulgaria",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Croatia",
+      "slug": "croatia",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Cyprus",
+      "slug": "cyprus",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Czechia",
+      "slug": "czechia",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Denmark",
+      "slug": "denmark",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Estonia",
+      "slug": "estonia",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Finland",
+      "slug": "finland",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "France",
+      "slug": "france",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Germany",
+      "slug": "germany",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Greece",
+      "slug": "greece",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Hungary",
+      "slug": "hungary",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Iceland",
+      "slug": "iceland",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Ireland",
+      "slug": "ireland",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Italy",
+      "slug": "italy",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Latvia",
+      "slug": "latvia",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Liechtenstein",
+      "slug": "liechtenstein",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Lithuania",
+      "slug": "lithuania",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Luxembourg",
+      "slug": "luxembourg",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Malta",
+      "slug": "malta",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Moldova",
+      "slug": "moldova",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Monaco",
+      "slug": "monaco",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Montenegro",
+      "slug": "montenegro",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Netherlands",
+      "slug": "netherlands",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "North Macedonia",
+      "slug": "north-macedonia",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Norway",
+      "slug": "norway",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Poland",
+      "slug": "poland",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Portugal",
+      "slug": "portugal",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Romania",
+      "slug": "romania",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Russia",
+      "slug": "russia",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "San Marino",
+      "slug": "san-marino",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Serbia",
+      "slug": "serbia",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Slovakia",
+      "slug": "slovakia",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Slovenia",
+      "slug": "slovenia",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Spain",
+      "slug": "spain",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Sweden",
+      "slug": "sweden",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Switzerland",
+      "slug": "switzerland",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Ukraine",
+      "slug": "ukraine",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "United Kingdom",
+      "slug": "united-kingdom",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Vatican City",
+      "slug": "vatican-city",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Australia",
+      "slug": "australia",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Fiji",
+      "slug": "fiji",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Kiribati",
+      "slug": "kiribati",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Marshall Islands",
+      "slug": "marshall-islands",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Micronesia",
+      "slug": "micronesia",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Nauru",
+      "slug": "nauru",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "New Zealand",
+      "slug": "new-zealand",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Palau",
+      "slug": "palau",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Papua New Guinea",
+      "slug": "papua-new-guinea",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Samoa",
+      "slug": "samoa",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Solomon Islands",
+      "slug": "solomon-islands",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Tonga",
+      "slug": "tonga",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Tuvalu",
+      "slug": "tuvalu",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
+    },
+    {
+      "country": "Vanuatu",
+      "slug": "vanuatu",
+      "status": "updated",
+      "updates": [],
+      "warnings": [
+        "fetch failed"
+      ]
     }
   ]
 }
