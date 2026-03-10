@@ -13,17 +13,17 @@
   },
   "key_data": {
     "capital": "Banjul",
-    "population": "2,422,712",
+    "population": "2,759,988",
     "political_system": "National institutional system of Gambia",
     "head_of_state": "Current head of state of Gambia",
     "gdp": "$2,404,888,749",
     "gdp_per_capita": "$871",
-    "growth": "6.7%",
+    "growth": "5.3%",
     "inflation": "11.6%",
     "public_debt": "Data unavailable",
     "unemployment": "6.5%",
     "hdi": "0.62",
-    "corruption_index": "32"
+    "corruption_index": "37"
   },
   "analysis": {
     "security": "Profil de risque élevé pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
@@ -36,5 +36,81 @@
     "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
     "regional_analysis": "African exposure is driven by uneven state capacity, security fragmentation in selected corridors, commodity dependency, and infrastructure stress.",
     "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
+  },
+  "intelligence_indicators": {
+    "political_stability": {
+      "value": null,
+      "display": "",
+      "source": "",
+      "year": ""
+    },
+    "conflict_risk": {
+      "value": 3,
+      "display": "3/5",
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "terrorism_risk": {
+      "value": 5,
+      "display": "5/5",
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "military_expenditure": {
+      "value": null,
+      "display": "",
+      "source": "",
+      "year": ""
+    }
+  },
+  "data_sources": {
+    "gdp": {
+      "source": "World Bank",
+      "year": "2024"
+    },
+    "gdp_per_capita": {
+      "source": "World Bank",
+      "year": "2024"
+    },
+    "growth": {
+      "source": "IMF",
+      "year": "2024"
+    },
+    "inflation": {
+      "source": "IMF",
+      "year": "2024"
+    },
+    "unemployment": {
+      "source": "World Bank",
+      "year": "2025"
+    },
+    "hdi": {
+      "source": "",
+      "year": ""
+    },
+    "corruption_index": {
+      "source": "Transparency International CPI",
+      "year": "2025"
+    },
+    "political_stability": {
+      "source": "",
+      "year": ""
+    },
+    "conflict_risk": {
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "terrorism_risk": {
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "military_expenditure": {
+      "source": "",
+      "year": ""
+    },
+    "population": {
+      "source": "World Bank",
+      "year": "2024"
+    }
   }
 }

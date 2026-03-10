@@ -13,17 +13,17 @@
   },
   "key_data": {
     "capital": "Manama",
-    "population": "1,594,654",
+    "population": "1,588,670",
     "political_system": "National institutional system of Bahrain",
     "head_of_state": "Current head of state of Bahrain",
     "gdp": "$47,109,734,309",
     "gdp_per_capita": "$29,654",
-    "growth": "0.3%",
+    "growth": "2.6%",
     "inflation": "0.9%",
     "public_debt": "111.6%",
     "unemployment": "1.1%",
     "hdi": "0.78",
-    "corruption_index": "24"
+    "corruption_index": "50"
   },
   "analysis": {
     "security": "Profil de risque élevé pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
@@ -36,5 +36,81 @@
     "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
     "regional_analysis": "Asian exposure is influenced by great-power rivalry, maritime trade routes, domestic political concentration, and supply-chain sensitivity.",
     "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
+  },
+  "intelligence_indicators": {
+    "political_stability": {
+      "value": 12,
+      "display": "12/100",
+      "source": "Freedom House",
+      "year": "2025"
+    },
+    "conflict_risk": {
+      "value": 3,
+      "display": "3/5",
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "terrorism_risk": {
+      "value": 1,
+      "display": "1/5",
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "military_expenditure": {
+      "value": null,
+      "display": "",
+      "source": "",
+      "year": ""
+    }
+  },
+  "data_sources": {
+    "gdp": {
+      "source": "World Bank",
+      "year": "2024"
+    },
+    "gdp_per_capita": {
+      "source": "World Bank",
+      "year": "2024"
+    },
+    "growth": {
+      "source": "IMF",
+      "year": "2024"
+    },
+    "inflation": {
+      "source": "IMF",
+      "year": "2024"
+    },
+    "unemployment": {
+      "source": "World Bank",
+      "year": "2025"
+    },
+    "hdi": {
+      "source": "",
+      "year": ""
+    },
+    "corruption_index": {
+      "source": "Transparency International CPI",
+      "year": "2025"
+    },
+    "political_stability": {
+      "source": "Freedom House",
+      "year": "2025"
+    },
+    "conflict_risk": {
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "terrorism_risk": {
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "military_expenditure": {
+      "source": "",
+      "year": ""
+    },
+    "population": {
+      "source": "World Bank",
+      "year": "2024"
+    }
   }
 }

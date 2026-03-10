@@ -18,12 +18,12 @@
     "head_of_state": "Donald Trump",
     "gdp": "$28,750,956,130,731",
     "gdp_per_capita": "$84,534",
-    "growth": "6.7%",
-    "inflation": "2.9%",
+    "growth": "2.8%",
+    "inflation": "3.0%",
     "public_debt": "118.1%",
     "unemployment": "4.2%",
     "hdi": "0.62",
-    "corruption_index": "32"
+    "corruption_index": "64"
   },
   "analysis": {
     "security": "Profil de risque élevé pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
@@ -36,5 +36,81 @@
     "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
     "regional_analysis": "North American exposure reflects cross-border logistics, hurricane and seismic risk pockets, organized crime routes, and US policy spillovers.",
     "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
+  },
+  "intelligence_indicators": {
+    "political_stability": {
+      "value": 84,
+      "display": "84/100",
+      "source": "Freedom House",
+      "year": "2025"
+    },
+    "conflict_risk": {
+      "value": 3,
+      "display": "3/5",
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "terrorism_risk": {
+      "value": 5,
+      "display": "5/5",
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "military_expenditure": {
+      "value": null,
+      "display": "",
+      "source": "",
+      "year": ""
+    }
+  },
+  "data_sources": {
+    "gdp": {
+      "source": "World Bank",
+      "year": "2024"
+    },
+    "gdp_per_capita": {
+      "source": "World Bank",
+      "year": "2024"
+    },
+    "growth": {
+      "source": "IMF",
+      "year": "2024"
+    },
+    "inflation": {
+      "source": "IMF",
+      "year": "2024"
+    },
+    "unemployment": {
+      "source": "World Bank",
+      "year": "2025"
+    },
+    "hdi": {
+      "source": "",
+      "year": ""
+    },
+    "corruption_index": {
+      "source": "Transparency International CPI",
+      "year": "2025"
+    },
+    "political_stability": {
+      "source": "Freedom House",
+      "year": "2025"
+    },
+    "conflict_risk": {
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "terrorism_risk": {
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "military_expenditure": {
+      "source": "",
+      "year": ""
+    },
+    "population": {
+      "source": "World Bank",
+      "year": "2024"
+    }
   }
 }

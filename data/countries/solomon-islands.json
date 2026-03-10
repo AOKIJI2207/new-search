@@ -13,17 +13,17 @@
   },
   "key_data": {
     "capital": "Honiara",
-    "population": "750,325",
+    "population": "819,198",
     "political_system": "National institutional system of Solomon Islands",
     "head_of_state": "Current head of state of Solomon Islands",
     "gdp": "$1,583,964,704",
     "gdp_per_capita": "$1,934",
-    "growth": "0.3%",
-    "inflation": "4.3%",
+    "growth": "2.5%",
+    "inflation": "4.2%",
     "public_debt": "16.4%",
     "unemployment": "1.4%",
     "hdi": "0.78",
-    "corruption_index": "24"
+    "corruption_index": "44"
   },
   "analysis": {
     "security": "Profil de risque élevé pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
@@ -36,5 +36,81 @@
     "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
     "regional_analysis": "Oceania exposure is shaped by remoteness, climate hazards, maritime connectivity, and strong variance between advanced and small island states.",
     "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
+  },
+  "intelligence_indicators": {
+    "political_stability": {
+      "value": 75,
+      "display": "75/100",
+      "source": "Freedom House",
+      "year": "2025"
+    },
+    "conflict_risk": {
+      "value": 3,
+      "display": "3/5",
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "terrorism_risk": {
+      "value": 1,
+      "display": "1/5",
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "military_expenditure": {
+      "value": null,
+      "display": "",
+      "source": "",
+      "year": ""
+    }
+  },
+  "data_sources": {
+    "gdp": {
+      "source": "World Bank",
+      "year": "2024"
+    },
+    "gdp_per_capita": {
+      "source": "World Bank",
+      "year": "2024"
+    },
+    "growth": {
+      "source": "IMF",
+      "year": "2024"
+    },
+    "inflation": {
+      "source": "IMF",
+      "year": "2024"
+    },
+    "unemployment": {
+      "source": "World Bank",
+      "year": "2025"
+    },
+    "hdi": {
+      "source": "",
+      "year": ""
+    },
+    "corruption_index": {
+      "source": "Transparency International CPI",
+      "year": "2025"
+    },
+    "political_stability": {
+      "source": "Freedom House",
+      "year": "2025"
+    },
+    "conflict_risk": {
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "terrorism_risk": {
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "military_expenditure": {
+      "source": "",
+      "year": ""
+    },
+    "population": {
+      "source": "World Bank",
+      "year": "2024"
+    }
   }
 }

@@ -13,12 +13,12 @@
   },
   "key_data": {
     "capital": "Saint John's",
-    "population": "103,603",
+    "population": "93,772",
     "political_system": "National institutional system of Antigua and Barbuda",
     "head_of_state": "Current head of state of Antigua and Barbuda",
     "gdp": "$2,207,622,874",
     "gdp_per_capita": "$23,542",
-    "growth": "6.3%",
+    "growth": "3.7%",
     "inflation": "6.2%",
     "public_debt": "Data unavailable",
     "unemployment": "Data unavailable",
@@ -36,5 +36,81 @@
     "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
     "regional_analysis": "North American exposure reflects cross-border logistics, hurricane and seismic risk pockets, organized crime routes, and US policy spillovers.",
     "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
+  },
+  "intelligence_indicators": {
+    "political_stability": {
+      "value": null,
+      "display": "",
+      "source": "",
+      "year": ""
+    },
+    "conflict_risk": {
+      "value": 3,
+      "display": "3/5",
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "terrorism_risk": {
+      "value": 1,
+      "display": "1/5",
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "military_expenditure": {
+      "value": null,
+      "display": "",
+      "source": "",
+      "year": ""
+    }
+  },
+  "data_sources": {
+    "gdp": {
+      "source": "World Bank",
+      "year": "2024"
+    },
+    "gdp_per_capita": {
+      "source": "World Bank",
+      "year": "2024"
+    },
+    "growth": {
+      "source": "IMF",
+      "year": "2024"
+    },
+    "inflation": {
+      "source": "IMF",
+      "year": "2024"
+    },
+    "unemployment": {
+      "source": "",
+      "year": ""
+    },
+    "hdi": {
+      "source": "",
+      "year": ""
+    },
+    "corruption_index": {
+      "source": "",
+      "year": ""
+    },
+    "political_stability": {
+      "source": "",
+      "year": ""
+    },
+    "conflict_risk": {
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "terrorism_risk": {
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "military_expenditure": {
+      "source": "",
+      "year": ""
+    },
+    "population": {
+      "source": "World Bank",
+      "year": "2024"
+    }
   }
 }

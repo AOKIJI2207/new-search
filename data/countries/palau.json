@@ -13,13 +13,13 @@
   },
   "key_data": {
     "capital": "Ngerulmud",
-    "population": "16,733",
+    "population": "17,695",
     "political_system": "National institutional system of Palau",
     "head_of_state": "Current head of state of Palau",
     "gdp": "$276,733,063",
     "gdp_per_capita": "$15,611",
-    "growth": "0.9%",
-    "inflation": "2.2%",
+    "growth": "12.0%",
+    "inflation": "3.6%",
     "public_debt": "85.2%",
     "unemployment": "Data unavailable",
     "hdi": "0.84",
@@ -36,5 +36,81 @@
     "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
     "regional_analysis": "Oceania exposure is shaped by remoteness, climate hazards, maritime connectivity, and strong variance between advanced and small island states.",
     "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
+  },
+  "intelligence_indicators": {
+    "political_stability": {
+      "value": 92,
+      "display": "92/100",
+      "source": "Freedom House",
+      "year": "2025"
+    },
+    "conflict_risk": {
+      "value": 3,
+      "display": "3/5",
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "terrorism_risk": {
+      "value": 2,
+      "display": "2/5",
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "military_expenditure": {
+      "value": null,
+      "display": "",
+      "source": "",
+      "year": ""
+    }
+  },
+  "data_sources": {
+    "gdp": {
+      "source": "World Bank",
+      "year": "2023"
+    },
+    "gdp_per_capita": {
+      "source": "World Bank",
+      "year": "2023"
+    },
+    "growth": {
+      "source": "IMF",
+      "year": "2024"
+    },
+    "inflation": {
+      "source": "IMF",
+      "year": "2024"
+    },
+    "unemployment": {
+      "source": "",
+      "year": ""
+    },
+    "hdi": {
+      "source": "",
+      "year": ""
+    },
+    "corruption_index": {
+      "source": "",
+      "year": ""
+    },
+    "political_stability": {
+      "source": "Freedom House",
+      "year": "2025"
+    },
+    "conflict_risk": {
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "terrorism_risk": {
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "military_expenditure": {
+      "source": "",
+      "year": ""
+    },
+    "population": {
+      "source": "World Bank",
+      "year": "2024"
+    }
   }
 }

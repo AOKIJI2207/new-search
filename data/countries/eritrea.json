@@ -13,17 +13,17 @@
   },
   "key_data": {
     "capital": "Asmara",
-    "population": "3,607,000",
+    "population": "3,535,603",
     "political_system": "National institutional system of Eritrea",
     "head_of_state": "Current head of state of Eritrea",
     "gdp": "$2,065,001,626",
     "gdp_per_capita": "$689",
-    "growth": "0.6%",
-    "inflation": "Data unavailable",
+    "growth": "3.8%",
+    "inflation": "1.3%",
     "public_debt": "Data unavailable",
     "unemployment": "6.0%",
     "hdi": "0.71",
-    "corruption_index": "62"
+    "corruption_index": "13"
   },
   "analysis": {
     "security": "Profil de risque modéré pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
@@ -36,5 +36,81 @@
     "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
     "regional_analysis": "African exposure is driven by uneven state capacity, security fragmentation in selected corridors, commodity dependency, and infrastructure stress.",
     "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
+  },
+  "intelligence_indicators": {
+    "political_stability": {
+      "value": 3,
+      "display": "3/100",
+      "source": "Freedom House",
+      "year": "2025"
+    },
+    "conflict_risk": {
+      "value": 3,
+      "display": "3/5",
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "terrorism_risk": {
+      "value": 4,
+      "display": "4/5",
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "military_expenditure": {
+      "value": null,
+      "display": "",
+      "source": "",
+      "year": ""
+    }
+  },
+  "data_sources": {
+    "gdp": {
+      "source": "World Bank",
+      "year": "2011"
+    },
+    "gdp_per_capita": {
+      "source": "World Bank",
+      "year": "2011"
+    },
+    "growth": {
+      "source": "IMF",
+      "year": "2019"
+    },
+    "inflation": {
+      "source": "IMF",
+      "year": "2019"
+    },
+    "unemployment": {
+      "source": "World Bank",
+      "year": "2025"
+    },
+    "hdi": {
+      "source": "",
+      "year": ""
+    },
+    "corruption_index": {
+      "source": "Transparency International CPI",
+      "year": "2025"
+    },
+    "political_stability": {
+      "source": "Freedom House",
+      "year": "2025"
+    },
+    "conflict_risk": {
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "terrorism_risk": {
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "military_expenditure": {
+      "source": "",
+      "year": ""
+    },
+    "population": {
+      "source": "World Bank",
+      "year": "2024"
+    }
   }
 }

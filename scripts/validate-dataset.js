@@ -16,6 +16,7 @@ function validateProfileShape(profile, expectedName, expectedContinent) {
   const requiredBarometer = ["geopolitics", "politics", "socio_economic", "crime", "terrorism", "health_disasters", "transport"];
   const requiredKeyData = ["capital", "population", "political_system", "head_of_state", "gdp", "gdp_per_capita", "growth", "inflation", "public_debt", "unemployment", "hdi", "corruption_index"];
   const requiredAnalysis = ["security", "geopolitics", "politics", "economy", "crime", "terrorism", "health_disasters", "transport", "regional_analysis", "summary"];
+  const requiredSupplemental = ["political_stability", "conflict_risk", "terrorism_risk", "military_expenditure"];
 
   for (const key of requiredRoot) {
     if (!(key in profile)) errors.push(`missing:${key}`);
@@ -44,6 +45,14 @@ function validateProfileShape(profile, expectedName, expectedContinent) {
   for (const key of requiredAnalysis) {
     if (isBlank(profile.analysis?.[key])) {
       errors.push(`empty:analysis.${key}`);
+    }
+  }
+
+  if ("intelligence_indicators" in profile) {
+    for (const key of requiredSupplemental) {
+      if (!(key in profile.intelligence_indicators)) {
+        errors.push(`missing:intelligence_indicators.${key}`);
+      }
     }
   }
 

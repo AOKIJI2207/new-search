@@ -13,17 +13,17 @@
   },
   "key_data": {
     "capital": "Havana",
-    "population": "9,748,007",
+    "population": "10,979,783",
     "political_system": "National institutional system of Cuba",
     "head_of_state": "Current head of state of Cuba",
     "gdp": "$107,352,000,000",
     "gdp_per_capita": "$9,605",
-    "growth": "6.9%",
+    "growth": "-1.1%",
     "inflation": "Data unavailable",
     "public_debt": "Data unavailable",
     "unemployment": "1.7%",
     "hdi": "0.64",
-    "corruption_index": "31"
+    "corruption_index": "40"
   },
   "analysis": {
     "security": "Profil de risque modéré pour voyageurs d'affaires et entreprises, avec recommandations de continuité d'activité.",
@@ -36,5 +36,81 @@
     "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
     "regional_analysis": "North American exposure reflects cross-border logistics, hurricane and seismic risk pockets, organized crime routes, and US policy spillovers.",
     "summary": "Contexte évolutif avec signaux mixtes sur les plans politique et socio-économique."
+  },
+  "intelligence_indicators": {
+    "political_stability": {
+      "value": 10,
+      "display": "10/100",
+      "source": "Freedom House",
+      "year": "2025"
+    },
+    "conflict_risk": {
+      "value": 3,
+      "display": "3/5",
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "terrorism_risk": {
+      "value": 2,
+      "display": "2/5",
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "military_expenditure": {
+      "value": null,
+      "display": "",
+      "source": "",
+      "year": ""
+    }
+  },
+  "data_sources": {
+    "gdp": {
+      "source": "World Bank",
+      "year": "2020"
+    },
+    "gdp_per_capita": {
+      "source": "World Bank",
+      "year": "2020"
+    },
+    "growth": {
+      "source": "World Bank",
+      "year": "2024"
+    },
+    "inflation": {
+      "source": "",
+      "year": ""
+    },
+    "unemployment": {
+      "source": "World Bank",
+      "year": "2025"
+    },
+    "hdi": {
+      "source": "",
+      "year": ""
+    },
+    "corruption_index": {
+      "source": "Transparency International CPI",
+      "year": "2025"
+    },
+    "political_stability": {
+      "source": "Freedom House",
+      "year": "2025"
+    },
+    "conflict_risk": {
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "terrorism_risk": {
+      "source": "Derived fallback from AGORAFLUX baseline",
+      "year": ""
+    },
+    "military_expenditure": {
+      "source": "",
+      "year": ""
+    },
+    "population": {
+      "source": "World Bank",
+      "year": "2024"
+    }
   }
 }

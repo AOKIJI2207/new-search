@@ -25,6 +25,46 @@
     "hdi": "",
     "corruption_index": ""
   },
+  "intelligence_indicators": {
+    "political_stability": {
+      "value": null,
+      "display": "",
+      "source": "",
+      "year": ""
+    },
+    "conflict_risk": {
+      "value": null,
+      "display": "",
+      "source": "",
+      "year": ""
+    },
+    "terrorism_risk": {
+      "value": null,
+      "display": "",
+      "source": "",
+      "year": ""
+    },
+    "military_expenditure": {
+      "value": null,
+      "display": "",
+      "source": "",
+      "year": ""
+    }
+  },
+  "data_sources": {
+    "population": { "source": "", "year": "" },
+    "gdp": { "source": "", "year": "" },
+    "gdp_per_capita": { "source": "", "year": "" },
+    "growth": { "source": "", "year": "" },
+    "inflation": { "source": "", "year": "" },
+    "unemployment": { "source": "", "year": "" },
+    "hdi": { "source": "", "year": "" },
+    "corruption_index": { "source": "", "year": "" },
+    "political_stability": { "source": "", "year": "" },
+    "conflict_risk": { "source": "", "year": "" },
+    "terrorism_risk": { "source": "", "year": "" },
+    "military_expenditure": { "source": "", "year": "" }
+  },
   "analysis": {
     "security": "",
     "geopolitics": "",
