@@ -6,13 +6,13 @@
   "region": "Europe & Central Asia",
   "incomeGroup": "High income",
   "currency": null,
-  "lastUpdated": "2025-12-31",
+  "lastUpdated": "2024-12-31",
   "metrics": {
     "population": 81938,
     "gdp": 4039842405.48117,
     "gdpPerCapita": 49303.6491674336,
     "growth": 3.37182032638998,
-    "inflation": 2.2,
+    "inflation": null,
     "unemployment": null,
     "hdi": null
   },
@@ -24,16 +24,6 @@
     "fiscal": null
   },
   "sources": [
-    {
-      "category": "Macroeconomy",
-      "label": "IMF",
-      "referenceLabel": "DataMapper",
-      "url": "https://www.imf.org/external/datamapper",
-      "updatedAt": "2025-12-31",
-      "fields": [
-        "inflation"
-      ]
-    },
     {
       "category": "Macroeconomy",
       "label": "World Bank",
@@ -81,6 +71,6 @@
     "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
     "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
     "regional_analysis": "European exposure is shaped by regulatory stability, proximity to NATO and EU dynamics, and spillovers from the Russia-Ukraine war.",
-    "summary": "Andorra shows solid economic momentum with GDP growth at 3.4%. Inflation remains moderate at 2.2%. Unemployment stands at 0.0%. Overall signals for the short-term outlook are mixed."
+    "summary": "Andorra shows solid economic momentum with GDP growth at 3.4%. Inflation remains contained at 0.0%. Unemployment stands at 0.0%. Overall signals for the short-term outlook are mixed."
   }
 }

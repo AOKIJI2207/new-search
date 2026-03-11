@@ -6,13 +6,13 @@
   "region": "East Asia & Pacific",
   "incomeGroup": "Upper middle income",
   "currency": "U.S. dollar",
-  "lastUpdated": "2025-12-31",
+  "lastUpdated": "2024-12-31",
   "metrics": {
     "population": 37548,
     "gdp": 290108489.990234,
     "gdpPerCapita": 7726.33668877794,
     "growth": 2.50192717852873,
-    "inflation": 5.2,
+    "inflation": null,
     "unemployment": null,
     "hdi": null
   },
@@ -24,16 +24,6 @@
     "fiscal": null
   },
   "sources": [
-    {
-      "category": "Macroeconomy",
-      "label": "IMF",
-      "referenceLabel": "DataMapper",
-      "url": "https://www.imf.org/external/datamapper",
-      "updatedAt": "2025-12-31",
-      "fields": [
-        "inflation"
-      ]
-    },
     {
       "category": "Macroeconomy",
       "label": "World Bank",
@@ -90,6 +80,6 @@
     "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
     "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
     "regional_analysis": "Oceania exposure is shaped by remoteness, climate hazards, maritime connectivity, and strong variance between advanced and small island states.",
-    "summary": "Marshall Islands shows solid economic momentum with GDP growth at 2.5%. Inflation remains elevated at 5.2%. Unemployment stands at 0.0%. Overall signals for the short-term outlook are mixed."
+    "summary": "Marshall Islands shows solid economic momentum with GDP growth at 2.5%. Inflation remains contained at 0.0%. Unemployment stands at 0.0%. Overall signals for the short-term outlook are mixed."
   }
 }

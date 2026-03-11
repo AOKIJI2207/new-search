@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-10T16:32:26.064Z",
+  "generated_at": "2026-03-11T05:17:13.310Z",
   "countries": [
     {
       "name": "Algeria",
@@ -263,13 +263,13 @@
       "lastUpdated": "2025-12-31",
       "risk_global": 3,
       "synthetic_index": 2.64,
-      "summary": "DR Congo shows solid economic momentum with GDP growth at 6.1%. Inflation remains elevated at 8.8%. Unemployment stands at 4.4%. Overall signals for the short-term outlook are mixed.",
+      "summary": "DR Congo shows solid economic momentum with GDP growth at 6.1%. Inflation remains contained at 0.0%. Unemployment stands at 4.4%. Overall signals for the short-term outlook are mixed.",
       "metrics": {
         "population": 109276265,
         "gdp": 70962185790.7094,
         "gdpPerCapita": 649.383338556725,
         "growth": 6.12675551779212,
-        "inflation": 8.8,
+        "inflation": null,
         "unemployment": 4.434,
         "hdi": null
       }
@@ -326,13 +326,13 @@
       "lastUpdated": "2025-12-31",
       "risk_global": 3,
       "synthetic_index": 2.82,
-      "summary": "Eritrea shows solid economic momentum with GDP growth at 3.8%. Inflation remains contained at 1.3%. Unemployment stands at 6.0%. Overall signals for the short-term outlook are mixed.",
+      "summary": "Eritrea shows very weak economic momentum with GDP growth at 0.0%. Inflation remains contained at 0.0%. Unemployment stands at 6.0%. Overall signals for the short-term outlook are mixed.",
       "metrics": {
         "population": 3535603,
         "gdp": null,
         "gdpPerCapita": null,
-        "growth": 3.8,
-        "inflation": 1.3,
+        "growth": null,
+        "inflation": null,
         "unemployment": 5.978,
         "hdi": null
       }
@@ -347,13 +347,13 @@
       "lastUpdated": "2025-12-31",
       "risk_global": 3,
       "synthetic_index": 2.64,
-      "summary": "Eswatini shows solid economic momentum with GDP growth at 3.0%. Inflation remains moderate at 3.5%. Unemployment stands at 34.2%. Overall signals for the short-term outlook are mixed.",
+      "summary": "Eswatini shows solid economic momentum with GDP growth at 3.0%. Inflation remains contained at 0.0%. Unemployment stands at 34.2%. Overall signals for the short-term outlook are mixed.",
       "metrics": {
         "population": 1242822,
         "gdp": 4858885840.77236,
         "gdpPerCapita": 3909.55892378182,
         "growth": 2.97391075973985,
-        "inflation": 3.5,
+        "inflation": null,
         "unemployment": 34.202,
         "hdi": null
       }
@@ -935,13 +935,13 @@
       "lastUpdated": "2025-12-31",
       "risk_global": 3,
       "synthetic_index": 2.64,
-      "summary": "Somalia shows solid economic momentum with GDP growth at 4.1%. Inflation remains moderate at 3.6%. Unemployment stands at 18.9%. Overall signals for the short-term outlook are mixed.",
+      "summary": "Somalia shows solid economic momentum with GDP growth at 4.1%. Inflation remains contained at 0.0%. Unemployment stands at 18.9%. Overall signals for the short-term outlook are mixed.",
       "metrics": {
         "population": 19009151,
         "gdp": 11967000000,
         "gdpPerCapita": 629.538899449007,
         "growth": 4.11139335779471,
-        "inflation": 3.6,
+        "inflation": null,
         "unemployment": 18.948,
         "hdi": null
       }
@@ -974,15 +974,15 @@
       "region": "Sub-Saharan Africa ",
       "incomeGroup": "Low income",
       "currency": "South Sudanese Pound",
-      "lastUpdated": "2025-12-31",
+      "lastUpdated": "2024-12-31",
       "risk_global": 3,
       "synthetic_index": 2.64,
-      "summary": "South Sudan shows solid economic momentum with GDP growth at 24.3%. Inflation remains elevated at 91.4%. Unemployment stands at 12.4%. Overall signals for the short-term outlook are mixed.",
+      "summary": "South Sudan shows very weak economic momentum with GDP growth at 0.0%. Inflation remains elevated at 91.4%. Unemployment stands at 12.4%. Overall signals for the short-term outlook are mixed.",
       "metrics": {
         "population": 11943408,
         "gdp": null,
         "gdpPerCapita": null,
-        "growth": 24.3,
+        "growth": null,
         "inflation": 91.4408220769046,
         "unemployment": 12.374,
         "hdi": null
@@ -1859,13 +1859,13 @@
       "lastUpdated": "2025-12-31",
       "risk_global": 3,
       "synthetic_index": 2.64,
-      "summary": "Venezuela shows solid economic momentum with GDP growth at 5.3%. Inflation remains elevated at 269.9%. Unemployment stands at 5.3%. Overall signals for the short-term outlook are mixed.",
+      "summary": "Venezuela shows solid economic momentum with GDP growth at 5.3%. Inflation remains contained at 0.0%. Unemployment stands at 5.3%. Overall signals for the short-term outlook are mixed.",
       "metrics": {
         "population": 28405543,
         "gdp": 119802963257.783,
         "gdpPerCapita": 4217.59102643391,
         "growth": 5.29999999999984,
-        "inflation": 269.9,
+        "inflation": null,
         "unemployment": 5.307,
         "hdi": null
       }
@@ -2405,13 +2405,13 @@
       "lastUpdated": "2025-12-31",
       "risk_global": 3,
       "synthetic_index": 2.64,
-      "summary": "Myanmar shows very weak economic momentum with GDP growth at -1.0%. Inflation remains elevated at 31.0%. Unemployment stands at 3.0%. Overall signals for the short-term outlook are mixed.",
+      "summary": "Myanmar shows very weak economic momentum with GDP growth at -1.0%. Inflation remains contained at 0.0%. Unemployment stands at 3.0%. Overall signals for the short-term outlook are mixed.",
       "metrics": {
         "population": 54500091,
         "gdp": 74068349523.8095,
         "gdpPerCapita": 1359.05001560107,
         "growth": -0.97204641363362,
-        "inflation": 31,
+        "inflation": null,
         "unemployment": 3.047,
         "hdi": null
       }
@@ -2657,13 +2657,13 @@
       "lastUpdated": "2025-12-31",
       "risk_global": 3,
       "synthetic_index": 2.64,
-      "summary": "Syria shows moderate economic momentum with GDP growth at 0.7%. Inflation remains elevated at 4.4%. Unemployment stands at 13.6%. Overall signals for the short-term outlook are mixed.",
+      "summary": "Syria shows moderate economic momentum with GDP growth at 0.7%. Inflation remains contained at 0.0%. Unemployment stands at 13.6%. Overall signals for the short-term outlook are mixed.",
       "metrics": {
         "population": 24672760,
         "gdp": 23622827079.5047,
         "gdpPerCapita": 1051.67149587463,
         "growth": 0.732781301861365,
-        "inflation": 4.4,
+        "inflation": null,
         "unemployment": 13.569,
         "hdi": null
       }
@@ -2678,13 +2678,13 @@
       "lastUpdated": "2025-12-31",
       "risk_global": 3,
       "synthetic_index": 3.34,
-      "summary": "Tajikistan shows solid economic momentum with GDP growth at 8.4%. Inflation remains moderate at 3.8%. Unemployment stands at 6.9%. Overall signals for the short-term outlook are mixed.",
+      "summary": "Tajikistan shows solid economic momentum with GDP growth at 8.4%. Inflation remains contained at 0.0%. Unemployment stands at 6.9%. Overall signals for the short-term outlook are mixed.",
       "metrics": {
         "population": 10590927,
         "gdp": 14204575548.5536,
         "gdpPerCapita": 1341.20229027672,
         "growth": 8.39999980983981,
-        "inflation": 3.8,
+        "inflation": null,
         "unemployment": 6.931,
         "hdi": null
       }
@@ -2762,13 +2762,13 @@
       "lastUpdated": "2025-12-31",
       "risk_global": 2,
       "synthetic_index": 2.47,
-      "summary": "Turkmenistan shows solid economic momentum with GDP growth at 6.3%. Inflation remains moderate at 3.9%. Unemployment stands at 4.3%. Overall signals for the short-term outlook are guarded.",
+      "summary": "Turkmenistan shows solid economic momentum with GDP growth at 6.3%. Inflation remains contained at 0.0%. Unemployment stands at 4.3%. Overall signals for the short-term outlook are guarded.",
       "metrics": {
         "population": 7494498,
         "gdp": 51387209872.2994,
         "gdpPerCapita": 6856.65802730208,
         "growth": 6.2994265836889,
-        "inflation": 3.9,
+        "inflation": null,
         "unemployment": 4.267,
         "hdi": null
       }
@@ -2846,13 +2846,13 @@
       "lastUpdated": "2025-12-31",
       "risk_global": 3,
       "synthetic_index": 2.64,
-      "summary": "Yemen shows very weak economic momentum with GDP growth at -1.5%. Inflation remains elevated at 20.4%. Unemployment stands at 17.3%. Overall signals for the short-term outlook are mixed.",
+      "summary": "Yemen shows very weak economic momentum with GDP growth at 0.0%. Inflation remains contained at 0.0%. Unemployment stands at 17.3%. Overall signals for the short-term outlook are mixed.",
       "metrics": {
         "population": 40583164,
         "gdp": null,
         "gdpPerCapita": null,
-        "growth": -1.5,
-        "inflation": 20.4,
+        "growth": null,
+        "inflation": null,
         "unemployment": 17.322,
         "hdi": null
       }
@@ -2885,16 +2885,16 @@
       "region": "Europe & Central Asia",
       "incomeGroup": "High income",
       "currency": null,
-      "lastUpdated": "2025-12-31",
+      "lastUpdated": "2024-12-31",
       "risk_global": 3,
       "synthetic_index": 2.99,
-      "summary": "Andorra shows solid economic momentum with GDP growth at 3.4%. Inflation remains moderate at 2.2%. Unemployment stands at 0.0%. Overall signals for the short-term outlook are mixed.",
+      "summary": "Andorra shows solid economic momentum with GDP growth at 3.4%. Inflation remains contained at 0.0%. Unemployment stands at 0.0%. Overall signals for the short-term outlook are mixed.",
       "metrics": {
         "population": 81938,
         "gdp": 4039842405.48117,
         "gdpPerCapita": 49303.6491674336,
         "growth": 3.37182032638998,
-        "inflation": 2.2,
+        "inflation": null,
         "unemployment": null,
         "hdi": null
       }
@@ -3305,16 +3305,16 @@
       "region": "Europe & Central Asia",
       "incomeGroup": "High income",
       "currency": null,
-      "lastUpdated": "2025-12-31",
+      "lastUpdated": "2024-12-31",
       "risk_global": 3,
       "synthetic_index": 2.9,
-      "summary": "Liechtenstein shows moderate economic momentum with GDP growth at 1.0%. Inflation remains contained at 0.1%. Unemployment stands at 0.0%. Overall signals for the short-term outlook are mixed.",
+      "summary": "Liechtenstein shows very weak economic momentum with GDP growth at 0.0%. Inflation remains contained at 0.0%. Unemployment stands at 0.0%. Overall signals for the short-term outlook are mixed.",
       "metrics": {
         "population": 40450,
         "gdp": 8239379403.22096,
         "gdpPerCapita": 206780.590353385,
-        "growth": 1,
-        "inflation": 0.1,
+        "growth": null,
+        "inflation": null,
         "unemployment": null,
         "hdi": null
       }
@@ -3788,7 +3788,7 @@
       "region": null,
       "incomeGroup": null,
       "currency": null,
-      "lastUpdated": "2026-03-10",
+      "lastUpdated": "2026-03-11",
       "risk_global": 3,
       "synthetic_index": 2.64,
       "summary": "Vatican City shows very weak economic momentum with GDP growth at 0.0%. Inflation remains contained at 0.0%. Unemployment stands at 0.0%. Overall signals for the short-term outlook are mixed.",
@@ -3872,16 +3872,16 @@
       "region": "East Asia & Pacific",
       "incomeGroup": "Upper middle income",
       "currency": "U.S. dollar",
-      "lastUpdated": "2025-12-31",
+      "lastUpdated": "2024-12-31",
       "risk_global": 3,
       "synthetic_index": 2.64,
-      "summary": "Marshall Islands shows solid economic momentum with GDP growth at 2.5%. Inflation remains elevated at 5.2%. Unemployment stands at 0.0%. Overall signals for the short-term outlook are mixed.",
+      "summary": "Marshall Islands shows solid economic momentum with GDP growth at 2.5%. Inflation remains contained at 0.0%. Unemployment stands at 0.0%. Overall signals for the short-term outlook are mixed.",
       "metrics": {
         "population": 37548,
         "gdp": 290108489.990234,
         "gdpPerCapita": 7726.33668877794,
         "growth": 2.50192717852873,
-        "inflation": 5.2,
+        "inflation": null,
         "unemployment": null,
         "hdi": null
       }
@@ -3914,16 +3914,16 @@
       "region": "East Asia & Pacific",
       "incomeGroup": "High income",
       "currency": null,
-      "lastUpdated": "2025-12-31",
+      "lastUpdated": "2024-12-31",
       "risk_global": 3,
       "synthetic_index": 2.79,
-      "summary": "Nauru shows moderate economic momentum with GDP growth at 1.4%. Inflation remains elevated at 6.1%. Unemployment stands at 0.0%. Overall signals for the short-term outlook are mixed.",
+      "summary": "Nauru shows moderate economic momentum with GDP growth at 1.4%. Inflation remains contained at 0.0%. Unemployment stands at 0.0%. Overall signals for the short-term outlook are mixed.",
       "metrics": {
         "population": 11947,
         "gdp": 162588620.632234,
         "gdpPerCapita": 13609.158837552,
         "growth": 1.38888888888904,
-        "inflation": 6.1,
+        "inflation": null,
         "unemployment": null,
         "hdi": null
       }
@@ -4061,16 +4061,16 @@
       "region": "East Asia & Pacific",
       "incomeGroup": "Upper middle income",
       "currency": "Australian dollar",
-      "lastUpdated": "2025-12-31",
+      "lastUpdated": "2024-12-31",
       "risk_global": 3,
       "synthetic_index": 2.99,
-      "summary": "Tuvalu shows solid economic momentum with GDP growth at 3.9%. Inflation remains moderate at 2.0%. Unemployment stands at 0.0%. Overall signals for the short-term outlook are mixed.",
+      "summary": "Tuvalu shows solid economic momentum with GDP growth at 3.9%. Inflation remains contained at 0.0%. Unemployment stands at 0.0%. Overall signals for the short-term outlook are mixed.",
       "metrics": {
         "population": 9646,
         "gdp": 62280311.5852172,
         "gdpPerCapita": 6344.7750188689,
         "growth": 3.85280919517032,
-        "inflation": 2,
+        "inflation": null,
         "unemployment": null,
         "hdi": null
       }
@@ -4446,13 +4446,13 @@
       "lastUpdated": "2025-12-31",
       "risk_global": 2,
       "synthetic_index": 2.47,
-      "summary": "Turkmenistan shows solid economic momentum with GDP growth at 6.3%. Inflation remains moderate at 3.9%. Unemployment stands at 4.3%. Overall signals for the short-term outlook are guarded.",
+      "summary": "Turkmenistan shows solid economic momentum with GDP growth at 6.3%. Inflation remains contained at 0.0%. Unemployment stands at 4.3%. Overall signals for the short-term outlook are guarded.",
       "metrics": {
         "population": 7494498,
         "gdp": 51387209872.2994,
         "gdpPerCapita": 6856.65802730208,
         "growth": 6.2994265836889,
-        "inflation": 3.9,
+        "inflation": null,
         "unemployment": 4.267,
         "hdi": null
       }
@@ -4833,13 +4833,13 @@
           "lastUpdated": "2025-12-31",
           "risk_global": 3,
           "synthetic_index": 3.34,
-          "summary": "Tajikistan shows solid economic momentum with GDP growth at 8.4%. Inflation remains moderate at 3.8%. Unemployment stands at 6.9%. Overall signals for the short-term outlook are mixed.",
+          "summary": "Tajikistan shows solid economic momentum with GDP growth at 8.4%. Inflation remains contained at 0.0%. Unemployment stands at 6.9%. Overall signals for the short-term outlook are mixed.",
           "metrics": {
             "population": 10590927,
             "gdp": 14204575548.5536,
             "gdpPerCapita": 1341.20229027672,
             "growth": 8.39999980983981,
-            "inflation": 3.8,
+            "inflation": null,
             "unemployment": 6.931,
             "hdi": null
           }

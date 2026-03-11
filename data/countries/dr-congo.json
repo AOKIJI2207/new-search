@@ -12,7 +12,7 @@
     "gdp": 70962185790.7094,
     "gdpPerCapita": 649.383338556725,
     "growth": 6.12675551779212,
-    "inflation": 8.8,
+    "inflation": null,
     "unemployment": 4.434,
     "hdi": null
   },
@@ -24,16 +24,6 @@
     "fiscal": null
   },
   "sources": [
-    {
-      "category": "Macroeconomy",
-      "label": "IMF",
-      "referenceLabel": "DataMapper",
-      "url": "https://www.imf.org/external/datamapper",
-      "updatedAt": "2025-12-31",
-      "fields": [
-        "inflation"
-      ]
-    },
     {
       "category": "Macroeconomy",
       "label": "World Bank",
@@ -91,6 +81,6 @@
     "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
     "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
     "regional_analysis": "African exposure is driven by uneven state capacity, security fragmentation in selected corridors, commodity dependency, and infrastructure stress.",
-    "summary": "DR Congo shows solid economic momentum with GDP growth at 6.1%. Inflation remains elevated at 8.8%. Unemployment stands at 4.4%. Overall signals for the short-term outlook are mixed."
+    "summary": "DR Congo shows solid economic momentum with GDP growth at 6.1%. Inflation remains contained at 0.0%. Unemployment stands at 4.4%. Overall signals for the short-term outlook are mixed."
   }
 }

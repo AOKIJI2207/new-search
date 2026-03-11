@@ -6,12 +6,12 @@
   "region": "Sub-Saharan Africa ",
   "incomeGroup": "Low income",
   "currency": "South Sudanese Pound",
-  "lastUpdated": "2025-12-31",
+  "lastUpdated": "2024-12-31",
   "metrics": {
     "population": 11943408,
     "gdp": null,
     "gdpPerCapita": null,
-    "growth": 24.3,
+    "growth": null,
     "inflation": 91.4408220769046,
     "unemployment": 12.374,
     "hdi": null
@@ -24,16 +24,6 @@
     "fiscal": null
   },
   "sources": [
-    {
-      "category": "Macroeconomy",
-      "label": "IMF",
-      "referenceLabel": "DataMapper",
-      "url": "https://www.imf.org/external/datamapper",
-      "updatedAt": "2025-12-31",
-      "fields": [
-        "growth"
-      ]
-    },
     {
       "category": "Macroeconomy",
       "label": "World Bank",
@@ -106,6 +96,6 @@
     "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
     "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
     "regional_analysis": "African exposure is driven by uneven state capacity, security fragmentation in selected corridors, commodity dependency, and infrastructure stress.",
-    "summary": "South Sudan shows solid economic momentum with GDP growth at 24.3%. Inflation remains elevated at 91.4%. Unemployment stands at 12.4%. Overall signals for the short-term outlook are mixed."
+    "summary": "South Sudan shows very weak economic momentum with GDP growth at 0.0%. Inflation remains elevated at 91.4%. Unemployment stands at 12.4%. Overall signals for the short-term outlook are mixed."
   }
 }

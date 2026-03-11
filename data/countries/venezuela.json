@@ -12,7 +12,7 @@
     "gdp": 119802963257.783,
     "gdpPerCapita": 4217.59102643391,
     "growth": 5.29999999999984,
-    "inflation": 269.9,
+    "inflation": null,
     "unemployment": 5.307,
     "hdi": null
   },
@@ -24,16 +24,6 @@
     "fiscal": null
   },
   "sources": [
-    {
-      "category": "Macroeconomy",
-      "label": "IMF",
-      "referenceLabel": "DataMapper",
-      "url": "https://www.imf.org/external/datamapper",
-      "updatedAt": "2025-12-31",
-      "fields": [
-        "inflation"
-      ]
-    },
     {
       "category": "Macroeconomy",
       "label": "World Bank",
@@ -100,6 +90,6 @@
     "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
     "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
     "regional_analysis": "South American exposure depends on political volatility, commodity cycles, organized crime pressure, and environmental disruption risks.",
-    "summary": "Venezuela shows solid economic momentum with GDP growth at 5.3%. Inflation remains elevated at 269.9%. Unemployment stands at 5.3%. Overall signals for the short-term outlook are mixed."
+    "summary": "Venezuela shows solid economic momentum with GDP growth at 5.3%. Inflation remains contained at 0.0%. Unemployment stands at 5.3%. Overall signals for the short-term outlook are mixed."
   }
 }

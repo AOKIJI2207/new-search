@@ -12,7 +12,7 @@
     "gdp": 23622827079.5047,
     "gdpPerCapita": 1051.67149587463,
     "growth": 0.732781301861365,
-    "inflation": 4.4,
+    "inflation": null,
     "unemployment": 13.569,
     "hdi": null
   },
@@ -54,16 +54,6 @@
         "gdp",
         "gdpPerCapita",
         "growth"
-      ]
-    },
-    {
-      "category": "Macroeconomy",
-      "label": "IMF",
-      "referenceLabel": "DataMapper",
-      "url": "https://www.imf.org/external/datamapper",
-      "updatedAt": "2010-12-31",
-      "fields": [
-        "inflation"
       ]
     },
     {
@@ -109,6 +99,6 @@
     "health_disasters": "Risque sanitaire et aléas naturels agrégés.",
     "transport": "Prévoir des marges sur les déplacements interurbains et vérifier les avis locaux.",
     "regional_analysis": "Asian exposure is influenced by great-power rivalry, maritime trade routes, domestic political concentration, and supply-chain sensitivity.",
-    "summary": "Syria shows moderate economic momentum with GDP growth at 0.7%. Inflation remains elevated at 4.4%. Unemployment stands at 13.6%. Overall signals for the short-term outlook are mixed."
+    "summary": "Syria shows moderate economic momentum with GDP growth at 0.7%. Inflation remains contained at 0.0%. Unemployment stands at 13.6%. Overall signals for the short-term outlook are mixed."
   }
 }
